@@ -1,0 +1,86 @@
+{
+  "homepage": "/",
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^4.4.0",
+    "@material-ui/icons": "^4.4.3",
+    "@n8tb1t/use-scroll-position": "^2.0.3",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "@types/react-select": "^4.0.13",
+    "axios": "^0.21.1",
+    "bootstrap": "^4.3.1",
+    "clsx": "^1.1.1",
+    "dotenv": "^8.2.0",
+    "font-awesome": "^4.7.0",
+    "jwt-decode": "^3.0.0-beta.2",
+    "lodash-es": "^4.17.15",
+    "lodash.throttle": "^4.1.1",
+    "prop-types": "^15.7.2",
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0",
+    "react-google-login": "^5.1.21",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "4.0.0",
+    "styled-components": "^5.2.1",
+    "ts-enum-util": "^4.0.2",
+    "typescript": "~3.7.2",
+    "undux": "^5.2.0",
+    "use-deep-compare-effect": "^1.5.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "pre-deploy": "yarn build",
+    "deploy": "gh-pages -d build"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.8.3",
+    "@types/axios": "^0.14.0",
+    "@types/dotenv": "^8.2.0",
+    "@types/jest": "^24.0.0",
+    "@types/jwt-decode": "^2.2.1",
+    "@types/lodash-es": "^4.17.3",
+    "@types/lodash.throttle": "^4.1.6",
+    "@types/node": "^14.6.2",
+    "@types/react": "^16.9.0",
+    "@types/react-dom": "^16.9.0",
+    "@types/react-router-dom": "^5.1.5",
+    "@types/styled-components": "^5.1.4",
+    "@types/use-deep-compare-effect": "^1.5.1",
+    "@typescript-eslint/eslint-plugin": "^4.7.0",
+    "@typescript-eslint/parser": "^4.7.0",
+    "babel-plugin-transform-remove-console": "^6.9.4",
+    "eslint-config-airbnb-typescript": "^12.0.0",
+    "eslint-config-prettier": "^6.15.0",
+    "file-loader": "^6.2.0",
+    "ts-loader": "^8.0.11",
+    "url-loader": "^4.1.1"
+  },
+  "babel": {
+    "plugins": [
+      "@babel/plugin-proposal-nullish-coalescing-operator",
+      "transform-remove-console"
+    ]
+  }
+}

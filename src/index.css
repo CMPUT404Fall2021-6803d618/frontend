@@ -1,0 +1,123 @@
+@import url("https://fonts.googleapis.com/css?family=Titillium+Web:400,700&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Raleway:500,700&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Nunito+Sans:400,800&display=swap");
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+input:active,
+input:focus,
+textarea:active,
+textarea:focus,
+button:active,
+button:focus {
+  outline: none;
+}
+
+/* hide arrows and spinner in input number type */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+a:hover {
+  text-decoration: none !important;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  font-family: "Nunito Sans", sans-serif;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+*::-webkit-scrollbar {
+  width: 5px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+*::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+@media only screen and (max-width: 600px) {
+  .Grid::-webkit-scrollbar {
+    width: 0px;
+  }
+}
+
+#update-prompt {
+  position: absolute;
+  bottom: 0;
+  z-index: 9999;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  background: #dd2020;
+  align-items: center;
+  padding: 0.5rem 0;
+  font-family: "Nunito Sans";
+  color: white;
+}
+
+#update-prompt span {
+  color: white;
+  margin-right: 1rem;
+}
+
+#update-prompt button {
+  border: none;
+  background: rgba(255, 255, 255, 0.25);
+  padding: 0.5rem;
+  margin-right: 0.5rem;
+  border-radius: 5px;
+  color: white;
+}
+
+@keyframes select-gradient {
+  0% {
+    border-color: #1e90ff;
+  }
+  50% {
+    border-color: #81daff;
+  }
+  100% {
+    border-color: #1e90ff;
+  }
+}
+
+.gradient-hover {
+  border: 4px solid transparent;
+}
+
+.gradient-hover:hover {
+  animation: select-gradient 1s infinite !important;
+  box-shadow: 0px 0px 10px rgba(96, 173, 225, 0.7);
+}
