@@ -1,0 +1,12 @@
+{
+    "root": "build/",
+    "routes": {
+        "/static/*": "/static/",
+        "/**": "index.html"
+    },
+    "proxies": {
+      "/api/": {
+        "origin": "https://${API_APP_NAME}.herokuapp.com/"
+      }
+    }
+}
