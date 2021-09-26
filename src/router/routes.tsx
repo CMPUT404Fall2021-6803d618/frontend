@@ -36,4 +36,12 @@ export const routes: IRoute[] = [
     fallback: <div> Loading... </div>,
     appBarTitle: "Home",
   },
+  {
+    path: paths.FRIENDS,
+    component: views.FriendView,
+    exact: true,
+    private: false,
+    fallback: <div> Loading... </div>,
+    appBarTitle: "Friends",
+  },
 ];
