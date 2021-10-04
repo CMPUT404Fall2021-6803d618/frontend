@@ -1,26 +1,16 @@
-import React, { useState, ChangeEvent, useEffect } from "react";
+import React, { useState, ChangeEvent , useEffect } from "react";
+import Posts from "./Posts";
 
 const Home = () => {
-  const [value, setValue] = useState("");
-  const [todos, setTodos] = useState<string[]>([]);
+  const [title, setTitle] = useState("");
 
-  const handleValueChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-  };
-
-  const handleButtonClick = () => {
-    const newTodos = [...todos, value];
-    setTodos(newTodos);
-    setValue("");
-  };
+  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
+  }
 
   return (
     <div className="container">
-      <input onChange={handleValueChange} value={value} />
-      <button onClick={handleButtonClick}>Add</button>
-      {todos.map((todo) => {
-        return <div key={todo}>{todo}</div>;
-      })}
+      <Posts/>
     </div>
   );
 };

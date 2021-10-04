@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "-": "^0.0.1",
     "@material-ui/core": "^4.4.0",
     "@material-ui/icons": "^4.4.3",
     "@n8tb1t/use-scroll-position": "^2.0.3",
@@ -14,6 +15,7 @@
     "axios": "^0.21.1",
     "bootstrap": "^4.3.1",
     "clsx": "^1.1.1",
+    "dependencies": "^0.0.1",
     "dotenv": "^8.2.0",
     "font-awesome": "^4.7.0",
     "jwt-decode": "^3.0.0-beta.2",
