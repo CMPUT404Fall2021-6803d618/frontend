@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ButtonBase, TextField } from "@material-ui/core";
 import React from "react";
 import GoogleLogin from "react-google-login";
@@ -78,7 +79,9 @@ export const Input = styled(TextField)`
   }
 `;
 
-export const ActionButton = styled(({ navigate, ...props }) => <ButtonBase {...props} />)`
+export const ActionButton = styled(({ navigate, ...props }) => (
+  <ButtonBase {...props} />
+))`
   background-color: rgba(255, 255, 255, 0.2) !important;
   color: white !important;
   padding: 0.75rem !important;

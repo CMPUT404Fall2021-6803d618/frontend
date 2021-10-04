@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { ReactNode, LazyExoticComponent } from "react";
 import { views } from "./views";
 import { paths } from "./paths";

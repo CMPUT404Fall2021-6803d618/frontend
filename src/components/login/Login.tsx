@@ -1,6 +1,14 @@
-import React, { FormEvent, FunctionComponent, useCallback, useState } from "react";
+import React, {
+  FormEvent,
+  FunctionComponent,
+  useCallback,
+  useState,
+} from "react";
 import { Link, Redirect } from "react-router-dom";
-import { GoogleLoginResponse, GoogleLoginResponseOffline } from "react-google-login";
+import {
+  GoogleLoginResponse,
+  GoogleLoginResponseOffline,
+} from "react-google-login";
 import {
   Container,
   Title,
@@ -14,31 +22,34 @@ import {
 } from "./style";
 import { useAuth } from "hooks/AuthHook";
 
-interface IProps {}
-
 function isGoogleResponse(
   response: GoogleLoginResponse | GoogleLoginResponseOffline
 ): response is GoogleLoginResponse {
   return (response as GoogleLoginResponse).accessToken !== undefined;
 }
 
-const Login: FunctionComponent<IProps> = () => {
+const Login: FunctionComponent = () => {
   const { isAuthenticated, login, googleLogin } = useAuth();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isEmailError, setIsEmailError] = useState<boolean>(false);
   const [isPasswordError, setIsPasswordError] = useState<boolean>(false);
 
-  const handleEmailChange = (event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setIsEmailError(false);
+  const handleEmailChange = useCallback(
+    (event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setIsEmailError(false);
+      setEmail(event.currentTarget.value);
+    },
+    []
+  );
 
-    setEmail(event.currentTarget.value);
-  };
-
-  const handlePasswordChange = (event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setIsPasswordError(false);
-    setPassword(event.currentTarget.value);
-  };
+  const handlePasswordChange = useCallback(
+    (event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setIsPasswordError(false);
+      setPassword(event.currentTarget.value);
+    },
+    []
+  );
 
   const handleLogin = useCallback(async () => {
     const isEmailEmpty = email.length === 0;
@@ -106,7 +117,8 @@ const Login: FunctionComponent<IProps> = () => {
         <ActionButton onClick={handleLogin}>Login</ActionButton>
         <SubTextContainer>
           <span>
-            Don't have an account? <Link to="/register">Register here</Link>
+            Don&apos;t have an account?{" "}
+            <Link to="/register">Register here</Link>
           </span>
           <Divider />
         </SubTextContainer>

@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, FC } from "react";
 import { IRoute, routes } from "router/routes";
 import Router from "router/Router";
 import styled from "styled-components";
@@ -31,7 +31,7 @@ interface IProps {
   };
 }
 
-export default function Shell(props: IProps) {
+const Shell: FC<IProps> = (props: IProps) => {
   const classes = useStyles();
 
   const currentRoute: IRoute = useMemo(() => {
@@ -48,4 +48,6 @@ export default function Shell(props: IProps) {
       </Main>
     </Root>
   );
-}
+};
+
+export default Shell;
