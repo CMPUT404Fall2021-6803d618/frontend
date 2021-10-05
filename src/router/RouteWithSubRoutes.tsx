@@ -1,25 +1,31 @@
 import { useAuth } from "hooks/AuthHook";
-import React, { Suspense } from "react";
+import React, { Suspense, FC } from "react";
 import { Redirect, Route } from "react-router-dom";
 import { IRoute } from "./routes";
-const RouteWithSubRoutes = (route: IRoute) => {
+
+const RouteWithSubRoutes: FC<IRoute> = (props) => {
   const { isAuthenticated } = useAuth();
 
   return (
-    <Suspense fallback={route.fallback}>
+    <Suspense fallback={props.fallback}>
       <Route
-        path={route.path}
-        render={(props: any) =>
-          route.redirect ? (
-            <Redirect to={route.redirect} />
-          ) : route.private ? (
+        path={props.path}
+        // eslint-disable-next-line @typescript-eslint/no-shadow
+        render={() =>
+          props.redirect ? (
+            <Redirect to={props.redirect} />
+          ) : props.private ? (
             isAuthenticated ? (
-              route.component && <route.component {...props} routes={route.routes} />
+              props.component && (
+                <props.component {...props} routes={props.routes} />
+              )
             ) : (
               <Redirect to="/login" />
             )
           ) : (
-            route.component && <route.component {...props} routes={route.routes} />
+            props.component && (
+              <props.component {...props} routes={props.routes} />
+            )
           )
         }
       />

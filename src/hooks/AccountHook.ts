@@ -12,13 +12,19 @@ interface IAccountHook {
 export const useAccount = (): IAccountHook => {
   const { username, setUsername } = useAuthStore();
 
-  const updateUsername = async (newUsername: Username) => {
-    if (newUsername.name === username?.name && newUsername.tag === username?.tag) {
-      return;
-    }
-    await accountService.updateUsername(newUsername);
-    setUsername(newUsername);
-  };
+  const updateUsername = useCallback(
+    async (newUsername: Username) => {
+      if (
+        newUsername.name === username?.name &&
+        newUsername.tag === username?.tag
+      ) {
+        return;
+      }
+      await accountService.updateUsername(newUsername);
+      setUsername(newUsername);
+    },
+    [setUsername, username?.name, username?.tag]
+  );
 
   const getFormattedUsername = useCallback(() => {
     return {

@@ -14,6 +14,6 @@ const Home = () => {
       <Posts isMedia={false} />
     </div>
   );
-};
+
 
 export default Home;
