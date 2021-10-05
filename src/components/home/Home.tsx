@@ -1,7 +1,16 @@
 import React from "react";
+import CreatePost, { PostRequest } from "./CreatePost";
 
 const Home = () => {
-  return <div>Hello</div>;
+  const addPost = (postRequest: PostRequest) => {
+    console.log(postRequest.text)
+  }
+  
+  return (
+    <div className='container'>
+      <CreatePost onAdd={addPost}/>
+    </div>
+  );
 };
 
 export default Home;
