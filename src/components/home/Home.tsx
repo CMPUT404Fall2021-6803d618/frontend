@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent , useEffect } from "react";
+import React, { useState, ChangeEvent, useEffect } from "react";
 import Posts from "./Posts";
 
 const Home = () => {
@@ -10,7 +10,8 @@ const Home = () => {
 
   return (
     <div className="container">
-      <Posts/>
+      <Posts isMedia={true} />
+      <Posts isMedia={false} />
     </div>
   );
 };

@@ -1,5 +1,4 @@
-import { Height } from "@material-ui/icons";
-import React, { FunctionComponent } from "react";
+import React, { FC } from "react";
 import styled from "styled-components";
 import profilePic from "./images.jpeg";
 import PostImage from "./PostImage.jpeg";
@@ -7,7 +6,7 @@ import PostImage from "./PostImage.jpeg";
 // Post Wrapper
 const PostWrapper = styled.div`
   max-width: 600px;
-  max-height: 450px;
+  height: fit-content;
   display: flex;
   border: 1px solid #ccc;
   &:hover {
@@ -18,7 +17,7 @@ const PostWrapper = styled.div`
 // Post container
 const PostContainer = styled.div`
   max-width: 550px;
-  max-height: 400px;
+  height: fit-content;
   margin: 20px;
   display: flex;
 `;
@@ -45,7 +44,7 @@ const PostBody = styled.div`
 const PostAuthor = styled.div`
   display: flex;
   justify-content: space-between;
-  max-height: 5%;
+  max-height: 22px;
   width: 100%;
   flex-wrap: nowrap;
 `;
@@ -84,15 +83,14 @@ const PostContent = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-height: 95%;
+  max-height: fit-content;
 `;
 
 // Post title
 const PostTitle = styled.div`
   display: flex;
   flex-direction: column;
-  text-align: justify;
-  max-height: 10%;
+  height: fit-content;
 `;
 
 // Post Media
@@ -100,16 +98,15 @@ const PostMedia = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-height: 80%;
+  max-height: 300px;
 `;
 
 // Post Action
 const PostAction = styled.div`
   display: flex;
   width: 100%;
-  max-height: 5%;
+  height: fit-content;
   flex-direction: row;
-  margin: 20px auto;
   justify-content: space-between;
 `;
 
@@ -119,12 +116,14 @@ const Action = styled.div`
   margin-right: 100px;
 `;
 
-// interface PostProps {
-//   title: string;
-// }
+interface PostProps {
+  isMedia: boolean;
+}
 
-const Posts = () => {
-  //   const { title } = props;
+// const Posts:FunctionComponent<PostProps> = (props) => {
+
+const Posts: FC<PostProps> = (props) => {
+  const { isMedia } = props;
   return (
     <div className="container">
       <PostWrapper>
@@ -152,6 +151,7 @@ const Posts = () => {
                   display: "flex",
                   flexDirection: "row",
                   fontSize: "15px",
+                  maxHeight: "100%",
                 }}
               >
                 <div> Trung Tran @TrungTran </div> {/* Author */}
@@ -181,24 +181,28 @@ const Posts = () => {
               <PostTitle>
                 {/* {title} */}
                 <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do
+                  We need to stop this #intentionallycruelwave ICUs are full.
+                  More than 100 Albertans per week are dying of COVID. Kids are
+                  getting infected at an unprecedented rate. We neeed
+                  #FirebreakAB to stop the suffering Please sign the petition:
                 </p>
               </PostTitle>
 
               {/* Media of the post */}
-              <PostMedia>
-                <img
-                  style={{
-                    width: "100%",
-                    maxHeight: "100%",
-                    margin: "10px auto",
-                    borderRadius: "20px",
-                  }}
-                  src={PostImage}
-                  alt="post pic"
-                />
-              </PostMedia>
+              {isMedia && (
+                <PostMedia>
+                  <img
+                    style={{
+                      width: "100%",
+                      maxHeight: "95%",
+                      margin: "10px auto",
+                      borderRadius: "20px",
+                    }}
+                    src={PostImage}
+                    alt="post pic"
+                  />
+                </PostMedia>
+              )}
 
               {/* Available Actions */}
               <PostAction>
