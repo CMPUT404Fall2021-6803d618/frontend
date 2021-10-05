@@ -22,8 +22,7 @@ import {
   Title,
 } from "./style";
 import { useAuth } from "hooks/AuthHook";
-
-interface IProps {}
+import { ServiceError } from "utils/ServiceError";
 
 function isGoogleResponse(
   response: GoogleLoginResponse | GoogleLoginResponseOffline
@@ -31,7 +30,7 @@ function isGoogleResponse(
   return (response as GoogleLoginResponse).accessToken !== undefined;
 }
 
-const Register: FunctionComponent<IProps> = () => {
+const Register: FunctionComponent = () => {
   const { isAuthenticated, register, googleLogin } = useAuth();
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
@@ -43,33 +42,37 @@ const Register: FunctionComponent<IProps> = () => {
   const [passwordError, setPasswordError] = useState<string>("");
   const [confirmPasswordError, setConfirmPasswordError] = useState<string>("");
 
-  const handleUsernameChange = (
-    event: FormEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setUsernameError("");
-    setUsername(event.currentTarget.value);
-  };
+  const handleUsernameChange = useCallback(
+    (event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setUsernameError("");
+      setUsername(event.currentTarget.value);
+    },
+    []
+  );
 
-  const handleEmailChange = (
-    event: FormEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setEmailError("");
-    setEmail(event.currentTarget.value);
-  };
+  const handleEmailChange = useCallback(
+    (event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setEmailError("");
+      setEmail(event.currentTarget.value);
+    },
+    []
+  );
 
-  const handlePasswordChange = (
-    event: FormEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setPasswordError("");
-    setPassword(event.currentTarget.value);
-  };
+  const handlePasswordChange = useCallback(
+    (event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setPasswordError("");
+      setPassword(event.currentTarget.value);
+    },
+    []
+  );
 
-  const handleConfirmPasswordChange = (
-    event: FormEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setConfirmPasswordError("");
-    setConfirmPassword(event.currentTarget.value);
-  };
+  const handleConfirmPasswordChange = useCallback(
+    (event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setConfirmPasswordError("");
+      setConfirmPassword(event.currentTarget.value);
+    },
+    []
+  );
 
   const handleRegister = useCallback(async () => {
     const isUsernameEmpty = username.length === 0;
@@ -112,7 +115,7 @@ const Register: FunctionComponent<IProps> = () => {
       await register(username, email, password);
       setIsSuccess(true);
     } catch (err) {
-      if ((err as any).statusCode === 409) {
+      if ((err as ServiceError).statusCode === 409) {
         setEmailError("Email already registered");
       }
     }

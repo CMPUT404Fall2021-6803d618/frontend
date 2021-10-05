@@ -1,4 +1,9 @@
-import React, { Fragment, FunctionComponent, useState } from "react";
+import React, {
+  Fragment,
+  FunctionComponent,
+  useState,
+  useCallback,
+} from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import UserControl from "./UserControl";
 import { LINK_LIST } from "router/drawerLinks";
@@ -90,9 +95,9 @@ const ResponsiveDrawer: FunctionComponent<IProps> = ({ currentRoute }) => {
   const classes = useStyles();
   const theme = useTheme();
 
-  const handleDrawerToggle = () => {
+  const handleDrawerToggle = useCallback(() => {
     setMobileOpen(!mobileOpen);
-  };
+  }, [mobileOpen]);
 
   const DrawerContent = (
     <div>
@@ -108,7 +113,10 @@ const ResponsiveDrawer: FunctionComponent<IProps> = ({ currentRoute }) => {
                 component={Link}
                 to={link.path}
                 selected={link.path === currentRoute.path}
-                classes={{ root: classes.listItem, selected: classes.listItemSelected }}
+                classes={{
+                  root: classes.listItem,
+                  selected: classes.listItemSelected,
+                }}
               >
                 <span className={classes.listItemText}>{link.name}</span>
                 {link.wip && <ErrorIcon className={classes.warning} />}
