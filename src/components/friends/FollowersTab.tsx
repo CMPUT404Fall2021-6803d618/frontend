@@ -3,6 +3,11 @@ import useFollow, { Peer } from "hooks/FollowHook";
 import styled from "styled-components";
 import UserCard from "./UserCard";
 
+enum FollowAction {
+  FOLLOW,
+  UNFOLLOW,
+}
+
 const Container = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -11,7 +16,7 @@ const Container = styled.div`
 
 const FollowersTab: FC = () => {
   const [followers, setFollowers] = useState<Peer[]>([]);
-  const { getFollowers, removeFollower } = useFollow();
+  const { getFollowers, removeFollower, follow, unfollow } = useFollow();
 
   useEffect(() => {
     getFollowers().then((data) => {
@@ -30,6 +35,36 @@ const FollowersTab: FC = () => {
     [followers, removeFollower]
   );
 
+  const updateFollowStatus = useCallback(
+    async (id: string, action: FollowAction) => {
+      let isFollowed: boolean;
+      if (action === FollowAction.FOLLOW) {
+        isFollowed = await follow(id);
+      } else {
+        isFollowed = await unfollow(id);
+      }
+      const index = followers.findIndex((f) => f.id === id);
+      const newFollowers = [...followers];
+      newFollowers[index] = { ...followers[index], isFollowed };
+      setFollowers(newFollowers);
+    },
+    [follow, followers, unfollow]
+  );
+
+  const handleFollow = useCallback(
+    async (id: string) => {
+      updateFollowStatus(id, FollowAction.FOLLOW);
+    },
+    [updateFollowStatus]
+  );
+
+  const handleUnfollow = useCallback(
+    async (id: string) => {
+      updateFollowStatus(id, FollowAction.UNFOLLOW);
+    },
+    [updateFollowStatus]
+  );
+
   return (
     <Container>
       {followers.map(({ id, userName, displayName, isFollowed }) => (
@@ -39,6 +74,8 @@ const FollowersTab: FC = () => {
           displayName={displayName}
           isFollowed={isFollowed}
           onFollowerRemove={handleRemoveFollower}
+          onFollow={handleFollow}
+          onUnfollow={handleUnfollow}
           key={id}
         />
       ))}

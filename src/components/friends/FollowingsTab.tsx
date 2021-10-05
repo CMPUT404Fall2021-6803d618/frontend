@@ -1,4 +1,4 @@
-import React, { useState, useEffect, FC } from "react";
+import React, { useState, useEffect, FC, useCallback } from "react";
 import useFollow, { Peer } from "hooks/FollowHook";
 import styled from "styled-components";
 import UserCard from "./UserCard";
@@ -11,13 +11,22 @@ const Container = styled.div`
 
 const FollowingsTab: FC = () => {
   const [followings, setFollowings] = useState<Peer[]>([]);
-  const { getFollowings } = useFollow();
+  const { getFollowings, unfollow } = useFollow();
 
   useEffect(() => {
     getFollowings().then((data) => {
       setFollowings(data);
     });
   }, [getFollowings]);
+
+  const handleUnfollow = useCallback(
+    async (id: string) => {
+      await unfollow(id);
+      const newFollowings = followings.filter((f) => f.id !== id);
+      setFollowings(newFollowings);
+    },
+    [followings, unfollow]
+  );
 
   return (
     <Container>
@@ -28,6 +37,7 @@ const FollowingsTab: FC = () => {
           displayName={displayName}
           isFollowed={isFollowed}
           key={id}
+          onUnfollow={handleUnfollow}
         />
       ))}
     </Container>

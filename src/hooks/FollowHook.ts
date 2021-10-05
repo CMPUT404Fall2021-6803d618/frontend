@@ -38,8 +38,8 @@ interface IFollowHook {
   getFriends: () => Promise<Peer[]>;
   getFollowings: () => Promise<Peer[]>;
   getFollowers: () => Promise<Peer[]>;
-  follow: () => void;
-  unfollow: () => void;
+  follow: (id: string) => Promise<boolean>;
+  unfollow: (id: string) => Promise<boolean>;
   removeFollower: (id: string) => Promise<boolean>;
 }
 
@@ -57,13 +57,13 @@ export default function useFollow(): IFollowHook {
   }, []);
 
   // send friend request
-  const follow = useCallback(() => {
-    return;
+  const follow = useCallback((_id: string) => {
+    return Promise.resolve(true);
   }, []);
 
   // cancel friend request
-  const unfollow = useCallback(() => {
-    return;
+  const unfollow = useCallback((_id: string) => {
+    return Promise.resolve(false);
   }, []);
 
   // delete friend request
