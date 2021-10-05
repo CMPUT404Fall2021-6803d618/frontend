@@ -6,7 +6,7 @@ type State = {
   username: Username | null;
 };
 
-let initialState: State = {
+const initialState: State = {
   isAuthenticated: false,
   username: null,
 };

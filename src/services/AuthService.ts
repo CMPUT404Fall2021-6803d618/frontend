@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { OAuthType } from "shared/enums";
 import { User } from "shared/interfaces";
 import { axios } from "utils/axios";
@@ -5,17 +7,21 @@ import { ErrorFactory } from "utils/ErrorFactory";
 
 interface AuthService {
   login: (email: string, password: string) => Promise<User>;
-  register: (username: string, email: string, password: string) => Promise<void>;
+  register: (
+    username: string,
+    email: string,
+    password: string
+  ) => Promise<void>;
   logout: () => Promise<void>;
   oAuthLogin: (payload: any, type: OAuthType) => Promise<User>;
   renewToken: () => Promise<User>;
 }
 
 export const authService: AuthService = class {
-  public static async login(email: string, password: string): Promise<User> {
+  public static async login(username: string, password: string): Promise<User> {
     try {
-      const res = await axios.post("/auth/login", {
-        email,
+      const res = await axios.post("/token", {
+        username,
         password,
       });
       console.log("success");
@@ -26,12 +32,18 @@ export const authService: AuthService = class {
     }
   }
 
-  public static async register(username: string, email: string, password: string) {
+  public static async register(
+    username: string,
+    password: string,
+    displayName?: string,
+    githubUrl?: string
+  ): Promise<void> {
     try {
       const res = await axios.post("/auth/register", {
         username,
-        email,
         password,
+        display_name: displayName,
+        github_url: githubUrl,
       });
       this.updateAuthHeader(res.data.accessToken);
     } catch (err) {
@@ -39,7 +51,7 @@ export const authService: AuthService = class {
     }
   }
 
-  public static async logout() {
+  public static async logout(): Promise<void> {
     try {
       await axios.post("/auth/logout");
       this.updateAuthHeader("");
@@ -68,7 +80,7 @@ export const authService: AuthService = class {
     }
   }
 
-  private static updateAuthHeader(accessToken: string) {
+  private static updateAuthHeader(accessToken: string): void {
     axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
   }
 };

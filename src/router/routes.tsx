@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { ReactNode, LazyExoticComponent } from "react";
 import { views } from "./views";
 import { paths } from "./paths";
@@ -35,5 +36,13 @@ export const routes: IRoute[] = [
     private: false,
     fallback: <div> Loading... </div>,
     appBarTitle: "Home",
+  },
+  {
+    path: paths.FRIENDS,
+    component: views.FriendView,
+    exact: true,
+    private: false,
+    fallback: <div> Loading... </div>,
+    appBarTitle: "Friends",
   },
 ];

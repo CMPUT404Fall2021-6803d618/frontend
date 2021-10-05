@@ -11,6 +11,11 @@ export const HOME: DrawerLink = {
   name: "Home",
 };
 
-export const MAIN_LIST: DrawerLink[] = [HOME];
+export const FRIENDS: DrawerLink = {
+  path: paths.FRIENDS,
+  name: "Friends",
+};
+
+export const MAIN_LIST: DrawerLink[] = [HOME, FRIENDS];
 
 export const LINK_LIST: DrawerLink[][] = [MAIN_LIST];

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { Fragment, FunctionComponent, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { paths } from "router/paths";
