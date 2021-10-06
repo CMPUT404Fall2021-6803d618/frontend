@@ -5,6 +5,22 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import UserPic from "./donaldTrump.jpeg";
+import styled from "styled-components";
+
+// Styling Card/CardContent/CardActions
+const StyledCard = styled(Card)`
+  height: fit-content;
+  margin-bottom: 10px;
+`;
+
+const StyledCardContent = styled(CardContent)`
+  text-align: center;
+`;
+
+const StyledCardActions = styled(CardActions)`
+  display: flex;
+  justify-content: space-evenly;
+`;
 
 interface UserCardProps {
   id: string;
@@ -47,14 +63,9 @@ const UserCard: FC<UserCardProps> = (props) => {
 
   return (
     <div className="col-3" key={id}>
-      <Card
-        style={{
-          height: "fit-content",
-          marginBottom: "10px",
-        }}
-      >
+      <StyledCard>
         <CardMedia component="img" image={UserPic} alt="test" />
-        <CardContent style={{ textAlign: "center" }}>
+        <StyledCardContent>
           <div
             style={{
               fontSize: "1rem",
@@ -64,10 +75,8 @@ const UserCard: FC<UserCardProps> = (props) => {
             {userName}
           </div>
           <div>{displayName}</div>
-        </CardContent>
-        <CardActions
-          style={{ display: "flex", justifyContent: "space-evenly" }}
-        >
+        </StyledCardContent>
+        <StyledCardActions>
           <Button
             variant="contained"
             color="primary"
@@ -85,8 +94,8 @@ const UserCard: FC<UserCardProps> = (props) => {
               Remove
             </Button>
           )}
-        </CardActions>
-      </Card>
+        </StyledCardActions>
+      </StyledCard>
     </div>
   );
 };
