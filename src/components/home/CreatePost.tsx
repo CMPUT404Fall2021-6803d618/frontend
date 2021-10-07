@@ -1,6 +1,5 @@
+import React, { useState, FC, MouseEvent, useCallback } from "react";
 import styled from "styled-components";
-import React from "react";
-import { useState, FC, MouseEvent, useCallback } from "react";
 
 const TweetBox = styled.div`
   padding-bottom: 10px;

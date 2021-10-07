@@ -1,4 +1,4 @@
-import React, { useState, useCallback, ChangeEvent, useEffect, FC } from "react";
+import React, { useCallback, FC } from "react";
 import CreatePost, { PostRequest } from "./CreatePost";
 import Posts from "./Posts";
 
