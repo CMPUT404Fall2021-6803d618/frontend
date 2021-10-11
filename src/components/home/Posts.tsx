@@ -109,7 +109,6 @@ const PostAction = styled.div`
   flex-direction: row;
   justify-content: space-between;
 `;
-
 // Action div
 const Action = styled.div`
   width: 20px;
@@ -164,8 +163,8 @@ const Posts: FC<PostProps> = (props) => {
                   <div
                     style={{
                       display: "flex",
-                      minHeight: "20%",
-                      flexShrink: 0,
+                      height: "100%",
+                      alignItems: "center",
                     }}
                   >
                     <Circle></Circle>
