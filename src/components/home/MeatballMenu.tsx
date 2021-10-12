@@ -1,4 +1,10 @@
-import React, { FC, useState, MouseEvent, useCallback } from "react";
+import React, {
+  FC,
+  useState,
+  MouseEvent,
+  useCallback,
+  ChangeEvent,
+} from "react";
 import styled from "styled-components";
 import Popover from "@material-ui/core/Popover";
 import Paper from "@material-ui/core/Paper";
@@ -10,7 +16,6 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
-import { ChangeEvent } from "react-router/node_modules/@types/react";
 
 // Meatball menu
 const MenuWrapper = styled.div`
@@ -101,18 +106,17 @@ const MeatballMenu: FC<MenuProps> = (props) => {
 
   // Dialog handle open/close (?)
   const handleOpenEdit = useCallback((_e: MouseEvent<HTMLDivElement>) => {
-    console.log("Hello");
     setDialogOpen(true);
   }, []);
 
   const handleCloseEdit = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
-      console.log(dialogOpen);
+      // console.log(dialogOpen);
       e.stopPropagation();
       setDialogOpen(false);
       onChange(value);
     },
-    [onChange, value, dialogOpen]
+    [onChange, value]
   );
 
   const handleOnChange = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {

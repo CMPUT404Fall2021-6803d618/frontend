@@ -17,7 +17,7 @@ const PostTitle: FC<titleProps> = (props) => {
   const title = props.title;
   return (
     <TitleContainer>
-      <p style={{ wordBreak: "break-word" }}>{title}</p>
+      <p style={{ wordWrap: "break-word" }}>{title}</p>
     </TitleContainer>
   );
 };
