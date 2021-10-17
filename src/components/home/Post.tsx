@@ -1,7 +1,9 @@
-import React, { FC } from "react";
+import React, { FC, useState, useCallback } from "react";
 import styled from "styled-components";
 import profilePic from "./images.jpeg";
+import MeatballMenu from "./MeatballMenu";
 import PostImage from "./PostImage.jpeg";
+import PostTitle from "./PostTitle";
 
 // Post Wrapper
 const PostWrapper = styled.div`
@@ -49,48 +51,12 @@ const PostAuthor = styled.div`
   flex-wrap: nowrap;
 `;
 
-// Meatball menu
-const MenuWrapper = styled.div`
-  display: flex;
-  max-height: 100%;
-  align-items: center;
-  justify-content: end;
-`;
-
-const Menu = styled.div`
-  display: flex;
-  height: 30px;
-  width: 30px;
-  border-radius: 50%;
-  align-items: center;
-  justify-content: center;
-  &:hover {
-    background-color: rgba(29, 155, 240, 0.1);
-  }
-`;
-
-const Circle = styled.div`
-  width: 3px;
-  height: 3px;
-  margin: 0 1px 1px;
-  border-radius: 50%;
-  background-color: #6c757d;
-  display: block;
-`;
-
 // Post content
 const PostContent = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
   max-height: fit-content;
-`;
-
-// Post title
-const PostTitle = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: fit-content;
 `;
 
 // Post Media
@@ -109,7 +75,6 @@ const PostAction = styled.div`
   flex-direction: row;
   justify-content: space-between;
 `;
-
 // Action div
 const Action = styled.div`
   width: 20px;
@@ -118,12 +83,20 @@ const Action = styled.div`
 
 interface PostProps {
   isMedia: boolean;
+  title: string;
 }
 
 // const Posts:FunctionComponent<PostProps> = (props) => {
 
 const Posts: FC<PostProps> = (props) => {
-  const { isMedia } = props;
+  const isMedia = props.isMedia;
+  const [title, setTitle] = useState(props.title);
+
+  // Handle change title
+  const handleChange = useCallback((value: string) => {
+    setTitle(value);
+  }, []);
+
   return (
     <div className="container">
       <PostWrapper>
@@ -159,34 +132,11 @@ const Posts: FC<PostProps> = (props) => {
                 <div> 20m</div> {/* Time posted */}
               </div>
 
-              <MenuWrapper>
-                <Menu>
-                  <div
-                    style={{
-                      display: "flex",
-                      minHeight: "20%",
-                      flexShrink: 0,
-                    }}
-                  >
-                    <Circle></Circle>
-                    <Circle></Circle>
-                    <Circle></Circle>
-                  </div>
-                </Menu>
-              </MenuWrapper>
+              <MeatballMenu title={title} onChange={handleChange} />
             </PostAuthor>
-
             {/* Main content of the post */}
             <PostContent>
-              <PostTitle>
-                {/* {title} */}
-                <p>
-                  We need to stop this #intentionallycruelwave ICUs are full.
-                  More than 100 Albertans per week are dying of COVID. Kids are
-                  getting infected at an unprecedented rate. We neeed
-                  #FirebreakAB to stop the suffering Please sign the petition:
-                </p>
-              </PostTitle>
+              <PostTitle title={title} />
 
               {/* Media of the post */}
               {isMedia && (
