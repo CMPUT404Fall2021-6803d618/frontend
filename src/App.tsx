@@ -21,6 +21,7 @@ const App: FunctionComponent = () => {
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
     if (isAuthenticated) {
+      // eslint-disable-next-line prefer-const
       intervalId = setInterval(renewToken, 1000 * 60 * 14);
     }
 

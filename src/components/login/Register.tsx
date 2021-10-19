@@ -5,10 +5,6 @@ import React, {
   useState,
 } from "react";
 import { Redirect } from "react-router-dom";
-import {
-  GoogleLoginResponse,
-  GoogleLoginResponseOffline,
-} from "react-google-login";
 import { Link } from "react-router-dom";
 import {
   ActionButton,
@@ -17,28 +13,22 @@ import {
   Container,
   Divider,
   Input,
-  StyledGoogleLogin,
   SubTextContainer,
   Title,
 } from "./style";
 import { useAuth } from "hooks/AuthHook";
 import { ServiceError } from "utils/ServiceError";
 
-function isGoogleResponse(
-  response: GoogleLoginResponse | GoogleLoginResponseOffline
-): response is GoogleLoginResponse {
-  return (response as GoogleLoginResponse).accessToken !== undefined;
-}
-
 const Register: FunctionComponent = () => {
-  const { isAuthenticated, register, googleLogin } = useAuth();
+  const { isAuthenticated, register } = useAuth();
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
+  const [displayName, setDisplayName] = useState<string>("");
+  const [githubUrl, setGithubUrl] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [usernameError, setUsernameError] = useState<string>("");
-  const [emailError, setEmailError] = useState<string>("");
+  const [githubUrlError, setGithubUrlError] = useState<string>("");
   const [passwordError, setPasswordError] = useState<string>("");
   const [confirmPasswordError, setConfirmPasswordError] = useState<string>("");
 
@@ -50,10 +40,17 @@ const Register: FunctionComponent = () => {
     []
   );
 
-  const handleEmailChange = useCallback(
+  const handleGithubUrlChange = useCallback(
     (event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setEmailError("");
-      setEmail(event.currentTarget.value);
+      setGithubUrlError("");
+      setGithubUrl(event.currentTarget.value);
+    },
+    []
+  );
+
+  const handleDisplayNameChange = useCallback(
+    (event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setDisplayName(event.currentTarget.value);
     },
     []
   );
@@ -76,7 +73,6 @@ const Register: FunctionComponent = () => {
 
   const handleRegister = useCallback(async () => {
     const isUsernameEmpty = username.length === 0;
-    const isEmailEmpty = email.length === 0;
     const isPasswordEmpty = password.length === 0;
     const isConfirmPasswordEmpty = confirmPassword.length === 0;
 
@@ -84,10 +80,6 @@ const Register: FunctionComponent = () => {
 
     if (isUsernameEmpty) {
       setUsernameError("Username cannot be empty");
-    }
-
-    if (isEmailEmpty) {
-      setEmailError("Email cannot be empty");
     }
 
     if (isPasswordEmpty) {
@@ -102,46 +94,26 @@ const Register: FunctionComponent = () => {
       setConfirmPasswordError("Confirm password does not match password");
     }
 
-    if (
-      isEmailEmpty ||
-      isPasswordEmpty ||
-      isConfirmPasswordEmpty ||
-      !isPasswordMatched
-    ) {
+    if (isPasswordEmpty || isConfirmPasswordEmpty || !isPasswordMatched) {
       return;
     }
 
     try {
-      await register(username, email, password);
+      await register({ username, password, displayName, githubUrl });
       setIsSuccess(true);
     } catch (err) {
       if ((err as ServiceError).statusCode === 409) {
-        setEmailError("Email already registered");
+        setGithubUrlError("Username already registered");
       }
     }
-  }, [username, email, password, confirmPassword, register]);
-
-  const handleGoogleResponse = useCallback(
-    async (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
-      if (isGoogleResponse(response)) {
-        try {
-          await googleLogin(response.accessToken);
-        } catch (err) {
-          console.log(err);
-        }
-      } else {
-        console.log("error google login");
-      }
-    },
-    [googleLogin]
-  );
+  }, [username, password, confirmPassword, register, displayName, githubUrl]);
 
   if (isAuthenticated) {
     return <Redirect to="/" />;
   }
 
   if (isSuccess) {
-    return <Redirect to="/login" />;
+    return <Redirect to="/home" />;
   }
 
   return (
@@ -150,23 +122,29 @@ const Register: FunctionComponent = () => {
         <Title>Register</Title>
         <Input
           id="filled-basic-username"
-          label="Username"
+          label="Username *"
           variant="filled"
           onChange={handleUsernameChange}
           error={usernameError.length > 0}
           helperText={usernameError}
         />
         <Input
-          id="filled-basic-email"
-          label="Email"
+          id="filled-basic-display-name"
+          label="Display Name"
           variant="filled"
-          onChange={handleEmailChange}
-          error={emailError.length > 0}
-          helperText={emailError}
+          onChange={handleDisplayNameChange}
+        />
+        <Input
+          id="filled-basic-github-url"
+          label="Github Url"
+          variant="filled"
+          onChange={handleGithubUrlChange}
+          error={githubUrlError.length > 0}
+          helperText={githubUrlError}
         />
         <Input
           id="filled-basic-password"
-          label="Password"
+          label="Password *"
           variant="filled"
           type="password"
           onChange={handlePasswordChange}
@@ -175,7 +153,7 @@ const Register: FunctionComponent = () => {
         />
         <Input
           id="filled-basic-confirm-password"
-          label="Confirm Password"
+          label="Confirm Password *"
           variant="filled"
           type="password"
           onChange={handleConfirmPasswordChange}
@@ -189,14 +167,6 @@ const Register: FunctionComponent = () => {
           </span>
           <Divider />
         </SubTextContainer>
-        {process.env.REACT_APP_GOOGLE_CLIENT_ID && (
-          <StyledGoogleLogin
-            clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
-            buttonText="Google Login"
-            onSuccess={handleGoogleResponse}
-            cookiePolicy={"single_host_origin"}
-          />
-        )}
         <BackToApp to="/" component={ActionButton}>
           Back to app
         </BackToApp>

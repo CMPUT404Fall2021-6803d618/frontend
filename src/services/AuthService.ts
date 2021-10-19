@@ -1,51 +1,87 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { OAuthType } from "shared/enums";
 import { User } from "shared/interfaces";
 import { axios } from "utils/axios";
 import { ErrorFactory } from "utils/ErrorFactory";
+import Cookies from "universal-cookie";
+import { AxiosResponse } from "axios";
+
+const cookies = new Cookies();
+
+export interface RegisterPayload {
+  username: string;
+  password: string;
+  displayName?: string;
+  githubUrl?: string;
+}
+
+export interface UserData {
+  username: string;
+  access_token: string;
+  refresh_token: string;
+  author: {
+    id: string;
+    host: string;
+    displayName: string;
+    url: string;
+    github: string;
+  };
+}
 
 interface AuthService {
   login: (email: string, password: string) => Promise<User>;
-  register: (
-    username: string,
-    email: string,
-    password: string
-  ) => Promise<void>;
+  register: (payload: RegisterPayload) => Promise<User>;
   logout: () => Promise<void>;
-  oAuthLogin: (payload: any, type: OAuthType) => Promise<User>;
-  renewToken: () => Promise<User>;
+  renewToken: () => Promise<User | null>;
 }
 
 export const authService: AuthService = class {
+  private static async processUserData(
+    response: AxiosResponse<UserData>
+  ): Promise<User> {
+    const { data } = response;
+    const {
+      access_token: accessToken,
+      refresh_token: refreshToken,
+      author,
+      username,
+    } = data;
+
+    this.updateAuthHeader(accessToken);
+    cookies.set("refreshToken", refreshToken);
+    return {
+      username,
+      ...author,
+    };
+  }
+
   public static async login(username: string, password: string): Promise<User> {
     try {
-      const res = await axios.post("/token", {
+      const res = await axios.post("/login/", {
         username,
         password,
       });
-      console.log("success");
-      this.updateAuthHeader(res.data.accessToken);
-      return res.data.user;
+      return this.processUserData(res);
     } catch (err) {
       throw ErrorFactory.get(err);
     }
   }
 
-  public static async register(
-    username: string,
-    password: string,
-    displayName?: string,
-    githubUrl?: string
-  ): Promise<void> {
+  public static async register(payload: RegisterPayload): Promise<User> {
     try {
-      const res = await axios.post("/auth/register", {
+      const {
         username,
         password,
-        display_name: displayName,
-        github_url: githubUrl,
+        displayName: display_name,
+        githubUrl: github_url,
+      } = payload;
+      const res = await axios.post("/register/", {
+        username,
+        password,
+        display_name,
+        github_url,
       });
-      this.updateAuthHeader(res.data.accessToken);
+      return this.processUserData(res);
     } catch (err) {
       throw ErrorFactory.get(err);
     }
@@ -53,28 +89,25 @@ export const authService: AuthService = class {
 
   public static async logout(): Promise<void> {
     try {
-      await axios.post("/auth/logout");
       this.updateAuthHeader("");
+      cookies.remove("refreshToken");
     } catch (err) {
       throw ErrorFactory.get(err);
     }
   }
 
-  public static async oAuthLogin(payLoad: any, type: OAuthType): Promise<User> {
+  public static async renewToken(): Promise<User | null> {
     try {
-      const res = await axios.post(`/auth/${type}`, payLoad);
-      this.updateAuthHeader(res.data.accessToken);
-      return res.data.user;
-    } catch (err) {
-      throw ErrorFactory.get(err);
-    }
-  }
-
-  public static async renewToken(): Promise<User> {
-    try {
-      const res = await axios.post("/auth/renew-token");
-      this.updateAuthHeader(res.data.accessToken);
-      return res.data.user;
+      const token = cookies.get("refreshToken");
+      if (token) {
+        const res = await axios.post("/token-refresh/", {
+          refresh: cookies.get("refreshToken"),
+        });
+        return this.processUserData(res);
+      } else {
+        console.log("No refresh token in cookie");
+        return null;
+      }
     } catch (err) {
       throw ErrorFactory.get(err);
     }
