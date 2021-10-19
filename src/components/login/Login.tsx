@@ -6,14 +6,9 @@ import React, {
 } from "react";
 import { Link, Redirect } from "react-router-dom";
 import {
-  GoogleLoginResponse,
-  GoogleLoginResponseOffline,
-} from "react-google-login";
-import {
   Container,
   Title,
   Background,
-  StyledGoogleLogin,
   Input,
   ActionButton,
   SubTextContainer,
@@ -22,23 +17,17 @@ import {
 } from "./style";
 import { useAuth } from "hooks/AuthHook";
 
-function isGoogleResponse(
-  response: GoogleLoginResponse | GoogleLoginResponseOffline
-): response is GoogleLoginResponse {
-  return (response as GoogleLoginResponse).accessToken !== undefined;
-}
-
 const Login: FunctionComponent = () => {
-  const { isAuthenticated, login, googleLogin } = useAuth();
-  const [email, setEmail] = useState<string>("");
+  const { isAuthenticated, login } = useAuth();
+  const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [isEmailError, setIsEmailError] = useState<boolean>(false);
+  const [isUsernameError, setUsernameError] = useState<boolean>(false);
   const [isPasswordError, setIsPasswordError] = useState<boolean>(false);
 
-  const handleEmailChange = useCallback(
+  const handleUsernameChange = useCallback(
     (event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setIsEmailError(false);
-      setEmail(event.currentTarget.value);
+      setUsernameError(false);
+      setUsername(event.currentTarget.value);
     },
     []
   );
@@ -52,45 +41,30 @@ const Login: FunctionComponent = () => {
   );
 
   const handleLogin = useCallback(async () => {
-    const isEmailEmpty = email.length === 0;
+    const isUsernameEmpty = username.length === 0;
     const isPasswordEmpty = password.length === 0;
-    if (isEmailEmpty) {
-      setIsEmailError(true);
+    if (isUsernameEmpty) {
+      setUsernameError(true);
     }
 
     if (isPasswordEmpty) {
       setIsPasswordError(true);
     }
 
-    if (isEmailEmpty || isPasswordEmpty) {
+    if (isUsernameEmpty || isPasswordEmpty) {
       return;
     }
 
     try {
-      await login(email, password);
+      await login(username, password);
     } catch (err) {
-      setIsEmailError(true);
+      setUsernameError(true);
       setIsPasswordError(true);
     }
-  }, [email, login, password]);
-
-  const handleGoogleResponse = useCallback(
-    async (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
-      if (isGoogleResponse(response)) {
-        try {
-          await googleLogin(response.accessToken);
-        } catch (err) {
-          console.log(err);
-        }
-      } else {
-        console.log("error google login");
-      }
-    },
-    [googleLogin]
-  );
+  }, [username, login, password]);
 
   if (isAuthenticated) {
-    return <Redirect to="/pokemons" push />;
+    return <Redirect to="/home" push />;
   }
 
   return (
@@ -98,12 +72,12 @@ const Login: FunctionComponent = () => {
       <Container className="container">
         <Title>Login</Title>
         <Input
-          id="filled-basic-email"
-          label="Email"
+          id="filled-basic-usernam"
+          label="Username"
           variant="filled"
-          onChange={handleEmailChange}
-          error={isEmailError}
-          helperText={isEmailError && "Email and password do not match"}
+          onChange={handleUsernameChange}
+          error={isUsernameError}
+          helperText={isUsernameError && "Username and password do not match"}
         />
         <Input
           id="filled-basic-password"
@@ -112,7 +86,7 @@ const Login: FunctionComponent = () => {
           type="password"
           onChange={handlePasswordChange}
           error={isPasswordError}
-          helperText={isPasswordError && "Email and password do not match"}
+          helperText={isPasswordError && "Username and password do not match"}
         />
         <ActionButton onClick={handleLogin}>Login</ActionButton>
         <SubTextContainer>
@@ -122,14 +96,6 @@ const Login: FunctionComponent = () => {
           </span>
           <Divider />
         </SubTextContainer>
-        {process.env.REACT_APP_GOOGLE_CLIENT_ID && (
-          <StyledGoogleLogin
-            clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
-            buttonText="Google Login"
-            onSuccess={handleGoogleResponse}
-            cookiePolicy={"single_host_origin"}
-          />
-        )}
         <BackToApp to="/" component={ActionButton}>
           Back to app
         </BackToApp>

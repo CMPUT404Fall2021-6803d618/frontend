@@ -119,9 +119,12 @@ const MeatballMenu: FC<MenuProps> = (props) => {
     [onChange, value]
   );
 
-  const handleOnChange = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
-    setValue(e.currentTarget.value);
-  }, []);
+  const handleValueChange = useCallback(
+    (e: ChangeEvent<HTMLTextAreaElement>) => {
+      setValue(e.currentTarget.value);
+    },
+    []
+  );
 
   return (
     <MenuWrapper>
@@ -162,7 +165,7 @@ const MeatballMenu: FC<MenuProps> = (props) => {
               <Dialog onClose={handleCloseEdit} open={dialogOpen}>
                 <DialogTitle>Edit Your Post</DialogTitle>
                 <StyledDialogContent dividers>
-                  <Input value={value} onChange={handleOnChange} />
+                  <Input value={value} onChange={handleValueChange} />
                 </StyledDialogContent>
                 <DialogActions>
                   <Button onClick={handleCloseEdit}>Save Changes</Button>

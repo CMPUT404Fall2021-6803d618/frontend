@@ -1,14 +1,14 @@
-import { Username } from "shared/interfaces";
+import { User } from "shared/interfaces";
 import { createConnectedStore, Effects, Store } from "undux";
 
 type State = {
   isAuthenticated: boolean;
-  username: Username | null;
+  user: User | null;
 };
 
 const initialState: State = {
   isAuthenticated: false,
-  username: null,
+  user: null,
 };
 
 // Create a store with an initial value.

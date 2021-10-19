@@ -6,7 +6,7 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import styled from "styled-components";
 import ButtonBase from "@material-ui/core/ButtonBase";
 import { useAuth } from "hooks/AuthHook";
-import { useAccount } from "hooks/AccountHook";
+import { useAuthStore } from "hooks/AuthStoreHook";
 
 const Header = styled.div`
   display: flex;
@@ -67,7 +67,7 @@ const SecondaryButton = styled(({ navigate, ...props }) => (
 
 const UserControl: FunctionComponent = () => {
   const { isAuthenticated, logout } = useAuth();
-  const { username } = useAccount();
+  const { user } = useAuthStore();
   const LoginLogout = useMemo(
     () =>
       isAuthenticated ? (
@@ -92,7 +92,7 @@ const UserControl: FunctionComponent = () => {
     <Header>
       <AccountCircleIcon />
       <Control>
-        <p>Welcome, {username?.name ?? ""}</p>
+        <p>Welcome, {user?.displayName ?? ""}</p>
         {LoginLogout}
       </Control>
     </Header>

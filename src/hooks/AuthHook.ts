@@ -1,70 +1,61 @@
 import { useCallback } from "react";
-import { authService } from "services/AuthService";
-import { OAuthType } from "shared/enums";
+import { authService, RegisterPayload } from "services/AuthService";
 import { useAuthStore } from "./AuthStoreHook";
 
 interface IAuthHook {
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (
-    username: string,
-    email: string,
-    password: string
-  ) => Promise<void>;
+  register: (payload: RegisterPayload) => Promise<void>;
   logout: () => Promise<void>;
   renewToken: () => Promise<void>;
-  googleLogin: (googleAccessToken: string) => Promise<void>;
 }
 
 export const useAuth = (): IAuthHook => {
-  const { isAuthenticated, setIsAuthenticated, setUsername } = useAuthStore();
+  const { isAuthenticated, setIsAuthenticated, setUser } = useAuthStore();
 
   const login = useCallback(
-    async (email: string, password: string) => {
-      const { username } = await authService.login(email, password);
+    async (username: string, password: string) => {
+      const user = await authService.login(username, password);
       setIsAuthenticated(true);
-      setUsername(username);
+      setUser(user);
     },
-    [setIsAuthenticated, setUsername]
+    [setIsAuthenticated, setUser]
   );
 
   const register = useCallback(
-    async (username: string, email: string, password: string) => {
-      await authService.register(username, email, password);
+    async (payload: RegisterPayload) => {
+      const { username, password, displayName, githubUrl } = payload;
+      const user = await authService.register({
+        username,
+        password,
+        displayName: displayName?.length ? displayName : undefined,
+        githubUrl: githubUrl?.length ? githubUrl : undefined,
+      });
+      setIsAuthenticated(true);
+      setUser(user);
     },
-    []
+    [setIsAuthenticated, setUser]
   );
 
   const logout = useCallback(async () => {
     await authService.logout();
     setIsAuthenticated(false);
-    setUsername(null);
-  }, [setIsAuthenticated, setUsername]);
-
-  const googleLogin = useCallback(
-    async (googleAccessToken: string) => {
-      const { username } = await authService.oAuthLogin(
-        { googleAccessToken },
-        OAuthType.GOOGLE
-      );
-      setIsAuthenticated(true);
-      setUsername(username);
-    },
-    [setIsAuthenticated, setUsername]
-  );
+    setUser(null);
+  }, [setIsAuthenticated, setUser]);
 
   const renewToken = useCallback(async () => {
-    const { username } = await authService.renewToken();
-    setIsAuthenticated(true);
-    setUsername(username);
-  }, [setIsAuthenticated, setUsername]);
+    const user = await authService.renewToken();
+    if (user) {
+      setIsAuthenticated(true);
+      setUser(user);
+    }
+  }, [setIsAuthenticated, setUser]);
 
   return {
     isAuthenticated,
     login,
     register,
     logout,
-    googleLogin,
     renewToken,
   };
 };
