@@ -1,21 +1,7 @@
-import React, {
-  FormEvent,
-  FunctionComponent,
-  useCallback,
-  useState,
-} from "react";
+import React, { FormEvent, FunctionComponent, useCallback, useState } from "react";
 import { Redirect } from "react-router-dom";
 import { Link } from "react-router-dom";
-import {
-  ActionButton,
-  Background,
-  BackToApp,
-  Container,
-  Divider,
-  Input,
-  SubTextContainer,
-  Title,
-} from "./style";
+import { ActionButton, Background, BackToApp, Container, Divider, Input, SubTextContainer, Title } from "./style";
 import { useAuth } from "hooks/AuthHook";
 import { ServiceError } from "utils/ServiceError";
 
@@ -32,44 +18,29 @@ const Register: FunctionComponent = () => {
   const [passwordError, setPasswordError] = useState<string>("");
   const [confirmPasswordError, setConfirmPasswordError] = useState<string>("");
 
-  const handleUsernameChange = useCallback(
-    (event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setUsernameError("");
-      setUsername(event.currentTarget.value);
-    },
-    []
-  );
+  const handleUsernameChange = useCallback((event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setUsernameError("");
+    setUsername(event.currentTarget.value);
+  }, []);
 
-  const handleGithubUrlChange = useCallback(
-    (event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setGithubUrlError("");
-      setGithubUrl(event.currentTarget.value);
-    },
-    []
-  );
+  const handleGithubUrlChange = useCallback((event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setGithubUrlError("");
+    setGithubUrl(event.currentTarget.value);
+  }, []);
 
-  const handleDisplayNameChange = useCallback(
-    (event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setDisplayName(event.currentTarget.value);
-    },
-    []
-  );
+  const handleDisplayNameChange = useCallback((event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setDisplayName(event.currentTarget.value);
+  }, []);
 
-  const handlePasswordChange = useCallback(
-    (event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setPasswordError("");
-      setPassword(event.currentTarget.value);
-    },
-    []
-  );
+  const handlePasswordChange = useCallback((event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setPasswordError("");
+    setPassword(event.currentTarget.value);
+  }, []);
 
-  const handleConfirmPasswordChange = useCallback(
-    (event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setConfirmPasswordError("");
-      setConfirmPassword(event.currentTarget.value);
-    },
-    []
-  );
+  const handleConfirmPasswordChange = useCallback((event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setConfirmPasswordError("");
+    setConfirmPassword(event.currentTarget.value);
+  }, []);
 
   const handleRegister = useCallback(async () => {
     const isUsernameEmpty = username.length === 0;

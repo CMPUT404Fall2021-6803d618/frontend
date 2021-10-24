@@ -41,7 +41,7 @@ export const routes: IRoute[] = [
     path: paths.FRIENDS,
     component: views.FriendView,
     exact: true,
-    private: false,
+    private: true,
     fallback: <div> Loading... </div>,
     appBarTitle: "Friends",
   },

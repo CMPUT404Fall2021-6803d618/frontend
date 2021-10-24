@@ -16,16 +16,12 @@ const RouteWithSubRoutes: FC<IRoute> = (props) => {
             <Redirect to={props.redirect} />
           ) : props.private ? (
             isAuthenticated ? (
-              props.component && (
-                <props.component {...props} routes={props.routes} />
-              )
+              props.component && <props.component {...props} routes={props.routes} />
             ) : (
               <Redirect to="/login" />
             )
           ) : (
-            props.component && (
-              <props.component {...props} routes={props.routes} />
-            )
+            props.component && <props.component {...props} routes={props.routes} />
           )
         }
       />

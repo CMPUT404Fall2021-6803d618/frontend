@@ -1,20 +1,6 @@
-import React, {
-  FormEvent,
-  FunctionComponent,
-  useCallback,
-  useState,
-} from "react";
+import React, { FormEvent, FunctionComponent, useCallback, useState } from "react";
 import { Link, Redirect } from "react-router-dom";
-import {
-  Container,
-  Title,
-  Background,
-  Input,
-  ActionButton,
-  SubTextContainer,
-  Divider,
-  BackToApp,
-} from "./style";
+import { Container, Title, Background, Input, ActionButton, SubTextContainer, Divider, BackToApp } from "./style";
 import { useAuth } from "hooks/AuthHook";
 
 const Login: FunctionComponent = () => {
@@ -24,21 +10,15 @@ const Login: FunctionComponent = () => {
   const [isUsernameError, setUsernameError] = useState<boolean>(false);
   const [isPasswordError, setIsPasswordError] = useState<boolean>(false);
 
-  const handleUsernameChange = useCallback(
-    (event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setUsernameError(false);
-      setUsername(event.currentTarget.value);
-    },
-    []
-  );
+  const handleUsernameChange = useCallback((event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setUsernameError(false);
+    setUsername(event.currentTarget.value);
+  }, []);
 
-  const handlePasswordChange = useCallback(
-    (event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setIsPasswordError(false);
-      setPassword(event.currentTarget.value);
-    },
-    []
-  );
+  const handlePasswordChange = useCallback((event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setIsPasswordError(false);
+    setPassword(event.currentTarget.value);
+  }, []);
 
   const handleLogin = useCallback(async () => {
     const isUsernameEmpty = username.length === 0;
@@ -91,8 +71,7 @@ const Login: FunctionComponent = () => {
         <ActionButton onClick={handleLogin}>Login</ActionButton>
         <SubTextContainer>
           <span>
-            Don&apos;t have an account?{" "}
-            <Link to="/register">Register here</Link>
+            Don&apos;t have an account? <Link to="/register">Register here</Link>
           </span>
           <Divider />
         </SubTextContainer>

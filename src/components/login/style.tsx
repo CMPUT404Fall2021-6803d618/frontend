@@ -79,9 +79,7 @@ export const Input = styled(TextField)`
   }
 `;
 
-export const ActionButton = styled(({ navigate, ...props }) => (
-  <ButtonBase {...props} />
-))`
+export const ActionButton = styled(({ navigate, ...props }) => <ButtonBase {...props} />)`
   background-color: rgba(255, 255, 255, 0.2) !important;
   color: white !important;
   padding: 0.75rem !important;
