@@ -1,8 +1,9 @@
-import React, { FC, useState, useCallback } from "react";
+import React, { FC, useCallback } from "react";
+import { Post } from "shared/interfaces";
 import styled from "styled-components";
+import { formatDate } from "utils/dateFormat";
 import profilePic from "./images.jpeg";
 import MeatballMenu from "./MeatballMenu";
-import PostImage from "./PostImage.jpeg";
 import PostTitle from "./PostTitle";
 
 // Post Wrapper
@@ -61,24 +62,24 @@ const PostContent = styled.div`
 `;
 
 // Post Media
-const PostMedia = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 800px;
-  width: 100%;
-  background-image: url(${PostImage});
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center center;
-  border-radius: 30px;
-  margin-bottom: 30px;
-  @media (max-width: 768px) {
-    height: 320px;
-  }
-  @media (max-width: 425px) {
-    height: 220px;
-  }
-`;
+// const PostMedia = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   height: 800px;
+//   width: 100%;
+//   background-image: url(${PostImage});
+//   background-size: cover;
+//   background-repeat: no-repeat;
+//   background-position: center center;
+//   border-radius: 30px;
+//   margin-bottom: 30px;
+//   @media (max-width: 768px) {
+//     height: 320px;
+//   }
+//   @media (max-width: 425px) {
+//     height: 220px;
+//   }
+// `;
 
 // Post Action
 const PostAction = styled.div`
@@ -94,20 +95,22 @@ const Action = styled.div`
 `;
 
 interface PostProps {
-  isMedia: boolean;
-  title: string;
+  post: Post;
+  onUpdate: (post: Post, newContent: string) => Promise<void>;
 }
 
 // const Posts:FunctionComponent<PostProps> = (props) => {
 
 const Posts: FC<PostProps> = (props) => {
-  const isMedia = props.isMedia;
-  const [title, setTitle] = useState(props.title);
-
+  const { post, onUpdate } = props;
+  const { content, author, published } = post;
   // Handle change title
-  const handleChange = useCallback((value: string) => {
-    setTitle(value);
-  }, []);
+  const handleEditSave = useCallback(
+    async (newValue: string) => {
+      await onUpdate(post, newValue);
+    },
+    [onUpdate, post]
+  );
 
   return (
     <PostWrapper>
@@ -136,20 +139,16 @@ const Posts: FC<PostProps> = (props) => {
                 alignItems: "center",
               }}
             >
-              <p style={{ marginBottom: "0" }}>Trung Tran @TrungTran</p>
-              <span style={{ margin: "0 5px" }}>.</span>
-              <p style={{ marginBottom: "0" }}>20m</p>
+              <p style={{ marginBottom: "0" }}>{author.displayName}</p>
+              <span style={{ margin: "0 5px", color: "gray" }}>🞄</span>
+              <p style={{ marginBottom: "0" }}>{formatDate(published)}</p>
             </div>
 
-            <MeatballMenu title={title} onChange={handleChange} />
+            <MeatballMenu content={content} onSave={handleEditSave} />
           </PostAuthor>
           {/* Main content of the post */}
           <PostContent>
-            <PostTitle title={title} />
-
-            {/* Media of the post */}
-            {isMedia && <PostMedia></PostMedia>}
-
+            <PostTitle title={content} />
             {/* Available Actions */}
             <PostAction>
               <Action>Reply</Action>

@@ -19,6 +19,7 @@ export interface Post {
   origin: string;
   description: string;
   contentType: ContentType;
+  content: string;
   author: Author;
   categories: string[];
   count: number;

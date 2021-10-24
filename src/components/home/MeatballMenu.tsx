@@ -1,4 +1,4 @@
-import React, { FC, useState, MouseEvent, useCallback, ChangeEvent } from "react";
+import React, { FC, useState, MouseEvent, useCallback, ChangeEvent, useEffect } from "react";
 import styled from "styled-components";
 import Popover from "@material-ui/core/Popover";
 import Paper from "@material-ui/core/Paper";
@@ -78,16 +78,20 @@ const Input = styled.textarea`
 `;
 
 interface MenuProps {
-  title: string;
-  onChange: (value: string) => void;
+  content: string;
+  onSave: (value: string) => Promise<void>;
 }
 
 const MeatballMenu: FC<MenuProps> = (props) => {
   const [value, setValue] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLDivElement>(null);
-  const { onChange } = props;
+  const { onSave, content } = props;
   const menuOpen = Boolean(anchorEl);
+
+  useEffect(() => {
+    setValue(content);
+  }, [content]);
 
   // menu handle open/close
   const handleMenuClick = useCallback((e: MouseEvent<HTMLDivElement>) => {
@@ -108,9 +112,9 @@ const MeatballMenu: FC<MenuProps> = (props) => {
       // console.log(dialogOpen);
       e.stopPropagation();
       setDialogOpen(false);
-      onChange(value);
+      onSave(value);
     },
-    [onChange, value]
+    [onSave, value]
   );
 
   const handleValueChange = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {

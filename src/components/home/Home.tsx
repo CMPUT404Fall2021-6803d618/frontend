@@ -1,26 +1,15 @@
-import React, { useCallback, FC, useState } from "react";
-import CreatePost, { PostRequest } from "./CreatePost";
+import usePost from "hooks/PostHook";
+import React, { FC } from "react";
+import CreatePost from "./CreatePost";
 import Post from "./Post";
 
 const Home: FC = () => {
-  const [title, setTitle] = useState("");
-  const [isPost, setIsPost] = useState(false);
-
-  // const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-  //   setTitle(e.target.value);
-  // }
-  const addPost = useCallback((postRequest: PostRequest) => {
-    console.log(postRequest.text);
-  }, []);
-
-  // const title =
-  //   "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore";
+  const { posts, handleUpdatePost, handleCreatePost } = usePost();
 
   return (
     <div className="container">
-      <CreatePost onAdd={addPost} />
-      <Post isMedia={true} title={title} />
-      <Post isMedia={false} title={title} />
+      <CreatePost onCreate={handleCreatePost} />
+      {posts ? posts.map((post) => <Post post={post} key={post.id} onUpdate={handleUpdatePost} />) : <div>Loading</div>}
     </div>
   );
 };

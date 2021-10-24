@@ -1,4 +1,6 @@
-import React, { useState, FC, MouseEvent, useCallback } from "react";
+import React, { useState, FC, MouseEvent, useCallback, ChangeEvent } from "react";
+import { PostPayload } from "services/PostService";
+import { ContentType, Visibility } from "shared/enums";
 import styled from "styled-components";
 
 const TweetBox = styled.div`
@@ -43,33 +45,40 @@ const TweetButton = styled.button`
   margin-left: auto;
 `;
 
-export interface PostRequest {
-  text: string;
-}
-
 interface CreatePostProp {
-  onAdd: (postRequest: PostRequest) => void;
+  onCreate: (payload: PostPayload) => void;
 }
 
-const CreatePost: FC<CreatePostProp> = ({ onAdd }) => {
+const CreatePost: FC<CreatePostProp> = ({ onCreate }) => {
   // text message
-  const [text, setText] = useState("");
+  const [content, setContent] = useState("");
 
-  const onSubmit = useCallback(
+  const handleSubmit = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
 
-      if (!text) {
+      if (!content) {
         alert("Please add a message");
         return;
       }
 
-      onAdd({ text });
+      onCreate({
+        title: "Title",
+        description: "description",
+        contentType: ContentType.PLAIN_TEXT,
+        content,
+        visibility: Visibility.PUBLIC,
+        unlisted: false,
+      });
       // clear text
-      setText("");
+      setContent("");
     },
-    [onAdd, text]
+    [onCreate, content]
   );
+
+  const handleContentChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setContent(e.target.value);
+  }, []);
 
   return (
     <TweetBox>
@@ -79,14 +88,14 @@ const CreatePost: FC<CreatePostProp> = ({ onAdd }) => {
           <TweetBoxImg src="https://i.pinimg.com/originals/a6/58/32/a65832155622ac173337874f02b218fb.png" alt="" />
 
           {/* input */}
-          <Input type="text" placeholder="What's happening" value={text} onChange={(e) => setText(e.target.value)} />
+          <Input type="text" placeholder="What's happening" value={content} onChange={handleContentChange} />
         </TweetBoxInput>
 
         {/* TODO: visibility */}
         <div></div>
 
         {/* button */}
-        <TweetButton onClick={onSubmit}>Tweet</TweetButton>
+        <TweetButton onClick={handleSubmit}>Tweet</TweetButton>
       </TweetBoxForm>
     </TweetBox>
   );
