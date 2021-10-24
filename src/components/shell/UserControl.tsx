@@ -88,7 +88,7 @@ const UserControl: FunctionComponent = () => {
     <Header>
       <AccountCircleIcon />
       <Control>
-        <p>Welcome, {user?.displayName ?? ""}</p>
+        {user ? <p>{user.displayName}</p> : <p>Social Distance </p>}
         {LoginLogout}
       </Control>
     </Header>

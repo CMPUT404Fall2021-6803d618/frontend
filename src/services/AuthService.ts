@@ -47,7 +47,10 @@ export class AuthService implements IAuthService {
     const { access_token: accessToken, refresh_token: refreshToken, author, username } = data;
 
     this.updateAuthHeader(accessToken);
-    cookies.set("refreshToken", refreshToken);
+    cookies.remove("refreshToken");
+    cookies.set("refreshToken", refreshToken, {
+      expires: new Date("9999-12-31T12:00:00"),
+    });
     return {
       username,
       ...author,
@@ -94,6 +97,7 @@ export class AuthService implements IAuthService {
     try {
       const token = cookies.get("refreshToken");
       if (token) {
+        delete axios.defaults.headers.common["Authorization"];
         const res = await axios.post(`${this.baseUrl}/token-refresh/`, {
           refresh: cookies.get("refreshToken"),
         });
@@ -103,7 +107,8 @@ export class AuthService implements IAuthService {
         return null;
       }
     } catch (err) {
-      throw ErrorFactory.get(err);
+      console.log(err);
+      return null;
     }
   }
 
