@@ -8,7 +8,6 @@ const config: AxiosRequestConfig = {
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",
-    Origin: "https://localhost:3000",
   },
 };
 
