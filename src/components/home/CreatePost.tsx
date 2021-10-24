@@ -76,18 +76,10 @@ const CreatePost: FC<CreatePostProp> = ({ onAdd }) => {
       <TweetBoxForm>
         <TweetBoxInput>
           {/* Avatar */}
-          <TweetBoxImg
-            src="https://i.pinimg.com/originals/a6/58/32/a65832155622ac173337874f02b218fb.png"
-            alt=""
-          />
+          <TweetBoxImg src="https://i.pinimg.com/originals/a6/58/32/a65832155622ac173337874f02b218fb.png" alt="" />
 
           {/* input */}
-          <Input
-            type="text"
-            placeholder="What's happening"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-          />
+          <Input type="text" placeholder="What's happening" value={text} onChange={(e) => setText(e.target.value)} />
         </TweetBoxInput>
 
         {/* TODO: visibility */}

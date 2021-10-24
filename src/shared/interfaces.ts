@@ -1,8 +1,11 @@
-export interface User {
+export interface Author {
   id: string;
-  username: string;
   host: string;
   displayName: string;
   url: string;
-  github: string;
+  github?: string;
+}
+
+export interface User extends Author {
+  username: string;
 }

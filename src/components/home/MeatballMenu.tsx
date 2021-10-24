@@ -1,10 +1,4 @@
-import React, {
-  FC,
-  useState,
-  MouseEvent,
-  useCallback,
-  ChangeEvent,
-} from "react";
+import React, { FC, useState, MouseEvent, useCallback, ChangeEvent } from "react";
 import styled from "styled-components";
 import Popover from "@material-ui/core/Popover";
 import Paper from "@material-ui/core/Paper";
@@ -119,12 +113,9 @@ const MeatballMenu: FC<MenuProps> = (props) => {
     [onChange, value]
   );
 
-  const handleValueChange = useCallback(
-    (e: ChangeEvent<HTMLTextAreaElement>) => {
-      setValue(e.currentTarget.value);
-    },
-    []
-  );
+  const handleValueChange = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
+    setValue(e.currentTarget.value);
+  }, []);
 
   return (
     <MenuWrapper>

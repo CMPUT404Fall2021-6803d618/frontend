@@ -1,5 +1,5 @@
-import { useCallback } from "react";
-import { authService, RegisterPayload } from "services/AuthService";
+import { useCallback, useMemo } from "react";
+import { AuthService, RegisterPayload } from "services/AuthService";
 import { useAuthStore } from "./AuthStoreHook";
 
 interface IAuthHook {
@@ -11,6 +11,7 @@ interface IAuthHook {
 }
 
 export const useAuth = (): IAuthHook => {
+  const authService = useMemo(() => new AuthService(), []);
   const { isAuthenticated, setIsAuthenticated, setUser } = useAuthStore();
 
   const login = useCallback(
@@ -19,7 +20,7 @@ export const useAuth = (): IAuthHook => {
       setIsAuthenticated(true);
       setUser(user);
     },
-    [setIsAuthenticated, setUser]
+    [authService, setIsAuthenticated, setUser]
   );
 
   const register = useCallback(
@@ -34,14 +35,14 @@ export const useAuth = (): IAuthHook => {
       setIsAuthenticated(true);
       setUser(user);
     },
-    [setIsAuthenticated, setUser]
+    [authService, setIsAuthenticated, setUser]
   );
 
   const logout = useCallback(async () => {
     await authService.logout();
     setIsAuthenticated(false);
     setUser(null);
-  }, [setIsAuthenticated, setUser]);
+  }, [authService, setIsAuthenticated, setUser]);
 
   const renewToken = useCallback(async () => {
     const user = await authService.renewToken();
@@ -49,7 +50,7 @@ export const useAuth = (): IAuthHook => {
       setIsAuthenticated(true);
       setUser(user);
     }
-  }, [setIsAuthenticated, setUser]);
+  }, [authService, setIsAuthenticated, setUser]);
 
   return {
     isAuthenticated,

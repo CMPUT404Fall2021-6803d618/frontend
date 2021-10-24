@@ -1,9 +1,4 @@
-import React, {
-  Fragment,
-  FunctionComponent,
-  useState,
-  useCallback,
-} from "react";
+import React, { Fragment, FunctionComponent, useState, useCallback } from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import UserControl from "./UserControl";
 import { LINK_LIST } from "router/drawerLinks";

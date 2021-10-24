@@ -35,9 +35,7 @@ const Control = styled.div`
   }
 `;
 
-const PrimaryButton = styled(({ navigate, ...props }) => (
-  <ButtonBase {...props} />
-))`
+const PrimaryButton = styled(({ navigate, ...props }) => <ButtonBase {...props} />)`
   background-color: #dd2020 !important;
   color: white !important;
   padding: 0.25rem !important;
@@ -50,9 +48,7 @@ const PrimaryButton = styled(({ navigate, ...props }) => (
   }
 `;
 
-const SecondaryButton = styled(({ navigate, ...props }) => (
-  <ButtonBase {...props} />
-))`
+const SecondaryButton = styled(({ navigate, ...props }) => <ButtonBase {...props} />)`
   color: #dd2020 !important;
   padding: 0.25rem !important;
   border-radius: 1rem !important;
