@@ -49,6 +49,9 @@ export const useAuth = (): IAuthHook => {
     if (user) {
       setIsAuthenticated(true);
       setUser(user);
+    } else {
+      setIsAuthenticated(false);
+      setUser(null);
     }
   }, [authService, setIsAuthenticated, setUser]);
 
