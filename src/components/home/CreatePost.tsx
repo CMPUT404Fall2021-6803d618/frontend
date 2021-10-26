@@ -1,3 +1,4 @@
+import { StepLabel } from "@material-ui/core";
 import React, { useState, FC, MouseEvent, useCallback, ChangeEvent } from "react";
 import { PostPayload } from "services/PostService";
 import { ContentType, Visibility } from "shared/enums";
@@ -19,12 +20,32 @@ const TweetBoxForm = styled.form`
   flex-direction: column;
 `;
 
-const Input = styled.input`
-  flex: 1;
+const InputDiv = styled.div`
+  display: block;
+  margin-left: auto;
+`;
+
+const TitleInput = styled.input`
   margin-left: 20px;
+  font-size: 15px;
+  border: none;
+  outline: none;
+`;
+
+const ContentInput = styled.input`
+  flex: 1;
+  margin-left: auto;
   font-size: 20px;
   border: none;
   outline: none;
+`;
+
+const VisibilityLabel = styled.label`
+  border-radius: 30px;
+  width: 80px;
+  height: 40px;
+  margin-top: 10px;
+  margin-left: 80px;
 `;
 
 const TweetBoxImg = styled.img`
@@ -87,12 +108,26 @@ const CreatePost: FC<CreatePostProp> = ({ onCreate }) => {
           {/* Avatar */}
           <TweetBoxImg src="https://i.pinimg.com/originals/a6/58/32/a65832155622ac173337874f02b218fb.png" alt="" />
 
-          {/* input */}
-          <Input type="text" placeholder="What's happening" value={content} onChange={handleContentChange} />
+          <InputDiv>
+            {/* title */}
+            <TitleInput type="text" placeholder="Title of the post" />
+          </InputDiv>
+
+          <InputDiv>
+            {/* content */}
+            <ContentInput type="text" placeholder="What's happening" value={content} onChange={handleContentChange} />
+          </InputDiv>
         </TweetBoxInput>
 
         {/* TODO: visibility */}
-        <div></div>
+        <VisibilityLabel>
+          {" "}
+          Visibility
+          <select>
+            <option value="FRIENDS">Friends</option>
+            <option value="PUBLIC">Public </option>
+          </select>
+        </VisibilityLabel>
 
         {/* button */}
         <TweetButton onClick={handleSubmit}>Tweet</TweetButton>
