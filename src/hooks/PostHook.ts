@@ -1,7 +1,6 @@
 import { useMemo, useCallback, useState, useEffect } from "react";
 import { PostPayload, PostService } from "services/PostService";
-import { Post } from "shared/interfaces";
-import { useAuthStore } from "./AuthStoreHook";
+import { Post, Author } from "shared/interfaces";
 
 interface IPostHook {
   posts: Post[] | null;
@@ -9,8 +8,7 @@ interface IPostHook {
   handleUpdatePost: (post: Post, newContent: string) => Promise<void>;
 }
 
-const usePost = (): IPostHook => {
-  const { user } = useAuthStore();
+const usePost = (user: Author | null): IPostHook => {
   const postService = useMemo(() => new PostService(), []);
   const [posts, setPosts] = useState<Post[] | null>(null);
 

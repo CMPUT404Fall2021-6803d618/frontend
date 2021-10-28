@@ -1,6 +1,6 @@
 import React, { FormEvent, FunctionComponent, useCallback, useState } from "react";
 import { Link, Redirect } from "react-router-dom";
-import { Container, Title, Background, Input, ActionButton, SubTextContainer, Divider, BackToApp } from "./style";
+import { Container, Title, Background, Input, ActionButton, SubTextContainer, Divider } from "./style";
 import { useAuth } from "hooks/AuthHook";
 
 const Login: FunctionComponent = () => {
@@ -75,9 +75,6 @@ const Login: FunctionComponent = () => {
           </span>
           <Divider />
         </SubTextContainer>
-        <BackToApp to="/" component={ActionButton}>
-          Back to app
-        </BackToApp>
       </Container>
     </Background>
   );

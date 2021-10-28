@@ -2,12 +2,12 @@ import { User } from "shared/interfaces";
 import { createConnectedStore, Effects, Store } from "undux";
 
 type State = {
-  isAuthenticated: boolean;
+  isAuthenticated: boolean | null;
   user: User | null;
 };
 
 const initialState: State = {
-  isAuthenticated: false,
+  isAuthenticated: null,
   user: null,
 };
 

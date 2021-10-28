@@ -3,9 +3,9 @@ import { User } from "shared/interfaces";
 import { AuthStore } from "stores/AuthStore";
 
 interface IAuthStoreHook {
-  isAuthenticated: boolean;
+  isAuthenticated: boolean | null;
   user: User | null;
-  setIsAuthenticated: (newState: boolean) => void;
+  setIsAuthenticated: (newState: boolean | null) => void;
   setUser: (newUser: User | null) => void;
 }
 
@@ -15,7 +15,7 @@ export const useAuthStore = (): IAuthStoreHook => {
   const user = authStore.get("user");
 
   const setIsAuthenticated = useCallback(
-    (newState: boolean) => {
+    (newState: boolean | null) => {
       authStore.set("isAuthenticated")(newState);
     },
     [authStore]

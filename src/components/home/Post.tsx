@@ -1,7 +1,7 @@
 import React, { FC, useCallback } from "react";
 import { Post } from "shared/interfaces";
 import styled from "styled-components";
-import { formatDate } from "utils/dateFormat";
+import { formatDate } from "utils";
 import profilePic from "./images.jpeg";
 import MeatballMenu from "./MeatballMenu";
 import PostTitle from "./PostTitle";

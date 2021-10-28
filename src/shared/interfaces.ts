@@ -6,6 +6,7 @@ export interface Author {
   displayName: string;
   url: string;
   github?: string;
+  profileImage?: string;
 }
 
 export interface User extends Author {

@@ -3,10 +3,10 @@ import { AuthService, RegisterPayload } from "services/AuthService";
 import { useAuthStore } from "./AuthStoreHook";
 
 interface IAuthHook {
-  isAuthenticated: boolean;
+  isAuthenticated: boolean | null;
   login: (email: string, password: string) => Promise<void>;
   register: (payload: RegisterPayload) => Promise<void>;
-  logout: () => Promise<void>;
+  logout: () => void;
   renewToken: () => Promise<void>;
 }
 
@@ -38,8 +38,8 @@ export const useAuth = (): IAuthHook => {
     [authService, setIsAuthenticated, setUser]
   );
 
-  const logout = useCallback(async () => {
-    await authService.logout();
+  const logout = useCallback(() => {
+    authService.logout();
     setIsAuthenticated(false);
     setUser(null);
   }, [authService, setIsAuthenticated, setUser]);
