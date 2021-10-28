@@ -19,6 +19,7 @@
     "dotenv": "^8.2.0",
     "faker": "^5.5.3",
     "font-awesome": "^4.7.0",
+    "history": "^5.0.1",
     "jwt-decode": "^3.0.0-beta.2",
     "lodash-es": "^4.17.15",
     "lodash.throttle": "^4.1.1",

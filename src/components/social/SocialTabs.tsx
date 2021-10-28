@@ -1,11 +1,7 @@
 import Box from "@material-ui/core/Box";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
-import useFollow from "hooks/FollowHook";
-import React, { useState, ChangeEvent, PropsWithChildren, FC, useCallback } from "react";
-import FollowersTab from "./FollowersTab";
-import FollowingsTab from "./FollowingsTab";
-import FriendsTab from "./FriendsTab";
+import React, { useState, ChangeEvent, PropsWithChildren, FC, useCallback, useEffect } from "react";
 
 interface TabPanelProps {
   value: number;
@@ -44,43 +40,58 @@ function a11yProps(index: number) {
   };
 }
 
-const FriendTabs: FC = () => {
-  const [value, setValue] = useState(0);
-  const { followers, followings, friends, handleFollow, handleRemoveFollower, handleUnfollow } = useFollow();
+interface IProps {
+  currentTab: string;
+  tabs: { id: string; label: string; render: () => JSX.Element }[];
+  onTabChange: (newTab: string) => void;
+}
+
+const SocialTabs: FC<IProps> = (props) => {
+  const { tabs, currentTab, onTabChange } = props;
+  const [value, setValue] = useState(
+    (() => {
+      const index = tabs.findIndex((t) => t.id === currentTab);
+      if (index === -1) {
+        return 0;
+      } else {
+        return index;
+      }
+    })()
+  );
+
+  useEffect(() => {
+    const index = tabs.findIndex((t) => t.id === currentTab);
+    if (index === -1) {
+      setValue(0);
+    } else {
+      setValue(index);
+    }
+  }, [currentTab, tabs]);
 
   const handleChange = useCallback(
     // eslint-disable-next-line @typescript-eslint/ban-types
     (_event: ChangeEvent<{}>, newValue: number) => {
-      setValue(newValue);
+      onTabChange(tabs[newValue].id);
     },
-    []
+    [onTabChange, tabs]
   );
 
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={value} onChange={handleChange} aria-label="friend tabs">
-          <Tab label="Followers" {...a11yProps(0)} />
-          <Tab label="Followings" {...a11yProps(1)} />
-          <Tab label="Friends" {...a11yProps(2)} />
+          {tabs.map((tab) => (
+            <Tab label={tab.label} {...a11yProps(0)} key={`tab-${tab.label}`} />
+          ))}
         </Tabs>
       </Box>
-      <TabPanel value={value} index={0}>
-        <FollowersTab
-          followers={followers}
-          onFollow={handleFollow}
-          onUnfollow={handleUnfollow}
-          onRemoveFollower={handleRemoveFollower}
-        />
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <FollowingsTab followings={followings} onUnfollow={handleUnfollow} />
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        <FriendsTab friends={friends} onUnfollow={handleUnfollow} onRemoveFollower={handleRemoveFollower} />
-      </TabPanel>
+      {tabs.map((tab, index) => (
+        <TabPanel value={value} index={index} key={`tab-panel-${tab.label}`}>
+          {tab.render()}
+        </TabPanel>
+      ))}
     </Box>
   );
 };
 
-export default FriendTabs;
+export default SocialTabs;

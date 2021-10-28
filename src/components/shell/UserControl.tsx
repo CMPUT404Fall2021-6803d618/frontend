@@ -7,6 +7,7 @@ import styled from "styled-components";
 import ButtonBase from "@material-ui/core/ButtonBase";
 import { useAuth } from "hooks/AuthHook";
 import { useAuthStore } from "hooks/AuthStoreHook";
+import { extractIdFromUrl } from "utils";
 
 const Header = styled.div`
   display: flex;
@@ -68,7 +69,9 @@ const UserControl: FunctionComponent = () => {
     () =>
       isAuthenticated ? (
         <Fragment>
-          <PrimaryButton>Profile</PrimaryButton>
+          <Link to={`/profile/${extractIdFromUrl(user?.id)}`} component={PrimaryButton}>
+            Profile
+          </Link>
           <SecondaryButton onClick={logout}>Logout</SecondaryButton>
         </Fragment>
       ) : (
@@ -81,7 +84,7 @@ const UserControl: FunctionComponent = () => {
           </Link>
         </Fragment>
       ),
-    [isAuthenticated, logout]
+    [isAuthenticated, logout, user?.id]
   );
 
   return (

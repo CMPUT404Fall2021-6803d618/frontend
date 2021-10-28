@@ -2,7 +2,6 @@ import React, { Fragment, FunctionComponent, useState, useCallback } from "react
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import UserControl from "./UserControl";
 import { LINK_LIST } from "router/drawerLinks";
-import { IRoute } from "router/routes";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ErrorIcon from "@material-ui/icons/Error";
@@ -82,10 +81,11 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface IProps {
-  currentRoute: IRoute;
+  currentUrl: string;
+  currentTitle: string;
 }
 
-const ResponsiveDrawer: FunctionComponent<IProps> = ({ currentRoute }) => {
+const ResponsiveDrawer: FunctionComponent<IProps> = ({ currentUrl, currentTitle }) => {
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
   const classes = useStyles();
   const theme = useTheme();
@@ -107,7 +107,7 @@ const ResponsiveDrawer: FunctionComponent<IProps> = ({ currentRoute }) => {
                 key={link.name}
                 component={Link}
                 to={link.path}
-                selected={link.path === currentRoute.path}
+                selected={link.subpath ? link.subpath.includes(currentUrl) : link.path === currentUrl}
                 classes={{
                   root: classes.listItem,
                   selected: classes.listItemSelected,
@@ -126,7 +126,7 @@ const ResponsiveDrawer: FunctionComponent<IProps> = ({ currentRoute }) => {
   return (
     <Fragment>
       <CssBaseline />
-      {currentRoute.appBarTitle && (
+      {currentTitle && (
         <AppBar position="fixed" className={classes.appBar} elevation={0}>
           <Toolbar>
             <IconButton
@@ -139,7 +139,7 @@ const ResponsiveDrawer: FunctionComponent<IProps> = ({ currentRoute }) => {
               <MenuIcon />
             </IconButton>
             <Typography className={classes.appBarTitle} variant="h6" noWrap>
-              {currentRoute.appBarTitle}
+              {currentTitle}
             </Typography>
           </Toolbar>
         </AppBar>

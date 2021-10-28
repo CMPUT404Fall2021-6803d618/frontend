@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Peer } from "hooks/FollowHook";
+import { Person } from "hooks/SocialHook";
 import styled from "styled-components";
 import UserCard from "./UserCard";
 
@@ -10,7 +10,7 @@ const Container = styled.div`
 `;
 
 export interface IFriendsTabProps {
-  friends: Peer[] | null;
+  friends: Person[] | null;
   onRemoveFollower: (id: string) => Promise<void>;
   onUnfollow: (id: string) => Promise<void>;
 }

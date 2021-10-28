@@ -1,4 +1,5 @@
-import axios, { AxiosError, AxiosRequestConfig } from "axios";
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
+import { BASE_URL } from "shared/constants";
 import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
@@ -11,7 +12,9 @@ const config: AxiosRequestConfig = {
   },
 };
 
-const instance = axios.create(config);
+const createAxiosInstance = (): AxiosInstance => axios.create(config);
+
+const instance = createAxiosInstance();
 
 // retry to fetch access token
 instance.interceptors.response.use(undefined, (error: AxiosError) => {
@@ -24,9 +27,8 @@ instance.interceptors.response.use(undefined, (error: AxiosError) => {
     return Promise.reject(error);
   }
   if (error.config && error.response?.status === 401) {
-    const baseUrl = process.env.REACT_APP_BACKEND_URL ?? "http://localhost:8000/";
     delete instance.defaults.headers.common["Authorization"];
-    return instance.post(`${baseUrl}/token-refresh/`, { refresh: cookies.get("refreshToken") }).then((res) => {
+    return instance.post(`${BASE_URL}/token-refresh/`, { refresh: cookies.get("refreshToken") }).then((res) => {
       const AuthHeader = `Bearer ${res.data.access_token}`;
       instance.defaults.headers.common["Authorization"] = AuthHeader;
       error.config.headers["Authorization"] = AuthHeader;
@@ -37,4 +39,4 @@ instance.interceptors.response.use(undefined, (error: AxiosError) => {
   return Promise.reject(error);
 });
 
-export { instance as axios };
+export { instance as axios, createAxiosInstance };

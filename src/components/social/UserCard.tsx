@@ -6,7 +6,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import UserPic from "./donaldTrump.jpeg";
 import styled from "styled-components";
-import { FollowStatus } from "hooks/FollowHook";
+import { FollowStatus } from "hooks/SocialHook";
 
 // Styling Card/CardContent/CardActions
 const StyledCard = styled(Card)`

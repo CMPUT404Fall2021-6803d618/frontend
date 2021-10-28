@@ -1,4 +1,4 @@
-import React, { useMemo, FC } from "react";
+import React, { FC, useState, useCallback } from "react";
 import { IRoute, routes } from "router/routes";
 import Router from "router/Router";
 import styled from "styled-components";
@@ -31,20 +31,23 @@ interface IProps {
   };
 }
 
-const Shell: FC<IProps> = (props: IProps) => {
+const Shell: FC<IProps> = () => {
   const classes = useStyles();
+  const [currentTitle, setCurrentTitle] = useState(routes[1].appBarTitle ?? "");
+  const [currentUrl, setCurrentUrl] = useState(routes[1].path);
 
-  const currentRoute: IRoute = useMemo(() => {
-    const currentPath = props.location.pathname;
-    return routes.find((route) => route.path === currentPath) ?? routes[0];
-  }, [props.location.pathname]);
+  const handleRouteChange = useCallback((path: string, url: string) => {
+    const currentRoute = routes.find((route) => route.path === path);
+    setCurrentUrl(currentRoute ? url : routes[0].path);
+    setCurrentTitle(currentRoute?.appBarTitle ?? "");
+  }, []);
 
   return (
     <Root>
-      <ResponsiveDrawer currentRoute={currentRoute} />
+      <ResponsiveDrawer currentUrl={currentUrl} currentTitle={currentTitle} />
       <Main>
-        {currentRoute.appBarTitle && <div className={classes.toolbar} />}
-        <Router routes={routes} />
+        {currentTitle && <div className={classes.toolbar} />}
+        <Router routes={routes} onRouteChange={handleRouteChange} />
       </Main>
     </Root>
   );

@@ -1,7 +1,7 @@
 import React, { FormEvent, FunctionComponent, useCallback, useState } from "react";
 import { Redirect } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { ActionButton, Background, BackToApp, Container, Divider, Input, SubTextContainer, Title } from "./style";
+import { ActionButton, Background, Container, Divider, Input, SubTextContainer, Title } from "./style";
 import { useAuth } from "hooks/AuthHook";
 import { ServiceError } from "utils/ServiceError";
 
@@ -138,9 +138,6 @@ const Register: FunctionComponent = () => {
           </span>
           <Divider />
         </SubTextContainer>
-        <BackToApp to="/" component={ActionButton}>
-          Back to app
-        </BackToApp>
       </Container>
     </Background>
   );

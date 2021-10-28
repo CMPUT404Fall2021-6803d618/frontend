@@ -5,6 +5,7 @@ import { axios } from "utils/axios";
 import { ErrorFactory } from "utils/ErrorFactory";
 import Cookies from "universal-cookie";
 import { AxiosResponse } from "axios";
+import { BASE_URL } from "shared/constants";
 
 const cookies = new Cookies();
 
@@ -31,17 +32,11 @@ export interface UserData {
 interface IAuthService {
   login: (email: string, password: string) => Promise<User>;
   register: (payload: RegisterPayload) => Promise<User>;
-  logout: () => Promise<void>;
+  logout: () => void;
   renewToken: () => Promise<User | null>;
 }
 
 export class AuthService implements IAuthService {
-  private baseUrl: string;
-
-  constructor() {
-    this.baseUrl = process.env.REACT_APP_BACKEND_URL ?? "http://localhost:8000/";
-  }
-
   private async processUserData(response: AxiosResponse<UserData>): Promise<User> {
     const { data } = response;
     const { access_token: accessToken, refresh_token: refreshToken, author, username } = data;
@@ -59,7 +54,7 @@ export class AuthService implements IAuthService {
 
   public async login(username: string, password: string): Promise<User> {
     try {
-      const res = await axios.post(`${this.baseUrl}/login/`, {
+      const res = await axios.post(`${BASE_URL}/login/`, {
         username,
         password,
       });
@@ -72,7 +67,7 @@ export class AuthService implements IAuthService {
   public async register(payload: RegisterPayload): Promise<User> {
     try {
       const { username, password, displayName: display_name, githubUrl: github_url } = payload;
-      const res = await axios.post(`${this.baseUrl}/register/`, {
+      const res = await axios.post(`${BASE_URL}/register/`, {
         username,
         password,
         display_name,
@@ -84,7 +79,7 @@ export class AuthService implements IAuthService {
     }
   }
 
-  public async logout(): Promise<void> {
+  public logout(): void {
     try {
       delete axios.defaults.headers.common["Authorization"];
       cookies.remove("refreshToken");
@@ -98,7 +93,7 @@ export class AuthService implements IAuthService {
       const token = cookies.get("refreshToken");
       if (token) {
         delete axios.defaults.headers.common["Authorization"];
-        const res = await axios.post(`${this.baseUrl}/token-refresh/`, {
+        const res = await axios.post(`${BASE_URL}/token-refresh/`, {
           refresh: cookies.get("refreshToken"),
         });
         return this.processUserData(res);
