@@ -98,12 +98,13 @@ const Action = styled.div`
 interface PostProps {
   post: IPost;
   onUpdate: (post: IPost, newContent: string) => Promise<void>;
+  onDelete: (post: IPost) => Promise<void>;
 }
 
 // const Posts:FunctionComponent<PostProps> = (props) => {
 
 const Post: FC<PostProps> = (props) => {
-  const { post, onUpdate } = props;
+  const { post, onUpdate, onDelete } = props;
   const { content, author, published } = post;
   // Handle change title
   const handleEditSave = useCallback(
@@ -112,6 +113,10 @@ const Post: FC<PostProps> = (props) => {
     },
     [onUpdate, post]
   );
+
+  const handleDelete = useCallback(async () => {
+    await onDelete(post);
+  }, [onDelete, post]);
 
   return (
     <PostWrapper to={`/post/${encodeURIComponent(post.id)}`}>
@@ -145,7 +150,7 @@ const Post: FC<PostProps> = (props) => {
               <p style={{ marginBottom: "0" }}>{formatDate(published)}</p>
             </div>
 
-            <MeatballMenu content={content} onSave={handleEditSave} />
+            <MeatballMenu content={content} onSave={handleEditSave} onDelete={handleDelete} />
           </PostAuthor>
           {/* Main content of the post */}
           <PostContent>

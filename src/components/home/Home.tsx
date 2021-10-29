@@ -8,7 +8,7 @@ import { Post as IPost } from "shared/interfaces";
 
 const Home: FC = () => {
   const { user } = useAuthStore();
-  const { updatePost, getPosts } = usePost(user);
+  const { deletePost, updatePost, getPosts } = usePost(user);
   const [posts, setPosts] = useState<IPost[] | null>(null);
 
   useEffect(() => {
@@ -31,6 +31,16 @@ const Home: FC = () => {
     [posts, updatePost]
   );
 
+  const handleDeletePost = useCallback(
+    async (post: IPost) => {
+      if (posts !== null) {
+        await deletePost(post);
+        setPosts(posts.filter((newPost) => newPost.id !== post.id));
+      }
+    },
+    [posts, deletePost]
+  );
+
   const render = useCallback(() => {
     if (posts === null) {
       return <Loading />;
@@ -38,10 +48,10 @@ const Home: FC = () => {
       return <div>No posts</div>;
     } else {
       return posts.map((post) => {
-        return <Post key={post.id} post={post} onUpdate={handleUpdatePost} />;
+        return <Post key={post.id} post={post} onUpdate={handleUpdatePost} onDelete={handleDeletePost} />;
       });
     }
-  }, [handleUpdatePost, posts]);
+  }, [handleDeletePost, handleUpdatePost, posts]);
 
   return (
     <div className="container">

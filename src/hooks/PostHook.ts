@@ -7,6 +7,7 @@ interface IPostHook {
   getPostById: (id: string) => Promise<Post>;
   createPost: (payload: PostPayload) => Promise<Post | null>;
   updatePost: (post: Post, newContent: string) => Promise<Post | null>;
+  deletePost: (post: Post) => Promise<void>;
 }
 
 const usePost = (user: Author | null): IPostHook => {
@@ -62,11 +63,19 @@ const usePost = (user: Author | null): IPostHook => {
     [postService]
   );
 
+  const deletePost = useCallback(
+    async (post: Post) => {
+      postService.deletePost(post.id);
+    },
+    [postService]
+  );
+
   return {
     getPosts,
     getPostById,
     createPost,
     updatePost,
+    deletePost,
   };
 };
 
