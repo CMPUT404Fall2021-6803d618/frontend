@@ -45,4 +45,20 @@ export const routes: IRoute[] = [
     fallback: <div> Loading... </div>,
     appBarTitle: "Social",
   },
+  {
+    path: paths.INBOX,
+    component: views.InboxView,
+    exact: true,
+    private: true,
+    fallback: <div> Loading... </div>,
+    appBarTitle: "Inbox",
+  },
+  {
+    path: paths.POST_CREATE,
+    component: views.CreatePostView,
+    exact: true,
+    private: true,
+    fallback: <div> Loading... </div>,
+    appBarTitle: "Create Post",
+  },
 ];

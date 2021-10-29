@@ -29,3 +29,10 @@ export interface Post {
   visibility: Visibility;
   unlisted: boolean;
 }
+
+export interface FollowingData {
+  object: Author;
+  status: "PENDING" | "ACCEPTED";
+  actor: Author;
+  summary: string;
+}

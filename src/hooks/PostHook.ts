@@ -1,44 +1,41 @@
-import { useMemo, useCallback, useState, useEffect } from "react";
+import { useMemo, useCallback } from "react";
 import { PostPayload, PostService } from "services/PostService";
 import { Post, Author } from "shared/interfaces";
 
 interface IPostHook {
-  posts: Post[] | null;
-  handleCreatePost: (payload: PostPayload) => Promise<void>;
-  handleUpdatePost: (post: Post, newContent: string) => Promise<void>;
+  getPosts: () => Promise<Post[]>;
+  createPost: (payload: PostPayload) => Promise<Post | null>;
+  updatePost: (post: Post, newContent: string) => Promise<Post | null>;
 }
 
 const usePost = (user: Author | null): IPostHook => {
   const postService = useMemo(() => new PostService(), []);
-  const [posts, setPosts] = useState<Post[] | null>(null);
 
-  const loadData = useCallback(async () => {
+  const getPosts = useCallback(async () => {
     if (user) {
       const data = await postService.getPosts(user.id);
-      setPosts(data);
+      return data;
     } else {
-      setPosts([]);
+      return [];
     }
   }, [postService, user]);
 
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
-
-  const handleCreatePost = useCallback(
+  const createPost = useCallback(
     async (payload: PostPayload) => {
-      if (user && posts) {
+      if (user) {
         const post = await postService.createPost(user.id, payload);
-        setPosts([post, ...posts]);
+        return post;
+      } else {
+        return null;
       }
     },
-    [postService, posts, user]
+    [postService, user]
   );
 
-  const handleUpdatePost = useCallback(
+  const updatePost = useCallback(
     async (post: Post, newContent: string) => {
       const { title, description, contentType, content, visibility, unlisted } = post;
-      if (content !== newContent && posts !== null) {
+      if (content !== newContent) {
         const payload = {
           title,
           description,
@@ -48,19 +45,18 @@ const usePost = (user: Author | null): IPostHook => {
           unlisted,
         };
         const newPost = await postService.updatePost(post.id, payload);
-        const index = posts?.findIndex((p) => p.id === post.id);
-        const newPosts = [...posts];
-        newPosts[index] = { ...newPost };
-        setPosts(newPosts);
+        return newPost;
+      } else {
+        return null;
       }
     },
-    [postService, posts]
+    [postService]
   );
 
   return {
-    posts,
-    handleCreatePost,
-    handleUpdatePost,
+    getPosts,
+    createPost,
+    updatePost,
   };
 };
 

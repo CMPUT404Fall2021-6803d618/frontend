@@ -1,11 +1,10 @@
 import React, { FC, useMemo, useEffect, useState } from "react";
-import { useAuthStore } from "hooks/AuthStoreHook";
 import usePost from "hooks/PostHook";
 import styled from "styled-components";
-import useSocial from "hooks/SocialHook";
+import useSocial, { FollowStatus } from "hooks/SocialHook";
 import { withParamId } from "decorators/withParamId";
 import { ProfileService } from "services/ProfileService";
-import { Author } from "shared/interfaces";
+import { Author, Post } from "shared/interfaces";
 import Loading from "components/common/components/Loading";
 
 const Container = styled.div`
@@ -63,17 +62,22 @@ interface IProps {
 
 const Profile: FC<IProps> = (props) => {
   const { id } = props;
-  const { isAuthenticated } = useAuthStore();
+  // const { isAuthenticated } = useAuthStore();
   const { followers, followings } = useSocial();
   const profileService = useMemo(() => new ProfileService(), []);
   const [profile, setProfile] = useState<Author | null>(null);
-  const { posts } = usePost(profile);
+  const { getPosts } = usePost(profile);
+  const [posts, setPosts] = useState<Post[] | null>(null);
 
   useEffect(() => {
     profileService.getProfile(id).then((data) => {
       setProfile(data);
     });
   }, [id, profileService]);
+
+  useEffect(() => {
+    getPosts().then((data) => setPosts(data));
+  }, [getPosts]);
 
   return (
     <Container className="container">
@@ -101,7 +105,7 @@ const Profile: FC<IProps> = (props) => {
                 <span>followers</span>
               </div>
               <div>
-                <span>{followings?.length ?? 0} </span>
+                <span>{followings?.filter((f) => f.followStatus === FollowStatus.FOLLOWED).length ?? 0} </span>
                 <span>followings</span>
               </div>
             </SocialStats>

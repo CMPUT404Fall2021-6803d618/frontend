@@ -1,5 +1,5 @@
 import React, { FC, useCallback } from "react";
-import { Post } from "shared/interfaces";
+import { Post as IPost } from "shared/interfaces";
 import styled from "styled-components";
 import { formatDate } from "utils";
 import profilePic from "./images.jpeg";
@@ -95,13 +95,13 @@ const Action = styled.div`
 `;
 
 interface PostProps {
-  post: Post;
-  onUpdate: (post: Post, newContent: string) => Promise<void>;
+  post: IPost;
+  onUpdate: (post: IPost, newContent: string) => Promise<void>;
 }
 
 // const Posts:FunctionComponent<PostProps> = (props) => {
 
-const Posts: FC<PostProps> = (props) => {
+const Post: FC<PostProps> = (props) => {
   const { post, onUpdate } = props;
   const { content, author, published } = post;
   // Handle change title
@@ -163,4 +163,4 @@ const Posts: FC<PostProps> = (props) => {
   );
 };
 
-export default Posts;
+export default Post;

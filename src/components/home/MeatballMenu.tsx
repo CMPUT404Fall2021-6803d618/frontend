@@ -113,8 +113,9 @@ const MeatballMenu: FC<MenuProps> = (props) => {
       e.stopPropagation();
       setDialogOpen(false);
       onSave(value);
+      handleMenuClose();
     },
-    [onSave, value]
+    [handleMenuClose, onSave, value]
   );
 
   const handleValueChange = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
