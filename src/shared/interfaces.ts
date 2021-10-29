@@ -36,3 +36,11 @@ export interface FollowingData {
   actor: Author;
   summary: string;
 }
+
+export interface Comment {
+  id: string;
+  author: Author;
+  comment: string;
+  contentType: ContentType.PLAIN_TEXT | ContentType.MARKDOWN;
+  published: string;
+}

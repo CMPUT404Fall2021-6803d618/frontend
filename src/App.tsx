@@ -7,6 +7,8 @@ import Register from "components/login/Register";
 import Profile from "components/profile/Profile";
 import Loading from "components/common/components/Loading";
 import NotFound from "components/404/NotFound";
+import { paths } from "router/paths";
+import PostDetail from "components/home/PostDetail";
 
 const App: FunctionComponent = () => {
   const { renewToken, isAuthenticated } = useAuth();
@@ -36,9 +38,10 @@ const App: FunctionComponent = () => {
     <div>loading...</div>
   ) : (
     <Switch>
-      <Route path="/login" exact component={Login} />
-      <Route path="/register" exact component={Register} />
-      <Route path="/profile/:id" exact component={Profile} />
+      <Route path={paths.LOGIN} exact component={Login} />
+      <Route path={paths.REGISTER} exact component={Register} />
+      <Route path={paths.PROFILE} exact component={Profile} />
+      <Route path={paths.POST_DETAIL} exact component={PostDetail} />
       <Route path="/404" component={NotFound} />
       <Route path="/" component={Shell} />
     </Switch>

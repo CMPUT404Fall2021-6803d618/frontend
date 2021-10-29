@@ -95,15 +95,19 @@ const MeatballMenu: FC<MenuProps> = (props) => {
 
   // menu handle open/close
   const handleMenuClick = useCallback((e: MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    e.preventDefault();
     setAnchorEl(e.currentTarget);
   }, []);
 
-  const handleMenuClose = useCallback(() => {
+  const handleMenuClose = useCallback((e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     setAnchorEl(null);
   }, []);
 
   // Dialog handle open/close (?)
-  const handleOpenEdit = useCallback((_e: MouseEvent<HTMLDivElement>) => {
+  const handleOpenEdit = useCallback((e: MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
     setDialogOpen(true);
   }, []);
 
@@ -111,9 +115,10 @@ const MeatballMenu: FC<MenuProps> = (props) => {
     (e: MouseEvent<HTMLButtonElement>) => {
       // console.log(dialogOpen);
       e.stopPropagation();
+      e.preventDefault();
       setDialogOpen(false);
       onSave(value);
-      handleMenuClose();
+      handleMenuClose(e);
     },
     [handleMenuClose, onSave, value]
   );

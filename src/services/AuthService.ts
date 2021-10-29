@@ -44,6 +44,7 @@ export class AuthService implements IAuthService {
     this.updateAuthHeader(accessToken);
     cookies.remove("refreshToken");
     cookies.set("refreshToken", refreshToken, {
+      path: "/",
       expires: new Date("9999-12-31T12:00:00"),
     });
     return {
@@ -82,7 +83,7 @@ export class AuthService implements IAuthService {
   public logout(): void {
     try {
       delete axios.defaults.headers.common["Authorization"];
-      cookies.remove("refreshToken");
+      cookies.remove("refreshToken", { path: "/" });
     } catch (err) {
       throw ErrorFactory.get(err);
     }
