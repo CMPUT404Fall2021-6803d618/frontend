@@ -80,13 +80,14 @@ const Input = styled.textarea`
 interface MenuProps {
   content: string;
   onSave: (value: string) => Promise<void>;
+  onDelete: () => Promise<void>;
 }
 
 const MeatballMenu: FC<MenuProps> = (props) => {
   const [value, setValue] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLDivElement>(null);
-  const { onSave, content } = props;
+  const { onDelete, onSave, content } = props;
   const menuOpen = Boolean(anchorEl);
 
   useEffect(() => {
@@ -127,6 +128,15 @@ const MeatballMenu: FC<MenuProps> = (props) => {
     setValue(e.currentTarget.value);
   }, []);
 
+  const handleDelete = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      onDelete();
+      setAnchorEl(null);
+    },
+    [onDelete]
+  );
+
   return (
     <MenuWrapper>
       <StyledMenu>
@@ -158,7 +168,9 @@ const MeatballMenu: FC<MenuProps> = (props) => {
           <StyledPaper>
             <ActionBox>
               <Delete style={{ margin: "10px" }}></Delete>
-              <Typography style={{ margin: "10px" }}>Delete</Typography>
+              <Typography style={{ margin: "10px" }} onClick={handleDelete}>
+                Delete
+              </Typography>
             </ActionBox>
             <ActionBox onClick={handleOpenEdit}>
               <Edit style={{ margin: "10px" }}></Edit>
