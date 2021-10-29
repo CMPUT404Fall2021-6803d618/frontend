@@ -4,6 +4,7 @@ import { Post, Author } from "shared/interfaces";
 
 interface IPostHook {
   getPosts: () => Promise<Post[]>;
+  getPostById: (id: string) => Promise<Post>;
   createPost: (payload: PostPayload) => Promise<Post | null>;
   updatePost: (post: Post, newContent: string) => Promise<Post | null>;
 }
@@ -19,6 +20,14 @@ const usePost = (user: Author | null): IPostHook => {
       return [];
     }
   }, [postService, user]);
+
+  const getPostById = useCallback(
+    async (id: string) => {
+      const data = await postService.getPostById(id);
+      return data;
+    },
+    [postService]
+  );
 
   const createPost = useCallback(
     async (payload: PostPayload) => {
@@ -55,6 +64,7 @@ const usePost = (user: Author | null): IPostHook => {
 
   return {
     getPosts,
+    getPostById,
     createPost,
     updatePost,
   };

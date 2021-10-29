@@ -7,6 +7,7 @@ const SocialView = lazy(() => import("components/social/Social"));
 const ProfileView = lazy(() => import("components/profile/Profile"));
 const InboxView = lazy(() => import("components/inbox/Inbox"));
 const CreatePostView = lazy(() => import("components/home/CreatePost"));
+const PostDetailView = lazy(() => import("components/home/PostDetail"));
 
 export const views = {
   LoginView,
@@ -16,4 +17,5 @@ export const views = {
   ProfileView,
   InboxView,
   CreatePostView,
+  PostDetailView,
 };

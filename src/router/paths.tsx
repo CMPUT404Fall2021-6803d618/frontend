@@ -8,6 +8,7 @@ const SOCIAL_FOLLOWERS = "/social/followers";
 const SOCIAL_FOLLOWINGS = "/social/followings";
 const SOCIAL_FRIENDS = "/social/friends";
 const POST_CREATE = "/posts/create";
+const POST_DETAIL = "/post/:id";
 
 const PROFILE = "/profile/:id";
 
@@ -23,4 +24,5 @@ export const paths = {
   PROFILE,
   INBOX,
   POST_CREATE,
+  POST_DETAIL,
 };

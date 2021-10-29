@@ -5,9 +5,10 @@ import { formatDate } from "utils";
 import profilePic from "./images.jpeg";
 import MeatballMenu from "./MeatballMenu";
 import PostTitle from "./PostTitle";
+import { Link } from "react-router-dom";
 
 // Post Wrapper
-const PostWrapper = styled.div`
+const PostWrapper = styled(Link)`
   height: fit-content;
   display: flex;
   border: 1px solid #ccc;
@@ -113,7 +114,7 @@ const Post: FC<PostProps> = (props) => {
   );
 
   return (
-    <PostWrapper>
+    <PostWrapper to={`/post/${encodeURIComponent(post.id)}`}>
       <PostContainer>
         {/* Display the user profile picture */}
         <ProfilePicContainer>
@@ -151,8 +152,7 @@ const Post: FC<PostProps> = (props) => {
             <PostTitle title={content} />
             {/* Available Actions */}
             <PostAction>
-              <Action>Reply</Action>
-              <Action>Retweet</Action>
+              <Action>Comment</Action>
               <Action>Like</Action>
               <Action>Share</Action>
             </PostAction>

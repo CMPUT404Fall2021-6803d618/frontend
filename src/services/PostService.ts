@@ -12,7 +12,11 @@ export interface PostPayload {
 }
 
 interface IPostService {
+  createPost: (authorId: string, payload: PostPayload) => Promise<Post>;
   getPosts: (authorId: string) => Promise<Post[]>;
+  getPostById: (postId: string) => Promise<Post>;
+  updatePost: (postId: string, payload: PostPayload) => Promise<Post>;
+  deletePost: (postId: string) => Promise<void>;
 }
 
 export class PostService implements IPostService {
@@ -29,7 +33,7 @@ export class PostService implements IPostService {
   }
 
   public async getPostById(postId: string): Promise<Post> {
-    const { data } = await axios.get(postId);
+    const { data } = await axios.get(decodeURIComponent(postId));
     return data;
   }
 
