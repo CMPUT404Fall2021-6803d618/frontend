@@ -18,6 +18,11 @@ export const SOCIAL: DrawerLink = {
   subpath: [paths.SOCIAL_PEOPLE, paths.SOCIAL_FOLLOWERS, paths.SOCIAL_FOLLOWINGS, paths.SOCIAL_FRIENDS],
 };
 
-export const MAIN_LIST: DrawerLink[] = [HOME, SOCIAL];
+export const INBOX: DrawerLink = {
+  path: paths.INBOX,
+  name: "Inbox",
+};
+
+export const MAIN_LIST: DrawerLink[] = [HOME, SOCIAL, INBOX];
 
 export const LINK_LIST: DrawerLink[][] = [MAIN_LIST];

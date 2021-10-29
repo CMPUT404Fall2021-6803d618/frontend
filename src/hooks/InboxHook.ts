@@ -1,16 +1,16 @@
-import { useState, useCallback, useMemo } from "react";
-import { useEffect } from "react-router/node_modules/@types/react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { InboxService } from "services/InboxService";
 import { useAuthStore } from "./AuthStoreHook";
 
 interface IInboxHook {
-  items: Record<string, string>[] | null;
+  items: Record<string, any>[] | null;
 }
 
 const useInbox = (): IInboxHook => {
   const inboxService = useMemo(() => new InboxService(), []);
   const { user } = useAuthStore();
-  const [items, setItems] = useState<Record<string, string>[] | null>(null);
+  const [items, setItems] = useState<Record<string, any>[] | null>(null);
 
   const loadData = useCallback(async () => {
     if (user) {

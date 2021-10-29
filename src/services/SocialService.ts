@@ -1,5 +1,5 @@
 import { BASE_URL } from "shared/constants";
-import { Author } from "shared/interfaces";
+import { Author, FollowingData } from "shared/interfaces";
 import { formatId } from "utils";
 import { axios } from "utils/axios";
 
@@ -18,11 +18,6 @@ interface Endpoints {
   FOLLOWERS: (authorId: string, foreignAuthorId: string) => string;
   LIST_FOLLOWINGS: (authorId: string) => string;
   FOLLOWINGS: (authorId: string, foreignAuthorId: string) => string;
-}
-
-interface FollowingData {
-  object: Author;
-  status: "PENDING" | "ACCEPTED";
 }
 
 interface Following extends Author {

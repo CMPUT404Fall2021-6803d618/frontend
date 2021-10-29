@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Author } from "shared/interfaces";
 import { axios } from "utils/axios";
 
 interface IInboxService {
-  getInbox: (authorId: string) => Promise<Record<string, string>[]>;
+  getInbox: (authorId: string) => Promise<Record<string, any>[]>;
   sendLike: (authorId: string, payload: LikePayload) => Promise<void>;
 }
 
@@ -13,7 +14,7 @@ interface LikePayload {
 }
 
 export class InboxService implements IInboxService {
-  public async getInbox(authorId: string): Promise<Record<string, string>[]> {
+  public async getInbox(authorId: string): Promise<Record<string, any>[]> {
     const { data } = await axios.get(`${authorId}inbox`);
     return data.items;
   }
