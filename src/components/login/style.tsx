@@ -14,7 +14,7 @@ export const Title = styled.h1`
 export const Background = styled.div`
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at 50% 250%, #f55308 55%, #e1242d 85%);
+  background: #282c34;
 `;
 
 export const Container = styled.div`
