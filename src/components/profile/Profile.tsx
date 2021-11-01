@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useEffect, useState } from "react";
+import React, { FC, useMemo, useEffect, useState, useCallback, MouseEvent, ChangeEvent } from "react";
 import usePost from "hooks/PostHook";
 import styled from "styled-components";
 import useSocial, { FollowStatus } from "hooks/SocialHook";
@@ -69,6 +69,10 @@ const Profile: FC<IProps> = (props) => {
   const { getPosts } = usePost(profile);
   const [posts, setPosts] = useState<Post[] | null>(null);
 
+  const [editing, setEditing] = useState(false);
+  const [editGithub, setEditGithub] = useState("");
+  const [editDisplayName, setEditDisplayName] = useState("");
+
   useEffect(() => {
     profileService.getProfile(id).then((data) => {
       setProfile(data);
@@ -79,10 +83,45 @@ const Profile: FC<IProps> = (props) => {
     getPosts().then((data) => setPosts(data.map((d) => ({ ...d, liked: false }))));
   }, [getPosts]);
 
+  useEffect(() => {
+    if (profile) {
+      setEditGithub(profile.github ?? "");
+      setEditDisplayName(profile.displayName ?? "");
+    }
+  }, [profile]);
+
+  const handleToggle = useCallback(
+    async (e: MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      if (editing) {
+        if (profile) {
+          await profileService.updateProfile(profile.id, {
+            github: editGithub,
+            displayName: editDisplayName,
+          });
+          setProfile({ ...profile, github: editGithub, displayName: editDisplayName });
+        }
+        setEditing(false);
+      } else {
+        setEditing(true);
+      }
+    },
+    [editGithub, editDisplayName, editing, profile, profileService]
+  );
+
+  const handleDisplayNameChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setEditDisplayName(e.target.value);
+  }, []);
+
+  const handleGithubChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setEditGithub(e.target.value);
+  }, []);
+
   return (
     <Container className="container">
       {profile ? (
         <ProfileDiv>
+          <button onClick={handleToggle}>{editing ? "Update" : "Edit"}</button>
           <ProfileImageDiv>
             <div>
               <img
@@ -94,7 +133,11 @@ const Profile: FC<IProps> = (props) => {
             </div>
           </ProfileImageDiv>
           <ProfileInfoDiv>
-            <DisplayName>{profile?.displayName}</DisplayName>
+            {editing ? (
+              <input type="text" onChange={handleDisplayNameChange} value={editDisplayName} />
+            ) : (
+              <DisplayName>{profile?.displayName}</DisplayName>
+            )}
             <SocialStats>
               <div>
                 <span>{posts?.length ?? 0} </span>
@@ -109,6 +152,15 @@ const Profile: FC<IProps> = (props) => {
                 <span>followings</span>
               </div>
             </SocialStats>
+            {editing ? (
+              <div className="info" style={{ display: "flex", flexDirection: "row", marginTop: "2rem" }}>
+                Github: <input style={{ flex: 1 }} onChange={handleGithubChange} value={editGithub} />
+              </div>
+            ) : (
+              <div className="info" style={{ display: "flex", flexDirection: "row", marginTop: "2rem" }}>
+                <span style={{ flex: 1 }}>Github: {profile?.github}</span>
+              </div>
+            )}
           </ProfileInfoDiv>
         </ProfileDiv>
       ) : (
