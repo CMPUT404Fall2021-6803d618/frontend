@@ -95,8 +95,8 @@ const Profile: FC<IProps> = (props) => {
       e.preventDefault();
       if (editing) {
         if (profile) {
-          await profileService.updateProfile(profile.id, {
-            github: editGithub,
+          await profileService.updateProfile(id, {
+            github: editGithub === "" ? undefined : editGithub,
             displayName: editDisplayName,
           });
           setProfile({ ...profile, github: editGithub, displayName: editDisplayName });
@@ -106,7 +106,7 @@ const Profile: FC<IProps> = (props) => {
         setEditing(true);
       }
     },
-    [editGithub, editDisplayName, editing, profile, profileService]
+    [editDisplayName, editGithub, editing, id, profile, profileService]
   );
 
   const handleDisplayNameChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
