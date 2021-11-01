@@ -4,7 +4,6 @@ import CardMedia from "@material-ui/core/CardMedia";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
-import UserPic from "./donaldTrump.jpeg";
 import styled from "styled-components";
 import { FollowStatus } from "hooks/SocialHook";
 
@@ -66,7 +65,7 @@ const UserCard: FC<UserCardProps> = (props) => {
   return (
     <div className="col-3" key={id}>
       <StyledCard>
-        <CardMedia component="img" image={UserPic} alt="test" />
+        <CardMedia component="img" src="https://via.placeholder.com/500?text=User+Profile+Image" alt="test" />
         <StyledCardContent>
           <div>{displayName}</div>
         </StyledCardContent>
