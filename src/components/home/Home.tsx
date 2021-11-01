@@ -5,15 +5,30 @@ import React, { FC, useCallback, useState, useEffect } from "react";
 import Post from "./Post";
 import { Link } from "react-router-dom";
 import { Post as IPost } from "shared/interfaces";
+import useLike from "hooks/LikeHook";
 
 const Home: FC = () => {
   const { user } = useAuthStore();
   const { deletePost, updatePost, getPosts } = usePost(user);
+  const { getLiked, likePost } = useLike();
   const [posts, setPosts] = useState<IPost[] | null>(null);
 
+  const loadData = useCallback(async () => {
+    const [postsData, likedData] = await Promise.all([getPosts(), getLiked()]);
+    const newPosts = postsData.map((post) => {
+      console.log(likedData);
+      const liked = likedData.find((l) => l.object === post.id);
+      return {
+        ...post,
+        liked: !!liked,
+      };
+    });
+    setPosts(newPosts);
+  }, [getPosts, getLiked]);
+
   useEffect(() => {
-    getPosts().then((data) => setPosts(data));
-  }, [getPosts]);
+    loadData();
+  }, [loadData]);
 
   const handleUpdatePost = useCallback(
     async (post: IPost, newContent: string) => {
@@ -23,12 +38,27 @@ const Home: FC = () => {
         if (newPost) {
           const index = posts?.findIndex((p) => p.id === post.id);
           const newPosts = [...posts];
-          newPosts[index] = { ...newPost };
+          newPosts[index] = { ...post, ...newPost };
           setPosts(newPosts);
         }
       }
     },
     [posts, updatePost]
+  );
+
+  const handleLikePost = useCallback(
+    async (post: IPost) => {
+      if (posts) {
+        const index = posts.findIndex((p) => p.id === post.id);
+        if (index !== -1) {
+          const likedPost = await likePost(post.author, post);
+          const newPosts = [...posts];
+          newPosts[index] = { ...likedPost };
+          setPosts(newPosts);
+        }
+      }
+    },
+    [likePost, posts]
   );
 
   const handleDeletePost = useCallback(
@@ -48,10 +78,18 @@ const Home: FC = () => {
       return <div>No posts</div>;
     } else {
       return posts.map((post) => {
-        return <Post key={post.id} post={post} onUpdate={handleUpdatePost} onDelete={handleDeletePost} />;
+        return (
+          <Post
+            key={post.id}
+            post={post}
+            onUpdate={handleUpdatePost}
+            onDelete={handleDeletePost}
+            onLike={handleLikePost}
+          />
+        );
       });
     }
-  }, [handleDeletePost, handleUpdatePost, posts]);
+  }, [handleDeletePost, likePost, handleUpdatePost, posts]);
 
   return (
     <div className="container">

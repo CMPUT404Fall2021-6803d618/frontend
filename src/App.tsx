@@ -12,7 +12,7 @@ import PostDetail from "components/home/PostDetail";
 
 const App: FunctionComponent = () => {
   const { renewToken, isAuthenticated } = useAuth();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   useEffect(() => {
     renewToken()
       .catch((err) => {
@@ -35,7 +35,7 @@ const App: FunctionComponent = () => {
   }, [renewToken, isAuthenticated]);
 
   return isLoading ? (
-    <div>loading...</div>
+    <Loading />
   ) : (
     <Switch>
       <Route path={paths.LOGIN} exact component={Login} />

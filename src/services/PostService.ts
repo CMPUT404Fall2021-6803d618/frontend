@@ -1,5 +1,5 @@
 import { ContentType, Visibility } from "shared/enums";
-import { Post } from "shared/interfaces";
+import { PostObject } from "shared/interfaces";
 import { axios } from "utils/axios";
 
 export interface PostPayload {
@@ -12,32 +12,32 @@ export interface PostPayload {
 }
 
 interface IPostService {
-  createPost: (authorId: string, payload: PostPayload) => Promise<Post>;
-  getPosts: (authorId: string) => Promise<Post[]>;
-  getPostById: (postId: string) => Promise<Post>;
-  updatePost: (postId: string, payload: PostPayload) => Promise<Post>;
+  createPost: (authorId: string, payload: PostPayload) => Promise<PostObject>;
+  getPosts: (authorId: string) => Promise<PostObject[]>;
+  getPostById: (postId: string) => Promise<PostObject>;
+  updatePost: (postId: string, payload: PostPayload) => Promise<PostObject>;
   deletePost: (postId: string) => Promise<void>;
 }
 
 export class PostService implements IPostService {
-  public async getPosts(authorId: string): Promise<Post[]> {
+  public async getPosts(authorId: string): Promise<PostObject[]> {
     const { data } = await axios.get(`${authorId}posts/`);
     return data.items;
   }
 
-  public async createPost(authorId: string, payload: PostPayload): Promise<Post> {
+  public async createPost(authorId: string, payload: PostPayload): Promise<PostObject> {
     const { data } = await axios.post(`${authorId}posts/`, {
       ...payload,
     });
     return data;
   }
 
-  public async getPostById(postId: string): Promise<Post> {
+  public async getPostById(postId: string): Promise<PostObject> {
     const { data } = await axios.get(decodeURIComponent(postId));
     return data;
   }
 
-  public async updatePost(postId: string, payload: PostPayload): Promise<Post> {
+  public async updatePost(postId: string, payload: PostPayload): Promise<PostObject> {
     const { data } = await axios.post(postId, {
       ...payload,
     });
@@ -48,7 +48,7 @@ export class PostService implements IPostService {
     await axios.delete(postId);
   }
 
-  public async createPostWithId(authorId: string, postId: string, payload: PostPayload): Promise<Post> {
+  public async createPostWithId(authorId: string, postId: string, payload: PostPayload): Promise<PostObject> {
     const { data } = await axios.post(`${authorId}posts/${postId}`, {
       ...payload,
     });

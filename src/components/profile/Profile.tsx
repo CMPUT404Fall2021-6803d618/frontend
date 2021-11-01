@@ -76,7 +76,7 @@ const Profile: FC<IProps> = (props) => {
   }, [id, profileService]);
 
   useEffect(() => {
-    getPosts().then((data) => setPosts(data));
+    getPosts().then((data) => setPosts(data.map((d) => ({ ...d, liked: false }))));
   }, [getPosts]);
 
   return (

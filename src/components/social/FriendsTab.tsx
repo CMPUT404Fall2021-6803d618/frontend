@@ -2,6 +2,7 @@ import React, { FC } from "react";
 import { Person } from "hooks/SocialHook";
 import styled from "styled-components";
 import UserCard from "./UserCard";
+import Loading from "components/common/components/Loading";
 
 const Container = styled.div`
   display: flex;
@@ -32,7 +33,7 @@ const FriendsTab: FC<IFriendsTabProps> = (props) => {
           />
         ))
       ) : (
-        <div>Loading</div>
+        <Loading />
       )}
     </Container>
   );

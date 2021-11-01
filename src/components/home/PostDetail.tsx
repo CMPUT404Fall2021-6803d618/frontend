@@ -3,6 +3,7 @@ import Loading from "components/common/components/Loading";
 import { withParamId } from "decorators/withParamId";
 import { useAuthStore } from "hooks/AuthStoreHook";
 import useComment from "hooks/CommentHook";
+import useLike from "hooks/LikeHook";
 import usePost from "hooks/PostHook";
 import React, { FC, useState, useEffect, useCallback, ChangeEvent } from "react";
 import { Comment, Post } from "shared/interfaces";
@@ -57,11 +58,24 @@ const PostDetail: FC<IProps> = (props) => {
   const [comments, setComments] = useState<Comment[] | null>(null);
   const { getPostById } = usePost(user);
   const { getComments, sendComment } = useComment(user);
+  const { getLiked } = useLike();
   const isPostAuthor = user?.id === post?.author.id;
 
+  const loadData = useCallback(async () => {
+    const postData = await getPostById(id);
+    let liked = false;
+    if (user) {
+      const likedData = await getLiked();
+      if (likedData.find((l) => l.object === postData.id)) {
+        liked = true;
+      }
+    }
+    setPost({ ...postData, liked });
+  }, [getPostById, getLiked, id, user]);
+
   useEffect(() => {
-    getPostById(id).then((data) => setPost(data));
-  }, [getPostById, id]);
+    loadData();
+  }, [loadData]);
 
   useEffect(() => {
     getComments(id).then((data) => setComments(data));

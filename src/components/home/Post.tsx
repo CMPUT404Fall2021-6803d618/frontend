@@ -1,11 +1,12 @@
 import React, { FC, useCallback } from "react";
-import { Post as IPost } from "shared/interfaces";
+import { Author, Post as IPost } from "shared/interfaces";
 import styled from "styled-components";
 import { formatDate } from "utils";
 import profilePic from "./images.jpeg";
 import MeatballMenu from "./MeatballMenu";
 import PostTitle from "./PostTitle";
 import { Link } from "react-router-dom";
+import LikeButton from "./LikeButton";
 
 // Post Wrapper
 const PostWrapper = styled(Link)`
@@ -99,12 +100,13 @@ interface PostProps {
   post: IPost;
   onUpdate: (post: IPost, newContent: string) => Promise<void>;
   onDelete: (post: IPost) => Promise<void>;
+  onLike: (post: IPost) => Promise<void>;
 }
 
 // const Posts:FunctionComponent<PostProps> = (props) => {
 
 const Post: FC<PostProps> = (props) => {
-  const { post, onUpdate, onDelete } = props;
+  const { post, onUpdate, onDelete, onLike } = props;
   const { content, author, published } = post;
   // Handle change title
   const handleEditSave = useCallback(
@@ -117,6 +119,10 @@ const Post: FC<PostProps> = (props) => {
   const handleDelete = useCallback(async () => {
     await onDelete(post);
   }, [onDelete, post]);
+
+  const handleLike = useCallback(async () => {
+    await onLike(post);
+  }, [onLike, post]);
 
   return (
     <PostWrapper to={`/post/${encodeURIComponent(post.id)}`}>
@@ -158,7 +164,9 @@ const Post: FC<PostProps> = (props) => {
             {/* Available Actions */}
             <PostAction>
               <Action>Comment</Action>
-              <Action>Like</Action>
+              <Action>
+                <LikeButton liked={post.liked} onClick={handleLike} />
+              </Action>
               <Action>Share</Action>
             </PostAction>
           </PostContent>
