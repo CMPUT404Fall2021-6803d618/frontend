@@ -45,6 +45,7 @@ export interface FollowingData {
   status: "PENDING" | "ACCEPTED";
   actor: Author;
   summary: string;
+  inbox_object: string;
 }
 
 export interface Comment extends BaseObject {

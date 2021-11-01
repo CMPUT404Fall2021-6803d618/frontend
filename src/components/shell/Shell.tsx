@@ -1,5 +1,5 @@
 import React, { FC, useState, useCallback } from "react";
-import { IRoute, routes } from "router/routes";
+import { routes } from "router/routes";
 import Router from "router/Router";
 import styled from "styled-components";
 import ResponsiveDrawer from "./ResponsiveDrawer";
