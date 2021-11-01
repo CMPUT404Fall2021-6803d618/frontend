@@ -13,7 +13,7 @@ enum InboxItemType {
 }
 
 const Inbox: FC = () => {
-  const { items } = useInbox();
+  const { items, handleAcceptFollowRequest } = useInbox();
 
   const render = useCallback(() => {
     if (items === null) {
@@ -26,7 +26,7 @@ const Inbox: FC = () => {
         type = type?.toLowerCase?.();
         if (type) {
           if (type === InboxItemType.FOLLOW) {
-            return <FollowInboxItem item={item as FollowingData} />;
+            return <FollowInboxItem item={item as FollowingData} onAccept={handleAcceptFollowRequest} />;
           } else if (type === InboxItemType.LIKE) {
             return <LikeInboxItem item={item as LikeInbox} />;
           } else if (type === InboxItemType.POST) {
@@ -39,7 +39,7 @@ const Inbox: FC = () => {
         }
       });
     }
-  }, [items]);
+  }, [handleAcceptFollowRequest, items]);
 
   return <div>{render()}</div>;
 };

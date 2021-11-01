@@ -1,5 +1,5 @@
 import React, { FC, useCallback } from "react";
-import { Author, Post as IPost } from "shared/interfaces";
+import { Post as IPost } from "shared/interfaces";
 import styled from "styled-components";
 import { formatDate } from "utils";
 import profilePic from "./images.jpeg";

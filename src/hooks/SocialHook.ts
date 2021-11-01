@@ -48,9 +48,10 @@ interface ISocialHook {
   handleFollow: (id: string) => Promise<void>;
   handleUnfollow: (id: string) => Promise<void>;
   handleRemoveFollower: (id: string) => Promise<void>;
+  handleAddFollower: (author: Author) => Promise<void>;
 }
 
-export default function useSocial(): ISocialHook {
+export default function useSocial(shouldLoadData = true): ISocialHook {
   const { user } = useAuthStore();
   const socialService = useMemo(() => new SocialService(), []);
   const [people, setPeople] = useState<Person[] | null>(null);
@@ -59,7 +60,7 @@ export default function useSocial(): ISocialHook {
   const [followings, setFollowings] = useState<Person[] | null>(null);
 
   const loadData = useCallback(async () => {
-    if (user) {
+    if (user && shouldLoadData) {
       const { id } = user;
       const [followersData, followingsData, peopleData] = await Promise.all([
         socialService.getFollowers(id),
@@ -90,7 +91,7 @@ export default function useSocial(): ISocialHook {
       setPeople(newPeople);
       setFriends(newFriends);
     }
-  }, [socialService, user]);
+  }, [shouldLoadData, socialService, user]);
 
   useEffect(() => {
     loadData();
@@ -168,6 +169,15 @@ export default function useSocial(): ISocialHook {
     [socialService, followers, followings, friends, user]
   );
 
+  const handleAddFollower = useCallback(
+    async (author: Author) => {
+      if (user) {
+        await socialService.addFollower(user.id, author);
+      }
+    },
+    [socialService, user]
+  );
+
   return {
     people,
     followers,
@@ -176,5 +186,6 @@ export default function useSocial(): ISocialHook {
     handleFollow,
     handleUnfollow,
     handleRemoveFollower,
+    handleAddFollower,
   };
 }

@@ -14,17 +14,19 @@ const Home: FC = () => {
   const [posts, setPosts] = useState<IPost[] | null>(null);
 
   const loadData = useCallback(async () => {
-    const [postsData, likedData] = await Promise.all([getPosts(), getLiked()]);
-    const newPosts = postsData.map((post) => {
-      console.log(likedData);
-      const liked = likedData.find((l) => l.object === post.id);
-      return {
-        ...post,
-        liked: !!liked,
-      };
-    });
-    setPosts(newPosts);
-  }, [getPosts, getLiked]);
+    if (user) {
+      const [postsData, likedData] = await Promise.all([getPosts(), getLiked()]);
+      const newPosts = postsData.map((post) => {
+        console.log(likedData);
+        const liked = likedData.find((l) => l.object === post.id);
+        return {
+          ...post,
+          liked: !!liked,
+        };
+      });
+      setPosts(newPosts);
+    }
+  }, [user, getPosts, getLiked]);
 
   useEffect(() => {
     loadData();
@@ -89,7 +91,7 @@ const Home: FC = () => {
         );
       });
     }
-  }, [handleDeletePost, likePost, handleUpdatePost, posts]);
+  }, [posts, handleUpdatePost, handleDeletePost, handleLikePost]);
 
   return (
     <div className="container">
