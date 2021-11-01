@@ -2,6 +2,7 @@ import React, { FC, useCallback } from "react";
 import { Person } from "hooks/SocialHook";
 import styled from "styled-components";
 import UserCard from "./UserCard";
+import Loading from "components/common/components/Loading";
 
 const Container = styled.div`
   display: flex;
@@ -27,7 +28,7 @@ const FollowingsTab: FC<IFollowingsTabProps> = (props) => {
     }
   }, [followings, onUnfollow]);
 
-  return <Container>{followings ? render() : <div>Loading</div>}</Container>;
+  return <Container>{followings ? render() : <Loading />}</Container>;
 };
 
 export default FollowingsTab;

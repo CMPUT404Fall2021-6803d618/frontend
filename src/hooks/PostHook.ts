@@ -1,13 +1,13 @@
 import { useMemo, useCallback } from "react";
 import { PostPayload, PostService } from "services/PostService";
-import { Post, Author } from "shared/interfaces";
+import { PostObject, Author } from "shared/interfaces";
 
 interface IPostHook {
-  getPosts: () => Promise<Post[]>;
-  getPostById: (id: string) => Promise<Post>;
-  createPost: (payload: PostPayload) => Promise<Post | null>;
-  updatePost: (post: Post, newContent: string) => Promise<Post | null>;
-  deletePost: (post: Post) => Promise<void>;
+  getPosts: () => Promise<PostObject[]>;
+  getPostById: (id: string) => Promise<PostObject>;
+  createPost: (payload: PostPayload) => Promise<PostObject | null>;
+  updatePost: (post: PostObject, newContent: string) => Promise<PostObject | null>;
+  deletePost: (post: PostObject) => Promise<void>;
 }
 
 const usePost = (user: Author | null): IPostHook => {
@@ -43,7 +43,7 @@ const usePost = (user: Author | null): IPostHook => {
   );
 
   const updatePost = useCallback(
-    async (post: Post, newContent: string) => {
+    async (post: PostObject, newContent: string) => {
       const { title, description, contentType, content, visibility, unlisted } = post;
       if (content !== newContent) {
         const payload = {
@@ -64,7 +64,7 @@ const usePost = (user: Author | null): IPostHook => {
   );
 
   const deletePost = useCallback(
-    async (post: Post) => {
+    async (post: PostObject) => {
       postService.deletePost(post.id);
     },
     [postService]
