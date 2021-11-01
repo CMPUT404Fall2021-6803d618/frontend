@@ -3,6 +3,7 @@ import faker from "faker";
 import { SocialService } from "services/SocialService";
 import { useAuthStore } from "./AuthStoreHook";
 import { Author } from "shared/interfaces";
+import { InboxService } from "services/InboxService";
 
 export enum FollowStatus {
   FOLLOWED,
@@ -48,12 +49,13 @@ interface ISocialHook {
   handleFollow: (id: string) => Promise<void>;
   handleUnfollow: (id: string) => Promise<void>;
   handleRemoveFollower: (id: string) => Promise<void>;
-  handleAddFollower: (author: Author) => Promise<void>;
+  handleAddFollower: (author: Author, inboxId: string) => Promise<void>;
 }
 
 export default function useSocial(shouldLoadData = true): ISocialHook {
   const { user } = useAuthStore();
   const socialService = useMemo(() => new SocialService(), []);
+  const inboxService = useMemo(() => new InboxService(), []);
   const [people, setPeople] = useState<Person[] | null>(null);
   const [followers, setFollowers] = useState<Person[] | null>(null);
   const [friends, setFriends] = useState<Person[] | null>(null);
@@ -170,12 +172,13 @@ export default function useSocial(shouldLoadData = true): ISocialHook {
   );
 
   const handleAddFollower = useCallback(
-    async (author: Author) => {
+    async (author: Author, inboxId: string) => {
       if (user) {
         await socialService.addFollower(user.id, author);
+        await inboxService.deleteInboxItem(user.id, inboxId);
       }
     },
-    [socialService, user]
+    [inboxService, socialService, user]
   );
 
   return {

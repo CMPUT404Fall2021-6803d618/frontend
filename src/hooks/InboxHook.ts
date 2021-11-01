@@ -29,7 +29,7 @@ const useInbox = (): IInboxHook => {
 
   const handleAcceptFollowRequest = useCallback(
     async (item: FollowingData) => {
-      await handleAddFollower(item.actor);
+      await handleAddFollower(item.actor, item.inbox_object);
       setItems(items?.filter((i) => i.inbox_object !== item.inbox_object) ?? []);
     },
     [handleAddFollower, items]
