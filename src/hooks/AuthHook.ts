@@ -16,9 +16,13 @@ export const useAuth = (): IAuthHook => {
 
   const login = useCallback(
     async (username: string, password: string) => {
-      const user = await authService.login(username, password);
-      setIsAuthenticated(true);
-      setUser(user);
+      try {
+        const user = await authService.login(username, password);
+        setIsAuthenticated(true);
+        setUser(user);
+      } catch (err) {
+        alert((err as Error).message);
+      }
     },
     [authService, setIsAuthenticated, setUser]
   );
@@ -26,14 +30,18 @@ export const useAuth = (): IAuthHook => {
   const register = useCallback(
     async (payload: RegisterPayload) => {
       const { username, password, displayName, githubUrl } = payload;
-      const user = await authService.register({
-        username,
-        password,
-        displayName: displayName?.length ? displayName : undefined,
-        githubUrl: githubUrl?.length ? githubUrl : undefined,
-      });
-      setIsAuthenticated(true);
-      setUser(user);
+      try {
+        const user = await authService.register({
+          username,
+          password,
+          displayName: displayName?.length ? displayName : undefined,
+          githubUrl: githubUrl?.length ? githubUrl : undefined,
+        });
+        setIsAuthenticated(true);
+        setUser(user);
+      } catch (err) {
+        alert((err as Error).message);
+      }
     },
     [authService, setIsAuthenticated, setUser]
   );
