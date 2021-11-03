@@ -1,7 +1,7 @@
 import Box from "@material-ui/core/Box";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
-import React, { useState, ChangeEvent, PropsWithChildren, FC, useCallback, useEffect } from "react";
+import React, { useState, ChangeEvent, PropsWithChildren, FC, useCallback, useEffect, Fragment } from "react";
 
 interface TabPanelProps {
   value: number;
@@ -35,10 +35,34 @@ function TabPanel(props: PropsWithChildren<TabPanelProps>) {
 function a11yProps(index: number) {
   return {
     id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
+    // "aria-controls": `simple-tabpanel-${index}`,
     key: `tab-${index}`,
   };
 }
+
+interface ITabItemProps {
+  isActive: boolean;
+  onTabClick: () => void;
+  key: string;
+  label: string;
+}
+
+const TabItem: FC<ITabItemProps> = (props) => {
+  const { isActive, onTabClick, key, label } = props;
+
+  return (
+    <button
+      className={`p-2 flex items-center justify-center bg-gray-900 text-white ${
+        isActive ? "bg-green-500 text-gray-800" : ""
+      }`}
+      onClick={onTabClick}
+      {...a11yProps(0)}
+      key={key}
+    >
+      {label}
+    </button>
+  );
+};
 
 interface IProps {
   currentTab: string;
@@ -76,21 +100,29 @@ const SocialTabs: FC<IProps> = (props) => {
     [onTabChange, tabs]
   );
 
+  const handleTabChange = useCallback(
+    (newValue: number) => {
+      onTabChange(tabs[newValue].id);
+    },
+    [onTabChange, tabs]
+  );
+
   return (
-    <Box sx={{ width: "100%" }}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs value={value} onChange={handleChange} aria-label="friend tabs">
-          {tabs.map((tab) => (
-            <Tab label={tab.label} {...a11yProps(0)} key={`tab-${tab.label}`} />
-          ))}
-        </Tabs>
-      </Box>
-      {tabs.map((tab, index) => (
-        <TabPanel value={value} index={index} key={`tab-panel-${tab.label}`}>
-          {tab.render()}
-        </TabPanel>
-      ))}
-    </Box>
+    <Fragment>
+      <div className="w-full flex flex-row">
+        {tabs.map((tab, index) => (
+          <TabItem
+            isActive={value === index}
+            onTabClick={() => {
+              handleTabChange(index);
+            }}
+            key={tab.id}
+            label={tab.label}
+          />
+        ))}
+      </div>
+      <div className="w-full">{tabs.map((tab, index) => value === index && tab.render())}</div>
+    </Fragment>
   );
 };
 

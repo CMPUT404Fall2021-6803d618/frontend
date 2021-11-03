@@ -63,29 +63,34 @@ const UserCard: FC<UserCardProps> = (props) => {
   }, [followStatus]);
 
   return (
-    <div className="col-3" key={id}>
-      <StyledCard>
-        <CardMedia component="img" src="https://via.placeholder.com/500?text=User+Profile+Image" alt="test" />
-        <StyledCardContent>
-          <div>{displayName}</div>
-        </StyledCardContent>
-        <StyledCardActions>
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            onClick={handleFollowClick}
-            disabled={followStatus === FollowStatus.PENDING}
-          >
-            {getFollowText()}
-          </Button>
-          {onFollowerRemove && (
-            <Button variant="contained" size="large" onClick={handleRemoveFollower}>
-              Remove
-            </Button>
-          )}
-        </StyledCardActions>
-      </StyledCard>
+    <div className="w-full p-2 flex flex-row rounded-md bg-gray-900 text-white shadow-sm text-xs sm:text-sm" key={id}>
+      <img
+        className="flex-0 h-4 w-4 sm:w-16 sm:h-16 rounded-full my-auto"
+        src="https://via.placeholder.com/500?text=User+Profile+Image"
+        alt="test"
+      />
+      {/* information */}
+      <div className="flex-1 flex flex-col items-start sm:ml-3">
+        <span>{displayName}</span>
+        <span>github: https://github.com/TODO</span>
+      </div>
+      {/* action buttons */}
+      <div className="flex-0 flex sm:py-2 flex-row sm:space-x-2">
+        <button
+          className="text-xs sm:text-sm bg-purple-800 hover:bg-purple-700 text-white
+          font-bold py-1 sm:px-2 rounded disabled:opacity-50"
+          onClick={handleFollowClick}
+          disabled={followStatus === FollowStatus.PENDING}
+        >
+          {getFollowText()}
+        </button>
+        <button
+          className="text-xs sm:text-sm bg-gray-800 hover:bg-gray-700 text-white font-bold py-1 sm:px-2 rounded"
+          onClick={handleRemoveFollower}
+        >
+          Remove
+        </button>
+      </div>
     </div>
   );
 };
