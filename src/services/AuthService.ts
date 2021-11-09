@@ -41,7 +41,7 @@ export class AuthService implements IAuthService {
   private async processUserData(response: AxiosResponse<UserData>): Promise<User> {
     const { data } = response;
     const { access_token: accessToken, refresh_token: refreshToken, author, username, is_active: isActive } = data;
-    if (process.env.REACT_APP_ADMIN_ACTIVE_TOGGLE === "true") {
+    if (import.meta.env.VITE_ADMIN_ACTIVE_TOGGLE === true) {
       if (isActive) {
         this.updateAuthHeader(accessToken);
         cookies.remove("refreshToken");
