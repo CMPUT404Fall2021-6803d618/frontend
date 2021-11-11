@@ -1,0 +1,28 @@
+.heart {
+    cursor: pointer;
+    height: 50px;
+    width: 50px;
+    background-image: url("./web_heart_animation.png");
+    background-repeat: no-repeat;
+    background-size: 2900%;
+    border: none;
+    background-color: transparent;
+    background-position: left;
+  }
+
+.heart.liked {
+    background-position: right;
+}
+
+.heart.animate {
+    animation: heart-burst 0.8s steps(28) 1;
+}
+
+@keyframes heart-burst {
+    from {
+        background-position:left;
+    }
+    to { 
+        background-position:right;
+    }
+}
