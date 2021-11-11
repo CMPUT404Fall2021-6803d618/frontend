@@ -6,7 +6,7 @@ import profilePic from "./images.jpeg";
 import MeatballMenu from "./MeatballMenu";
 import PostTitle from "./PostTitle";
 import { Link } from "react-router-dom";
-import LikeButton from "./LikeButton";
+import LikeButton from "../common/components/LikeButton/LikeButton";
 
 // Post Wrapper
 const PostWrapper = styled(Link)`
