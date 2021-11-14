@@ -7,46 +7,51 @@ import MeatballMenu from "./MeatballMenu";
 import PostTitle from "./PostTitle";
 import { Link } from "react-router-dom";
 import LikeButton from "../common/components/LikeButton/LikeButton";
+import Delete from "@material-ui/icons/Delete";
+import Edit from "@material-ui/icons/Edit";
+import ShareButton from "components/common/components/ShareButton";
+import { useAuthStore } from "hooks/AuthStoreHook";
+import CommentButton from "components/common/components/CommentButton";
 
 // Post Wrapper
 const PostWrapper = styled(Link)`
   height: fit-content;
   display: flex;
   border: 1px solid #ccc;
-  &:hover {
-    background-color: rgb(239, 243, 244);
-  }
   width: 100%;
+  color: darkslategray;
+  &:hover {
+    color: darkslategray;
+  }
 `;
 
 // Post container
 const PostContainer = styled.div`
   height: fit-content;
-  margin: 20px;
+  margin: 12px;
   display: flex;
   width: 100%;
 `;
 
-// User Profile Picture container
-const ProfilePicContainer = styled.div`
-  margin-right: 12px;
+const HeaderDiv = styled.div`
   display: flex;
-  justify-content: center;
-  width: 10%;
 `;
 
-// Post Body
+const ProfileImage = styled.img`
+  max-width: 50px;
+  max-height: 50px;
+  border-radius: 50%;
+  object-fit: contain;
+  margin-right: 12px;
+`;
+
 const PostBody = styled.div`
   display: flex;
   flex-direction: column;
-  padding-bottom: 12px;
-  max-height: 1000px;
-  height: fit-content;
-  width: 90%;
+  flex: 1;
 `;
 
-// Post Author
-const PostAuthor = styled.div`
+const PostAuthorMenuDiv = styled.div`
   display: flex;
   justify-content: space-between;
   flex-wrap: nowrap;
@@ -57,31 +62,15 @@ const PostAuthor = styled.div`
   }
 `;
 
-// Post content
-const PostContent = styled.div`
+const PostAuthorDiv = styled.div`
   display: flex;
-  flex-direction: column;
+  align-items: center;
 `;
 
-// Post Media
-// const PostMedia = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   height: 800px;
-//   width: 100%;
-//   background-image: url(${PostImage});
-//   background-size: cover;
-//   background-repeat: no-repeat;
-//   background-position: center center;
-//   border-radius: 30px;
-//   margin-bottom: 30px;
-//   @media (max-width: 768px) {
-//     height: 320px;
-//   }
-//   @media (max-width: 425px) {
-//     height: 220px;
-//   }
-// `;
+// Post content
+const PostContent = styled.div`
+  margin: 1rem 0;
+`;
 
 // Post Action
 const PostAction = styled.div`
@@ -89,87 +78,97 @@ const PostAction = styled.div`
   height: fit-content;
   flex-direction: row;
   justify-content: space-between;
-  margin-right: 30px;
+  margin-left: -12px;
+  max-width: 425px;
 `;
-// Action div
-const Action = styled.div`
-  max-width: 20px;
+
+const DisplayName = styled.span`
+  margin-bottom: 0;
+  font-weight: bold;
+`;
+
+const Dot = styled.span`
+  margin: 0 5px;
+  color: grey;
+`;
+
+const PublishedDate = styled.span`
+  margin-bottom: 0;
 `;
 
 interface PostProps {
   post: IPost;
-  onUpdate: (post: IPost, newContent: string) => Promise<void>;
-  onDelete: (post: IPost) => Promise<void>;
-  onLike: (post: IPost) => Promise<void>;
+  onDeleteClick: (post: IPost) => Promise<void>;
+  onLikeClick: (post: IPost) => Promise<void>;
+  onEditClick: (post: IPost) => void;
+  onShareClick: (post: IPost) => void;
 }
 
 // const Posts:FunctionComponent<PostProps> = (props) => {
 
 const Post: FC<PostProps> = (props) => {
-  const { post, onUpdate, onDelete, onLike } = props;
+  const { user } = useAuthStore();
+  const { post, onDeleteClick, onEditClick, onLikeClick, onShareClick } = props;
   const { content, author, published } = post;
-  // Handle change title
-  const handleEditSave = useCallback(
-    async (newValue: string) => {
-      await onUpdate(post, newValue);
+  const isPostAuthor = user?.id === post?.author.id;
+
+  const handleDeleteClick = useCallback(async () => {
+    await onDeleteClick(post);
+  }, [onDeleteClick, post]);
+
+  const handleEditClick = useCallback(() => {
+    onEditClick(post);
+  }, [onEditClick, post]);
+
+  const handleLikeClick = useCallback(async () => {
+    await onLikeClick(post);
+  }, [onLikeClick, post]);
+
+  const handleShareClick = useCallback(() => {
+    onShareClick(post);
+  }, [onShareClick, post]);
+
+  const meatballMenuItems = [
+    {
+      text: "Delete",
+      Icon: Delete,
+      onClick: handleDeleteClick,
     },
-    [onUpdate, post]
-  );
-
-  const handleDelete = useCallback(async () => {
-    await onDelete(post);
-  }, [onDelete, post]);
-
-  const handleLike = useCallback(async () => {
-    await onLike(post);
-  }, [onLike, post]);
+    {
+      text: "Edit",
+      Icon: Edit,
+      onClick: handleEditClick,
+    },
+  ];
 
   return (
     <PostWrapper to={`/post/${encodeURIComponent(post.id)}`}>
       <PostContainer>
-        {/* Display the user profile picture */}
-        <ProfilePicContainer>
-          <img
-            style={{
-              maxWidth: "50px",
-              maxHeight: "50px",
-              borderRadius: "50%",
-              margin: "0 20px",
-              objectFit: "contain",
-            }}
-            src={profilePic}
-            alt="user pic"
-          />
-        </ProfilePicContainer>
-        {/* Post Body */}
+        <ProfileImage src={profilePic} alt="Profile Image" />
         <PostBody>
-          <PostAuthor>
-            {/* Display the author and the time posted */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              <p style={{ marginBottom: "0" }}>{author.displayName}</p>
-              <span style={{ margin: "0 5px", color: "gray" }}>🞄</span>
-              <p style={{ marginBottom: "0" }}>{formatDate(published)}</p>
-            </div>
+          <HeaderDiv>
+            <PostAuthorMenuDiv>
+              <PostAuthorDiv>
+                <DisplayName>{author.displayName}</DisplayName>
+                <Dot>🞄</Dot>
+                <PublishedDate>{formatDate(published)}</PublishedDate>
+              </PostAuthorDiv>
 
-            <MeatballMenu content={content} onSave={handleEditSave} onDelete={handleDelete} />
-          </PostAuthor>
-          {/* Main content of the post */}
+              {isPostAuthor && <MeatballMenu items={meatballMenuItems} />}
+            </PostAuthorMenuDiv>
+          </HeaderDiv>
           <PostContent>
             <PostTitle title={content} />
-            {/* Available Actions */}
-            <PostAction>
-              <Action>Comment</Action>
-              <Action>
-                <LikeButton liked={post.liked} onClick={handleLike} />
-              </Action>
-              <Action>Share</Action>
-            </PostAction>
           </PostContent>
+          <PostAction>
+            <CommentButton
+              onClick={() => {
+                return Promise.resolve();
+              }}
+            />
+            <LikeButton liked={post.liked} onClick={handleLikeClick} />
+            <ShareButton onClick={handleShareClick} />
+          </PostAction>
         </PostBody>
       </PostContainer>
     </PostWrapper>

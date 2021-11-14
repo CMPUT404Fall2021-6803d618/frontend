@@ -1,101 +1,36 @@
-import React, { FC, useState, MouseEvent, useCallback, ChangeEvent, useEffect } from "react";
+/* eslint-disable @typescript-eslint/ban-types */
+import React, { FC, useState, MouseEvent, useCallback } from "react";
 import styled from "styled-components";
 import Popover from "@material-ui/core/Popover";
-import Paper from "@material-ui/core/Paper";
-import Delete from "@material-ui/icons/Delete";
-import Edit from "@material-ui/icons/Edit";
-import Typography from "@material-ui/core/Typography";
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Button from "@material-ui/core/Button";
+import MeatballIcon from "@material-ui/icons/MoreHoriz";
+import IconButton from "@material-ui/core/IconButton";
+import MenuItem from "@material-ui/core/MenuItem";
+import MenuList from "@material-ui/core/MenuList";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import { OverridableComponent } from "@material-ui/core/OverridableComponent";
+import { SvgIconTypeMap } from "@material-ui/core/SvgIcon";
 
-// Meatball menu
-const MenuWrapper = styled.div`
-  display: flex;
-  max-height: 100%;
-  width: 50px;
-  align-items: center;
-  justify-content: end;
-`;
-
-const StyledMenu = styled.div`
-  display: flex;
-  height: 30px;
-  width: 30px;
-  border-radius: 50%;
-  align-items: center;
-  justify-content: center;
-  &:hover {
-    background-color: rgba(29, 155, 240, 0.1);
-  }
-`;
-
-const Circle = styled.div`
-  width: 3px;
-  height: 3px;
-  margin: 0 1px 1px;
-  border-radius: 50%;
-  background-color: #6c757d;
-  display: block;
-`;
-
-// popup
-const StyledPaper = styled(Paper)`
-  max-width: 400px;
-  max-height: 400px;
-  width: fit-content;
-  height: fit-content;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-`;
-
-// popup Action
-const ActionBox = styled.div`
-  display: flex;
-  width: 100%;
-  height: 20%;
-  &:hover {
-    background-color: rgb(239, 243, 244);
-  }
-`;
-
-// Dialog Content
-const StyledDialogContent = styled(DialogContent)`
-  width: 600px;
-  min-height: 200px;
-  text-align: justify;
-`;
-
-// styled input
-const Input = styled.textarea`
-  width: 550px;
-  min-height: 200px;
-  border: 0;
-  font-size: 15px;
+const MeatballButton = styled(IconButton)`
+  padding: 0 !important;
+  height: 40px;
+  width: 40px;
 `;
 
 interface MenuProps {
-  content: string;
-  onSave: (value: string) => Promise<void>;
-  onDelete: () => Promise<void>;
+  items: {
+    text: string;
+    Icon: OverridableComponent<SvgIconTypeMap<{}, "svg">>;
+    onClick: () => void;
+  }[];
 }
 
 const MeatballMenu: FC<MenuProps> = (props) => {
-  const [value, setValue] = useState("");
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLDivElement>(null);
-  const { onDelete, onSave, content } = props;
+  const { items } = props;
+  const [anchorEl, setAnchorEl] = useState<null | HTMLButtonElement>(null);
   const menuOpen = Boolean(anchorEl);
 
-  useEffect(() => {
-    setValue(content);
-  }, [content]);
-
-  // menu handle open/close
-  const handleMenuClick = useCallback((e: MouseEvent<HTMLDivElement>) => {
+  const handleMenuClick = useCallback((e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     e.preventDefault();
     setAnchorEl(e.currentTarget);
@@ -106,89 +41,44 @@ const MeatballMenu: FC<MenuProps> = (props) => {
     setAnchorEl(null);
   }, []);
 
-  // Dialog handle open/close (?)
-  const handleOpenEdit = useCallback((e: MouseEvent<HTMLDivElement>) => {
-    e.stopPropagation();
-    setDialogOpen(true);
-  }, []);
-
-  const handleCloseEdit = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => {
-      // console.log(dialogOpen);
-      e.stopPropagation();
-      e.preventDefault();
-      setDialogOpen(false);
-      onSave(value);
-      handleMenuClose(e);
-    },
-    [handleMenuClose, onSave, value]
-  );
-
-  const handleValueChange = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
-    setValue(e.currentTarget.value);
-  }, []);
-
-  const handleDelete = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => {
-      e.preventDefault();
-      onDelete();
-      setAnchorEl(null);
-    },
-    [onDelete]
-  );
-
   return (
-    <MenuWrapper>
-      <StyledMenu>
-        <div
-          style={{
-            display: "flex",
-            height: "100%",
-            alignItems: "center",
-          }}
-          onClick={handleMenuClick}
-        >
-          <Circle></Circle>
-          <Circle></Circle>
-          <Circle></Circle>
-        </div>
-        <Popover
-          open={menuOpen}
-          anchorEl={anchorEl}
-          onClose={handleMenuClose}
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "center",
-          }}
-        >
-          <StyledPaper>
-            <ActionBox>
-              <Delete style={{ margin: "10px" }}></Delete>
-              <Typography style={{ margin: "10px" }} onClick={handleDelete}>
-                Delete
-              </Typography>
-            </ActionBox>
-            <ActionBox onClick={handleOpenEdit}>
-              <Edit style={{ margin: "10px" }}></Edit>
-              <Typography style={{ margin: "10px" }}>Edit</Typography>
-              <Dialog onClose={handleCloseEdit} open={dialogOpen}>
-                <DialogTitle>Edit Your Post</DialogTitle>
-                <StyledDialogContent dividers>
-                  <Input value={value} onChange={handleValueChange} />
-                </StyledDialogContent>
-                <DialogActions>
-                  <Button onClick={handleCloseEdit}>Save Changes</Button>
-                </DialogActions>
-              </Dialog>
-            </ActionBox>
-          </StyledPaper>
-        </Popover>
-      </StyledMenu>
-    </MenuWrapper>
+    <>
+      <MeatballButton onClick={handleMenuClick}>
+        <MeatballIcon />
+      </MeatballButton>
+      <Popover
+        open={menuOpen}
+        anchorEl={anchorEl}
+        onClose={handleMenuClose}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
+      >
+        <MenuList>
+          {items.map((item) => {
+            const { text, Icon, onClick } = item;
+            const handleClick = (e: MouseEvent<HTMLLIElement>): void => {
+              e.preventDefault();
+              onClick();
+              setAnchorEl(null);
+            };
+            return (
+              <MenuItem key={`menu-item-${text}`} onClick={handleClick}>
+                <ListItemIcon>
+                  <Icon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>{text}</ListItemText>
+              </MenuItem>
+            );
+          })}
+        </MenuList>
+      </Popover>
+    </>
   );
 };
 

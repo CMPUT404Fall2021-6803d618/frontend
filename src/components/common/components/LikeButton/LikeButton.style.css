@@ -8,6 +8,7 @@
     border: none;
     background-color: transparent;
     background-position: left;
+    position: absolute;
   }
 
 .heart.liked {

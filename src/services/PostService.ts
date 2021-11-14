@@ -1,5 +1,6 @@
 import { ContentType, Visibility } from "shared/enums";
-import { PostObject } from "shared/interfaces";
+import { Author, PostObject } from "shared/interfaces";
+import { formatId } from "utils";
 import { axios } from "utils/axios";
 
 export interface PostPayload {
@@ -9,6 +10,7 @@ export interface PostPayload {
   content: string;
   visibility: Visibility;
   unlisted: boolean;
+  friends?: Author[];
 }
 
 interface IPostService {
@@ -20,6 +22,18 @@ interface IPostService {
 }
 
 export class PostService implements IPostService {
+  // private getPostId(id: string): string {
+  //   const decoded = decodeURIComponent(id);
+  //   const url = new URL(decoded);
+  //   const baseUrl = new URL(BASE_URL);
+
+  //   if (url.host === baseUrl.host) {
+  //     return extractIdFromUrl(url.pathname);
+  //   } else {
+  //     return encodeURIComponent(decoded);
+  //   }
+  // }
+
   public async getPosts(authorId: string): Promise<PostObject[]> {
     const { data } = await axios.get(`${authorId}posts/`);
     return data.items;
@@ -53,5 +67,11 @@ export class PostService implements IPostService {
       ...payload,
     });
     return data;
+  }
+
+  public async sharePost(postId: string, friends: Author[]): Promise<void> {
+    await axios.post(`${formatId(postId)}/share`, {
+      friends,
+    });
   }
 }

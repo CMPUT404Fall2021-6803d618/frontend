@@ -80,7 +80,6 @@ export default function useSocial(shouldLoadData = true): ISocialHook {
         const following = newFollowings.find((f) => f.id === follower.id);
         return following ? { ...following } : { ...follower, followStatus: FollowStatus.NOT_FOLLOWED };
       });
-      console.log(peopleData);
       const newPeople: Person[] = peopleData
         .filter((person) => person.id !== user.id)
         .map((person) => {
@@ -142,7 +141,7 @@ export default function useSocial(shouldLoadData = true): ISocialHook {
         if (user && followers && followings && friends && people) {
           await socialService.unfollow(user.id, id);
           const newFollowerStatus = getNewStatusData(followers, id, FollowStatus.NOT_FOLLOWED);
-          const newPeopleStatus = getNewStatusData(people, id, FollowStatus.PENDING);
+          const newPeopleStatus = getNewStatusData(people, id, FollowStatus.NOT_FOLLOWED);
           if (newFollowerStatus) {
             setFollowers(newFollowerStatus.updatedArr);
             setFollowings(followings.filter((f) => f.id !== id));
