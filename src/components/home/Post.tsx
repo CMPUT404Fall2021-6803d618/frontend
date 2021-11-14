@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { formatDate } from "utils";
 import profilePic from "./images.jpeg";
 import MeatballMenu from "./MeatballMenu";
-import PostTitle from "./PostTitle";
 import { Link } from "react-router-dom";
 import LikeButton from "../common/components/LikeButton/LikeButton";
 import Delete from "@material-ui/icons/Delete";
@@ -12,6 +11,7 @@ import Edit from "@material-ui/icons/Edit";
 import ShareButton from "components/common/components/ShareButton";
 import { useAuthStore } from "hooks/AuthStoreHook";
 import CommentButton from "components/common/components/CommentButton";
+import ReactMarkdown from "react-markdown";
 
 // Post Wrapper
 const PostWrapper = styled(Link)`
@@ -158,7 +158,7 @@ const Post: FC<PostProps> = (props) => {
             </PostAuthorMenuDiv>
           </HeaderDiv>
           <PostContent>
-            <PostTitle title={content} />
+            <ReactMarkdown>{content}</ReactMarkdown>
           </PostContent>
           <PostAction>
             <CommentButton
