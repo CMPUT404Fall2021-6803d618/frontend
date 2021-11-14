@@ -70,6 +70,7 @@ const PostAuthorDiv = styled.div`
 // Post content
 const PostContent = styled.div`
   margin: 1rem 0;
+  overflow-wrap: anywhere;
 `;
 
 // Post Action
