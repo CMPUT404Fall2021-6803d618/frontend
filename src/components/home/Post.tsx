@@ -7,6 +7,7 @@ import MeatballMenu from "./MeatballMenu";
 import PostTitle from "./PostTitle";
 import { Link } from "react-router-dom";
 import LikeButton from "../common/components/LikeButton/LikeButton";
+import ReactMarkdown from "react-markdown";
 
 // Post Wrapper
 const PostWrapper = styled(Link)`
@@ -160,7 +161,7 @@ const Post: FC<PostProps> = (props) => {
           </PostAuthor>
           {/* Main content of the post */}
           <PostContent>
-            <PostTitle title={content} />
+            <ReactMarkdown>{content}</ReactMarkdown>
             {/* Available Actions */}
             <PostAction>
               <Action>Comment</Action>
