@@ -5,6 +5,7 @@ import { paths } from "router/paths";
 import { ContentType, Visibility } from "shared/enums";
 import styled from "styled-components";
 import { Redirect } from "react-router-dom";
+import FileUploader from "./FileUploader";
 
 const TweetBox = styled.div`
   padding-bottom: 10px;
@@ -58,6 +59,43 @@ const VisibilityLabel = styled.label`
   margin-left: 80px;
 `;
 
+const ImageButton = styled.button`
+  align-items: center;
+  appearance: none;
+  background-color: #3eb2fd;
+  background-image: linear-gradient(1deg, #4f58fd, #149bf3 99%);
+  background-size: calc(100% + 20px) calc(100% + 20px);
+  border-radius: 100px;
+  border-width: 0;
+  box-shadow: none;
+  box-sizing: border-box;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: CircularStd, sans-serif;
+  font-size: 1rem;
+  width: 120px;
+  height: 40px;
+  justify-content: center;
+  line-height: 1.5;
+  padding: 6px 20px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.2s, background-position 0.2s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: top;
+  white-space: nowrap;
+  margin-top: 10px;
+  margin-left: 60px;
+`;
+
+const ImageInput = styled.input`
+  visibility: hidden;
+`;
+
 const TweetBoxImg = styled.img`
   border-radius: 50%;
   height: 40px;
@@ -81,6 +119,7 @@ const CreatePost: FC = () => {
   // text message
   const [isPostCreated, setIsPostCreated] = useState(false);
   const [content, setContent] = useState("");
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [title, setTitle] = useState("");
   const [visibility, setVisibility] = useState(Visibility.PUBLIC);
   const [description, setDescription] = useState("");
@@ -142,6 +181,14 @@ const CreatePost: FC = () => {
     }
   }, []);
 
+  const handleFileSelectError = useCallback((e: any) => {
+    alert(e.error);
+  }, []);
+
+  const handleFileSelectSuccess = useCallback((file: File) => {
+    setSelectedImage(file);
+  }, []);
+
   const render = useCallback(() => {
     if (isPostCreated) {
       return <Redirect to={paths.HOME} />;
@@ -169,6 +216,10 @@ const CreatePost: FC = () => {
                 <option value="PUBLIC">Public </option>
               </select>
             </VisibilityLabel>
+            <FileUploader
+              onFileSelectError={handleFileSelectError}
+              onFileSelectSuccess={handleFileSelectSuccess}
+            ></FileUploader>
 
             {/* button */}
             <TweetButton onClick={handleSubmit}>Tweet</TweetButton>
