@@ -1,6 +1,18 @@
 import React, { FC, useCallback, useEffect, useState, ChangeEvent } from "react";
 import { Post } from "shared/interfaces";
 import Modal from "../common/components/Modal";
+import styled from "styled-components";
+
+const Container = styled.div`
+  display: flex;
+  flex: 1;
+  min-height: 400px;
+`;
+
+const TextArea = styled.textarea`
+  flex: 1;
+  resize: none;
+`;
 
 interface IProps {
   open: boolean;
@@ -42,7 +54,9 @@ const EditPostModal: FC<IProps> = (props) => {
       onClose={onClose}
       actionOption={{ onClick: handleUpdate, onSuccess: handleUpdateSuccess, text: "Update" }}
     >
-      <textarea value={value} onChange={handleValueChange} />
+      <Container>
+        <TextArea value={value} onChange={handleValueChange} />
+      </Container>
     </Modal>
   );
 };

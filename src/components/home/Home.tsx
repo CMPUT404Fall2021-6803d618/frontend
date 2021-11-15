@@ -11,9 +11,13 @@ import ShareModal from "./ShareModal";
 import styled from "styled-components";
 
 const Container = styled.div`
-  max-width: 600px;
   padding: 12px;
   overflow-y: scroll;
+  flex: 1;
+`;
+
+const PostList = styled.div`
+  max-width: 600px;
 `;
 
 const Home: FC = () => {
@@ -147,7 +151,7 @@ const Home: FC = () => {
   return (
     <Container>
       <Link to="/posts/create">Create Post</Link>
-      {render()}
+      <PostList>{render()}</PostList>
       <EditPostModal
         open={openEditModal}
         onClose={handleCloseEditModal}

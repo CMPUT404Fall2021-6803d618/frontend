@@ -31,6 +31,7 @@ const PostContainer = styled.div`
   margin: 12px;
   display: flex;
   width: 100%;
+  overflow: hidden;
 `;
 
 const HeaderDiv = styled.div`
@@ -55,11 +56,8 @@ const PostAuthorMenuDiv = styled.div`
   display: flex;
   justify-content: space-between;
   flex-wrap: nowrap;
-  font-size: 15px;
+  font-size: 14px;
   width: 100%;
-  @media (max-width: 425px) {
-    font-size: 13px;
-  }
 `;
 
 const PostAuthorDiv = styled.div`
@@ -71,6 +69,10 @@ const PostAuthorDiv = styled.div`
 const PostContent = styled.div`
   margin: 1rem 0;
   overflow-wrap: anywhere;
+  img {
+    height: auto;
+    max-width: 100%;
+  }
 `;
 
 // Post Action
