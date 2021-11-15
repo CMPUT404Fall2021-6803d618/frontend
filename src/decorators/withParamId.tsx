@@ -23,7 +23,6 @@ export function toInt(id: string): number {
 
 export function withParamId<T>(Component: FunctionComponent<IProps<T>>, parseId?: (paramId: string) => T) {
   return <P extends ComputedRouteComponentProps>(props: P) => {
-    console.log(props);
     const match = props.match ?? props.computedMatch;
     const paramId = (match.params as any).id;
     const id: T = parseId?.(paramId) ?? paramId;

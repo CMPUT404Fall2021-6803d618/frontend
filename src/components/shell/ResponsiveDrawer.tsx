@@ -7,11 +7,6 @@ import ListItem from "@material-ui/core/ListItem";
 import ErrorIcon from "@material-ui/icons/Error";
 import Divider from "@material-ui/core/Divider";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import Toolbar from "@material-ui/core/Toolbar";
-import AppBar from "@material-ui/core/AppBar";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import Typography from "@material-ui/core/Typography";
 import Hidden from "@material-ui/core/Hidden";
 import Drawer from "@material-ui/core/Drawer";
 import { Link } from "react-router-dom";
@@ -22,33 +17,24 @@ const drawerWidth = 240;
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     drawer: {
+      background: "white",
       [theme.breakpoints.up("sm")]: {
-        width: drawerWidth,
+        flex: 1,
         flexShrink: 0,
-      },
-    },
-    appBar: {
-      background: "#dd2020",
-      [theme.breakpoints.up("sm")]: {
-        width: `calc(100% - ${drawerWidth}px)`,
-        marginLeft: drawerWidth,
-      },
-    },
-    menuButton: {
-      marginRight: theme.spacing(2),
-      [theme.breakpoints.up("sm")]: {
-        display: "none",
+        borderRight: "1px solid rgba(0, 0, 0, 0.12)",
       },
     },
     drawerPaper: {
       width: drawerWidth,
+      position: "relative",
+      borderRight: "none",
+      [theme.breakpoints.up("sm")]: {
+        marginLeft: "auto",
+      },
     },
     content: {
       flexGrow: 1,
       padding: theme.spacing(3),
-    },
-    appBarTitle: {
-      fontFamily: "Nunito Sans",
     },
     listItem: {
       width: "auto",
@@ -82,17 +68,13 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IProps {
   currentUrl: string;
-  currentTitle: string;
+  mobileOpen: boolean;
+  onDrawerToggle: () => void;
 }
 
-const ResponsiveDrawer: FunctionComponent<IProps> = ({ currentUrl, currentTitle }) => {
-  const [mobileOpen, setMobileOpen] = useState<boolean>(false);
+const ResponsiveDrawer: FunctionComponent<IProps> = ({ currentUrl, onDrawerToggle, mobileOpen }) => {
   const classes = useStyles();
   const theme = useTheme();
-
-  const handleDrawerToggle = useCallback(() => {
-    setMobileOpen(!mobileOpen);
-  }, [mobileOpen]);
 
   const DrawerContent = (
     <div>
@@ -126,31 +108,13 @@ const ResponsiveDrawer: FunctionComponent<IProps> = ({ currentUrl, currentTitle 
   return (
     <Fragment>
       <CssBaseline />
-      {currentTitle && (
-        <AppBar position="fixed" className={classes.appBar} elevation={0}>
-          <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              edge="start"
-              onClick={handleDrawerToggle}
-              className={classes.menuButton}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography className={classes.appBarTitle} variant="h6" noWrap>
-              {currentTitle}
-            </Typography>
-          </Toolbar>
-        </AppBar>
-      )}
       <nav className={classes.drawer}>
         <Hidden smUp implementation="css">
           <Drawer
             variant="temporary"
-            anchor={theme.direction === "rtl" ? "right" : "left"}
+            anchor="left"
             open={mobileOpen}
-            onClose={handleDrawerToggle}
+            onClose={onDrawerToggle}
             classes={{
               paper: classes.drawerPaper,
             }}

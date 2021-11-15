@@ -1,10 +1,7 @@
+import prettyMs from "pretty-ms";
+
 export function formatDate(val: string): string {
-  return new Date(val).toLocaleDateString("en-US", {
-    weekday: "short",
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
+  return prettyMs(Date.now() - new Date(val).getTime(), { compact: true });
 }
 
 export function formatId(id: string): string {
