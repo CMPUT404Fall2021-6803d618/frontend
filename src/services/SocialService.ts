@@ -30,9 +30,11 @@ export class SocialService implements ISocialService {
     this.endpoints = {
       LIST_AUTHORS: () => `${BASE_URL}/authors/`,
       LIST_FOLLOWERS: (authorId: string) => `${formatId(authorId)}/followers/`,
-      FOLLOWERS: (authorId: string, foreignAuthorId: string) => `${formatId(authorId)}/followers/${foreignAuthorId}`,
+      FOLLOWERS: (authorId: string, foreignAuthorId: string) =>
+        `${formatId(authorId)}/followers/${encodeURIComponent(foreignAuthorId)}`,
       LIST_FOLLOWINGS: (authorId: string) => `${formatId(authorId)}/followings/`,
-      FOLLOWINGS: (authorId: string, foreignAuthorId: string) => `${formatId(authorId)}/followings/${foreignAuthorId}`,
+      FOLLOWINGS: (authorId: string, foreignAuthorId: string) =>
+        `${formatId(authorId)}/followings/${encodeURIComponent(foreignAuthorId)}`,
     };
   }
 

@@ -36,6 +36,6 @@ export class InboxService implements IInboxService {
   }
 
   public async deleteInboxItem(authorId: string, id: string): Promise<void> {
-    await axios.delete(`${formatId(authorId)}/inbox/${id}`);
+    await axios.delete(`${formatId(authorId)}/inbox/${id}/`);
   }
 }

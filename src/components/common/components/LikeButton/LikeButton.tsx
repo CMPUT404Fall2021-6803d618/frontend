@@ -1,6 +1,17 @@
-import React, { FC, useCallback, useState, MouseEvent, useEffect, useMemo } from "react";
+import React, { FC, useCallback, useState, MouseEvent, useMemo } from "react";
 import "./LikeButton.style.css";
 import classnames from "classnames";
+import { IconButton } from "@material-ui/core";
+import styled from "styled-components";
+
+const Button = styled(IconButton)`
+  width: 40px;
+  height: 40px;
+  transition: background-color 150ms linear !important;
+  &:hover {
+    background-color: rgba(226, 38, 77, 0.1) !important;
+  }
+`;
 
 interface IProps {
   liked: boolean;
@@ -10,10 +21,6 @@ interface IProps {
 const LikeButton: FC<IProps> = (props) => {
   const { liked, onClick } = props;
   const [shouldAnimate, setShouldAnimate] = useState(false);
-
-  useEffect(() => {
-    console.log(liked);
-  }, [liked]);
 
   const handleClick = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
@@ -31,7 +38,11 @@ const LikeButton: FC<IProps> = (props) => {
     return classnames("heart", { liked, animate: shouldAnimate });
   }, [liked, shouldAnimate]);
 
-  return <button onClick={handleClick} className={className} />;
+  return (
+    <Button onClick={handleClick}>
+      <div className={className} />
+    </Button>
+  );
 };
 
 export default LikeButton;

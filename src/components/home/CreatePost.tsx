@@ -1,91 +1,74 @@
 import { useAuthStore } from "hooks/AuthStoreHook";
 import usePost from "hooks/PostHook";
-import React, { useState, FC, MouseEvent, useCallback, ChangeEvent } from "react";
+import React, { useState, FC, MouseEvent, useCallback, ChangeEvent, useEffect } from "react";
 import { paths } from "router/paths";
 import { ContentType, Visibility } from "shared/enums";
 import styled from "styled-components";
 import { Redirect } from "react-router-dom";
+import { ButtonBase } from "@material-ui/core";
+import useSocial from "hooks/SocialHook";
+import FriendsModal from "./FriendsModal";
+import { Author } from "shared/interfaces";
+import { PostPayload } from "services/PostService";
 
-const TweetBox = styled.div`
-  padding-bottom: 10px;
-  border-bottom: 8px solid var(--twitter-background);
-  padding-right: 10px;
-  display: flex;
-  flex-direction: row;
-  flex: 1;
-`;
-
-// create css style for div
-const TweetBoxInput = styled.div`
-  display: flex;
-  padding: 20px;
-  flex-direction: column;
-  flex: 1;
-`;
-const TweetBoxForm = styled.form`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
 `;
 
-const InputDiv = styled.div`
+const Form = styled.form`
   display: flex;
-  margin: 1rem;
   flex-direction: column;
-`;
-
-const Input = styled.input`
-  font-size: 1rem;
-  flex: 1;
-`;
-
-const TextAreaDiv = styled.div`
-  display: flex;
-  margin: 1rem;
-  flex-direction: column;
-  flex: 1;
+  flex: 2;
 `;
 
 const TextArea = styled.textarea`
   flex: 1;
+  resize: none;
 `;
 
-const VisibilityLabel = styled.label`
-  border-radius: 30px;
-  width: 80px;
-  height: 40px;
-  margin-top: 10px;
-  margin-left: 80px;
+const ActionDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 `;
 
-const TweetBoxImg = styled.img`
-  border-radius: 50%;
-  height: 40px;
-  width: 40px;
-`;
-
-const TweetButton = styled.button`
-  background-color: #00acee;
-  border: none;
-  color: white;
-  font-weight: 900;
-
-  border-radius: 30px;
-  width: 80px;
-  height: 40px;
-  margin-top: 20px;
-  margin-left: auto;
+const FriendButton = styled(ButtonBase)`
+  padding: 0.75rem !important;
+  width: 100px;
+  border-radius: 5px !important;
+  color: rgb(29, 155, 240) !important;
+  font-weight: bold;
+  transition: all 200ms ease-in-out;
+  &:hover {
+    background-color: rgba(29, 155, 240, 0.1) !important;
+  }
+  &:disabled {
+    color: rgba(0, 0, 0, 0.5) !important;
+    background-color: rgba(0, 0, 0, 0.1) !important;
+  }
 `;
 
 const CreatePost: FC = () => {
   // text message
+  const [shouldLoadFriends, setShouldLoadFriends] = useState(false);
   const [isPostCreated, setIsPostCreated] = useState(false);
+  const [openFriendsModal, setOpenFriendsModal] = useState(false);
   const [content, setContent] = useState("");
   const [title, setTitle] = useState("");
   const [visibility, setVisibility] = useState(Visibility.PUBLIC);
   const [description, setDescription] = useState("");
   const { user } = useAuthStore();
   const { createPost } = usePost(user);
+  const { friends } = useSocial(shouldLoadFriends);
+  const [selectedFriends, setSelectedFriends] = useState<Author[]>([]);
+
+  useEffect(() => {
+    if (friends) {
+      setSelectedFriends(friends);
+    }
+  }, [friends]);
 
   const handleSubmit = useCallback(
     async (e: MouseEvent<HTMLButtonElement>) => {
@@ -106,18 +89,22 @@ const CreatePost: FC = () => {
         return;
       }
 
-      await createPost({
+      const payload: PostPayload = {
         title,
         description,
         contentType: ContentType.PLAIN_TEXT,
         content,
         visibility,
         unlisted: false,
-      });
-      // clear text
+      };
+
+      if (visibility === Visibility.FRIENDS) {
+        payload.friends = selectedFriends;
+      }
+      await createPost(payload);
       setIsPostCreated(true);
     },
-    [content, createPost, title, description, visibility]
+    [content, title, description, visibility, selectedFriends, createPost]
   );
 
   const handleContentChange = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -132,14 +119,33 @@ const CreatePost: FC = () => {
     setDescription(e.target.value);
   }, []);
 
-  const handleVisibilityChange = useCallback((e: ChangeEvent<HTMLSelectElement>) => {
-    if (e.target.value === Visibility.PUBLIC) {
-      setVisibility(Visibility.PUBLIC);
-    } else if (e.target.value === Visibility.FRIENDS) {
-      setVisibility(Visibility.FRIENDS);
-    } else {
-      console.log("invalid visibility");
-    }
+  const handleVisibilityChange = useCallback(
+    (e: ChangeEvent<HTMLSelectElement>) => {
+      if (e.target.value === Visibility.PUBLIC) {
+        setVisibility(Visibility.PUBLIC);
+      } else if (e.target.value === Visibility.FRIENDS) {
+        setVisibility(Visibility.FRIENDS);
+        if (!shouldLoadFriends) {
+          setShouldLoadFriends(true);
+        }
+      } else {
+        console.log("invalid visibility");
+      }
+    },
+    [shouldLoadFriends]
+  );
+
+  const handleOpenFriendsModal = useCallback(() => {
+    setOpenFriendsModal(true);
+  }, []);
+
+  const handleCloseFriendsModal = useCallback(() => {
+    setOpenFriendsModal(false);
+  }, []);
+
+  const handleFriendsSelected = useCallback((selected: Author[]) => {
+    console.log(selected);
+    setSelectedFriends(selected);
   }, []);
 
   const render = useCallback(() => {
@@ -147,44 +153,51 @@ const CreatePost: FC = () => {
       return <Redirect to={paths.HOME} />;
     } else {
       return (
-        <TweetBox>
-          <TweetBoxForm>
-            <TweetBoxInput>
-              <TweetBoxImg src="https://i.pinimg.com/originals/a6/58/32/a65832155622ac173337874f02b218fb.png" alt="" />
-              <InputDiv>
-                <Input type="text" placeholder="Title" onChange={handleTitleChange} value={title} />
-              </InputDiv>
-              <InputDiv>
-                <Input type="text" placeholder="Description" value={description} onChange={handleDescriptionChange} />
-              </InputDiv>
-              <TextAreaDiv>
-                <TextArea placeholder="Content" value={content} onChange={handleContentChange} />
-              </TextAreaDiv>
-            </TweetBoxInput>
-            <VisibilityLabel>
-              {" "}
-              Visibility
-              <select value={visibility} onChange={handleVisibilityChange}>
-                <option value="FRIENDS">Friends</option>
-                <option value="PUBLIC">Public </option>
-              </select>
-            </VisibilityLabel>
-
-            {/* button */}
-            <TweetButton onClick={handleSubmit}>Tweet</TweetButton>
-          </TweetBoxForm>
-        </TweetBox>
+        <Container className="container">
+          <Form>
+            <input placeholder="Title" onChange={handleTitleChange} value={title} />
+            <input placeholder="Description" onChange={handleDescriptionChange} value={description} />
+            <TextArea placeholder="Content" onChange={handleContentChange} value={content} />
+          </Form>
+          <ActionDiv>
+            <select value={visibility} onChange={handleVisibilityChange}>
+              <option value="PUBLIC" label="Everyone can see">
+                Public
+              </option>
+              <option value="FRIENDS" label="Only friends can see">
+                Friends
+              </option>
+            </select>
+            <FriendButton disabled={visibility !== Visibility.FRIENDS} onClick={handleOpenFriendsModal}>
+              Friends
+            </FriendButton>
+            <button onClick={handleSubmit}>Create</button>
+          </ActionDiv>
+          <FriendsModal
+            open={openFriendsModal}
+            onClose={handleCloseFriendsModal}
+            friends={friends}
+            currentSelectedFriends={selectedFriends}
+            onFriendsSelected={handleFriendsSelected}
+          />
+        </Container>
       );
     }
   }, [
     content,
     description,
+    friends,
+    selectedFriends,
+    handleCloseFriendsModal,
     handleContentChange,
     handleDescriptionChange,
+    handleFriendsSelected,
+    handleOpenFriendsModal,
     handleSubmit,
     handleTitleChange,
     handleVisibilityChange,
     isPostCreated,
+    openFriendsModal,
     title,
     visibility,
   ]);

@@ -6,18 +6,33 @@ import Post from "./Post";
 import { Link } from "react-router-dom";
 import { Post as IPost } from "shared/interfaces";
 import useLike from "hooks/LikeHook";
+import EditPostModal from "./EditPostModal";
+import ShareModal from "./ShareModal";
+import styled from "styled-components";
+
+const Container = styled.div`
+  padding: 12px;
+  overflow-y: scroll;
+  flex: 1;
+`;
+
+const PostList = styled.div`
+  max-width: 600px;
+`;
 
 const Home: FC = () => {
   const { user } = useAuthStore();
   const { deletePost, updatePost, getPosts } = usePost(user);
   const { getLiked, likePost } = useLike();
   const [posts, setPosts] = useState<IPost[] | null>(null);
+  const [selectedPost, setSelectedPost] = useState<IPost | null>(null);
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [openShareModal, setOpenShareModal] = useState(false);
 
   const loadData = useCallback(async () => {
     if (user) {
       const [postsData, likedData] = await Promise.all([getPosts(), getLiked()]);
       const newPosts = postsData.map((post) => {
-        console.log(likedData);
         const liked = likedData.find((l) => l.object === post.id);
         return {
           ...post,
@@ -33,19 +48,29 @@ const Home: FC = () => {
   }, [loadData]);
 
   const handleUpdatePost = useCallback(
-    async (post: IPost, newContent: string) => {
-      const { content } = post;
-      if (content !== newContent && posts !== null) {
-        const newPost = await updatePost(post, newContent);
-        if (newPost) {
-          const index = posts?.findIndex((p) => p.id === post.id);
-          const newPosts = [...posts];
-          newPosts[index] = { ...post, ...newPost };
-          setPosts(newPosts);
+    async (newContent: string) => {
+      if (selectedPost) {
+        const { content } = selectedPost;
+        if (content !== newContent && posts !== null) {
+          await updatePost(selectedPost, newContent);
         }
       }
     },
-    [posts, updatePost]
+    [selectedPost, posts, updatePost]
+  );
+
+  const handleUpdatePostSuccess = useCallback(
+    (newContent: string) => {
+      if (selectedPost && posts) {
+        const index = posts?.findIndex((p) => p.id === selectedPost.id);
+        const newPosts = [...posts];
+        newPosts[index] = { ...selectedPost, content: newContent };
+        setSelectedPost(null);
+        setPosts(newPosts);
+        setOpenEditModal(false);
+      }
+    },
+    [selectedPost, posts]
   );
 
   const handleLikePost = useCallback(
@@ -73,6 +98,35 @@ const Home: FC = () => {
     [posts, deletePost]
   );
 
+  const handleOpenEditModal = useCallback((post: IPost) => {
+    setSelectedPost(post);
+    setOpenEditModal(true);
+  }, []);
+
+  const handleCloseEditModal = useCallback(() => {
+    setSelectedPost(null);
+    setOpenEditModal(false);
+  }, []);
+
+  const handleOpenShareModal = useCallback((post: IPost) => {
+    setSelectedPost(post);
+    setOpenShareModal(true);
+  }, []);
+
+  const handleCloseShareModal = useCallback(() => {
+    setSelectedPost(null);
+    setOpenShareModal(false);
+  }, []);
+
+  const handleSharePost = useCallback(
+    (friends) => {
+      console.log(`Sharing post ${selectedPost?.id}`);
+      console.log(friends);
+      return Promise.resolve();
+    },
+    [selectedPost?.id]
+  );
+
   const render = useCallback(() => {
     if (posts === null) {
       return <Loading />;
@@ -84,20 +138,29 @@ const Home: FC = () => {
           <Post
             key={post.id}
             post={post}
-            onUpdate={handleUpdatePost}
-            onDelete={handleDeletePost}
-            onLike={handleLikePost}
+            onDeleteClick={handleDeletePost}
+            onEditClick={handleOpenEditModal}
+            onLikeClick={handleLikePost}
+            onShareClick={handleOpenShareModal}
           />
         );
       });
     }
-  }, [posts, handleUpdatePost, handleDeletePost, handleLikePost]);
+  }, [posts, handleDeletePost, handleOpenEditModal, handleLikePost, handleOpenShareModal]);
 
   return (
-    <div className="container">
+    <Container>
       <Link to="/posts/create">Create Post</Link>
-      {render()}
-    </div>
+      <PostList>{render()}</PostList>
+      <EditPostModal
+        open={openEditModal}
+        onClose={handleCloseEditModal}
+        post={selectedPost}
+        onUpdate={handleUpdatePost}
+        onUpdateSuccess={handleUpdatePostSuccess}
+      />
+      <ShareModal open={openShareModal} onClose={handleCloseShareModal} onShare={handleSharePost} />
+    </Container>
   );
 };
 
