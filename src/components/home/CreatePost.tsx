@@ -5,11 +5,12 @@ import { paths } from "router/paths";
 import { ContentType, Visibility } from "shared/enums";
 import styled from "styled-components";
 import { Redirect } from "react-router-dom";
-import { ButtonBase } from "@material-ui/core";
+import FileUploader from "./FileUploader";
 import useSocial from "hooks/SocialHook";
 import FriendsModal from "./FriendsModal";
 import { Author } from "shared/interfaces";
 import { PostPayload } from "services/PostService";
+import ButtonBase from "@material-ui/core/ButtonBase";
 
 const Container = styled.div`
   display: flex;
@@ -56,6 +57,7 @@ const CreatePost: FC = () => {
   const [isPostCreated, setIsPostCreated] = useState(false);
   const [openFriendsModal, setOpenFriendsModal] = useState(false);
   const [content, setContent] = useState("");
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [title, setTitle] = useState("");
   const [visibility, setVisibility] = useState(Visibility.PUBLIC);
   const [description, setDescription] = useState("");
@@ -148,6 +150,14 @@ const CreatePost: FC = () => {
     setSelectedFriends(selected);
   }, []);
 
+  const handleFileSelectError = useCallback((e: any) => {
+    alert(e.error);
+  }, []);
+
+  const handleFileSelectSuccess = useCallback((file: File) => {
+    setSelectedImage(file);
+  }, []);
+
   const render = useCallback(() => {
     if (isPostCreated) {
       return <Redirect to={paths.HOME} />;
@@ -171,6 +181,10 @@ const CreatePost: FC = () => {
             <FriendButton disabled={visibility !== Visibility.FRIENDS} onClick={handleOpenFriendsModal}>
               Friends
             </FriendButton>
+            <FileUploader
+              onFileSelectError={handleFileSelectError}
+              onFileSelectSuccess={handleFileSelectSuccess}
+            ></FileUploader>
             <button onClick={handleSubmit}>Create</button>
           </ActionDiv>
           <FriendsModal
@@ -184,22 +198,24 @@ const CreatePost: FC = () => {
       );
     }
   }, [
-    content,
+    isPostCreated,
+    handleTitleChange,
+    title,
+    handleDescriptionChange,
     description,
+    handleContentChange,
+    content,
+    visibility,
+    handleVisibilityChange,
+    handleOpenFriendsModal,
+    handleFileSelectError,
+    handleFileSelectSuccess,
+    handleSubmit,
+    openFriendsModal,
+    handleCloseFriendsModal,
     friends,
     selectedFriends,
-    handleCloseFriendsModal,
-    handleContentChange,
-    handleDescriptionChange,
     handleFriendsSelected,
-    handleOpenFriendsModal,
-    handleSubmit,
-    handleTitleChange,
-    handleVisibilityChange,
-    isPostCreated,
-    openFriendsModal,
-    title,
-    visibility,
   ]);
 
   return render();
