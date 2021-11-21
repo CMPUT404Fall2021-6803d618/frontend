@@ -15,7 +15,6 @@
     "@testing-library/user-event": "^7.1.2",
     "@types/react-select": "^4.0.13",
     "axios": "^0.21.1",
-    "bootstrap": "^4.3.1",
     "classnames": "^2.3.1",
     "clsx": "^1.1.1",
     "dependencies": "^0.0.1",

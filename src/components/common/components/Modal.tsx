@@ -9,6 +9,11 @@ import styled from "styled-components";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Zoom from "@mui/material/Zoom";
 import Backdrop from "@mui/material/Backdrop";
+import Container from "@mui/material/Container";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
+import Button from "@mui/material/Button";
 
 const ModalWrapper = styled(MuiModal)`
   display: flex;
@@ -17,6 +22,7 @@ const ModalWrapper = styled(MuiModal)`
 `;
 
 const ModalBody = styled.div`
+  z-index: 9999;
   display: flex;
   min-width: 350px;
   min-height: 200px;
@@ -131,18 +137,22 @@ const Modal = <T extends object | void>(props: IProps<T>) => {
           ) : (
             <Fragment>
               <Fade in={state === State.IDLE}>
-                <FadeContent>
-                  <Content>
+                <Card sx={{ minWidth: 300, maxWidth: 500, width: "90vw" }}>
+                  <CardContent>
                     <Title>{title}</Title>
                     {children}
-                  </Content>
-                  <Footer>
-                    <button onClick={handleClose}>Cancel</button>
+                  </CardContent>
+                  <CardActions>
+                    <Button onClick={handleClose} variant="outlined">
+                      Cancel
+                    </Button>
                     {actionOption && (
-                      <button onClick={handleClick}>{actionOption.text}</button>
+                      <Button onClick={handleClick} variant="contained">
+                        {actionOption.text}
+                      </Button>
                     )}
-                  </Footer>
-                </FadeContent>
+                  </CardActions>
+                </Card>
               </Fade>
               <Fade in={state === State.IN_PROGRESS} unmountOnExit>
                 <FadeLoading>

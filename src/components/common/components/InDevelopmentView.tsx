@@ -32,7 +32,9 @@ const InDevelopmentView: FunctionComponent = () => {
     <Container className="container">
       <ErrorOutlineIcon />
       <Header>In Development</Header>
-      <Body>Sorry, this page is still in development. It will be available soon!</Body>
+      <Body>
+        Sorry, this page is still in development. It will be available soon!
+      </Body>
     </Container>
   );
 };
