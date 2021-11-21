@@ -1,4 +1,9 @@
-import React, { Fragment, FunctionComponent, useState, useCallback } from "react";
+import React, {
+  Fragment,
+  FunctionComponent,
+  useState,
+  useCallback,
+} from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import UserControl from "./UserControl";
 import { LINK_LIST } from "router/drawerLinks";
@@ -17,7 +22,6 @@ const drawerWidth = 240;
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     drawer: {
-      background: "white",
       [theme.breakpoints.up("sm")]: {
         flex: 1,
         flexShrink: 0,
@@ -38,19 +42,20 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     listItem: {
       width: "auto",
+      color: theme.palette.text.primary,
       margin: "8px",
       borderRadius: "5px",
-      color: "#203e55",
       "&:hover": {
-        backgroundColor: "rgba(221, 32, 32, 0.08)",
-        color: "#dd2020",
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.primary,
       },
     },
     listItemSelected: {
-      backgroundColor: "rgba(221, 32, 32, 0.12) !important",
-      color: "#dd2020",
+      color: theme.palette.text.secondary,
+      backgroundColor: theme.palette.secondary.main + "!important",
       "&:hover": {
-        backgroundColor: "rgba(221, 32, 32, 0.12)",
+        color: theme.palette.text.secondary,
+        backgroundColor: theme.palette.secondary.main + "!important",
       },
     },
     listItemText: {
@@ -72,7 +77,11 @@ interface IProps {
   onDrawerToggle: () => void;
 }
 
-const ResponsiveDrawer: FunctionComponent<IProps> = ({ currentUrl, onDrawerToggle, mobileOpen }) => {
+const ResponsiveDrawer: FunctionComponent<IProps> = ({
+  currentUrl,
+  onDrawerToggle,
+  mobileOpen,
+}) => {
   const classes = useStyles();
   const theme = useTheme();
 
@@ -89,7 +98,11 @@ const ResponsiveDrawer: FunctionComponent<IProps> = ({ currentUrl, onDrawerToggl
                 key={link.name}
                 component={Link}
                 to={link.path}
-                selected={link.subpath ? link.subpath.includes(currentUrl) : link.path === currentUrl}
+                selected={
+                  link.subpath
+                    ? link.subpath.includes(currentUrl)
+                    : link.path === currentUrl
+                }
                 classes={{
                   root: classes.listItem,
                   selected: classes.listItemSelected,

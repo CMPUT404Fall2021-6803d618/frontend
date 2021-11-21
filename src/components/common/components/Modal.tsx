@@ -18,7 +18,6 @@ const ModalWrapper = styled(MuiModal)`
 
 const ModalBody = styled.div`
   display: flex;
-  background-color: white;
   min-width: 350px;
   min-height: 200px;
   max-height: calc(100% - 100px);
@@ -139,7 +138,9 @@ const Modal = <T extends object | void>(props: IProps<T>) => {
                   </Content>
                   <Footer>
                     <button onClick={handleClose}>Cancel</button>
-                    {actionOption && <button onClick={handleClick}>{actionOption.text}</button>}
+                    {actionOption && (
+                      <button onClick={handleClick}>{actionOption.text}</button>
+                    )}
                   </Footer>
                 </FadeContent>
               </Fade>

@@ -9,6 +9,8 @@ import Loading from "components/common/components/Loading";
 import NotFound from "components/404/NotFound";
 import { paths } from "router/paths";
 import PostDetail from "components/home/PostDetail";
+import { ThemeProvider } from "@material-ui/styles";
+import theme from "theme";
 
 const App: FunctionComponent = () => {
   const { renewToken, isAuthenticated } = useAuth();
@@ -34,17 +36,21 @@ const App: FunctionComponent = () => {
     };
   }, [renewToken, isAuthenticated]);
 
-  return isLoading ? (
-    <Loading />
-  ) : (
-    <Switch>
-      <Route path={paths.LOGIN} exact component={Login} />
-      <Route path={paths.REGISTER} exact component={Register} />
-      <Route path={paths.PROFILE} exact component={Profile} />
-      <Route path={paths.POST_DETAIL} exact component={PostDetail} />
-      <Route path="/404" component={NotFound} />
-      <Route path="/" component={Shell} />
-    </Switch>
+  return (
+    <ThemeProvider theme={theme}>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <Switch>
+          <Route path={paths.LOGIN} exact component={Login} />
+          <Route path={paths.REGISTER} exact component={Register} />
+          <Route path={paths.PROFILE} exact component={Profile} />
+          <Route path={paths.POST_DETAIL} exact component={PostDetail} />
+          <Route path="/404" component={NotFound} />
+          <Route path="/" component={Shell} />
+        </Switch>
+      )}
+    </ThemeProvider>
   );
 };
 

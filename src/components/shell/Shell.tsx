@@ -19,7 +19,6 @@ const Main = styled.main`
   height: 100%;
   display: flex;
   flex-flow: column;
-  background: white;
   flex: 2;
 `;
 
@@ -52,12 +51,21 @@ const Shell: FC<IProps> = () => {
 
   return (
     <Root>
-      <ResponsiveDrawer currentUrl={currentUrl} onDrawerToggle={handleDrawerToggle} mobileOpen={mobileOpen} />
+      <ResponsiveDrawer
+        currentUrl={currentUrl}
+        onDrawerToggle={handleDrawerToggle}
+        mobileOpen={mobileOpen}
+      />
       <Main>
         {currentTitle && (
           <AppBar position="relative" elevation={0}>
             <Toolbar>
-              <DrawerToggleButton color="inherit" aria-label="open drawer" edge="start" onClick={handleDrawerToggle}>
+              <DrawerToggleButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={handleDrawerToggle}
+              >
                 <MenuIcon />
               </DrawerToggleButton>
               <Typography variant="h6" noWrap>
