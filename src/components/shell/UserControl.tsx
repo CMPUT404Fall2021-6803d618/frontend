@@ -2,9 +2,9 @@
 import React, { Fragment, FunctionComponent, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { paths } from "router/paths";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import styled from "styled-components";
-import ButtonBase from "@material-ui/core/ButtonBase";
+import ButtonBase from "@mui/material/ButtonBase";
 import { useAuth } from "hooks/AuthHook";
 import { useAuthStore } from "hooks/AuthStoreHook";
 import { extractIdFromUrl } from "utils";

@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Fade from "@material-ui/core/Fade";
-import MuiModal from "@material-ui/core/Modal";
+import CircularProgress from "@mui/material/CircularProgress";
+import Fade from "@mui/material/Fade";
+import MuiModal from "@mui/material/Modal";
 import React, { Fragment, ReactNode, useCallback, useState, FC } from "react";
 import styled from "styled-components";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import Zoom from "@material-ui/core/Zoom";
-import Backdrop from "@material-ui/core/Backdrop";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import Zoom from "@mui/material/Zoom";
+import Backdrop from "@mui/material/Backdrop";
 
 const ModalWrapper = styled(MuiModal)`
   display: flex;

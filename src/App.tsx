@@ -9,8 +9,9 @@ import Loading from "components/common/components/Loading";
 import NotFound from "components/404/NotFound";
 import { paths } from "router/paths";
 import PostDetail from "components/home/PostDetail";
-import { ThemeProvider } from "@material-ui/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import theme from "theme";
+import { CssBaseline } from "@mui/material";
 
 const App: FunctionComponent = () => {
   const { renewToken, isAuthenticated } = useAuth();
@@ -38,6 +39,7 @@ const App: FunctionComponent = () => {
 
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline enableColorScheme />
       {isLoading ? (
         <Loading />
       ) : (

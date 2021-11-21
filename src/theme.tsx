@@ -1,23 +1,11 @@
-import { createTheme } from "@material-ui/core";
+import { createTheme } from "@mui/material";
 
-declare module "@material-ui/styles" {
-  interface Theme {
-    palette: {
+declare module "@mui/material/styles" {
+  interface PaletteOptions {
+    colors: {
       red?: string;
       green?: string;
-      orange?: string;
-      blue?: string;
-      purple?: string;
-      cyan?: string;
-      white?: string;
-    };
-  }
-  // allow configuration using `createTheme`
-  interface ThemeOptions {
-    palette: {
-      red?: string;
-      green?: string;
-      orange?: string;
+      yellow?: string;
       blue?: string;
       purple?: string;
       cyan?: string;
@@ -28,8 +16,16 @@ declare module "@material-ui/styles" {
 
 export default createTheme({
   palette: {
-    red: "e06c75",
     mode: "dark",
+    colors: {
+      red: "e06c75",
+      green: "#98c379",
+      yellow: "#e5c07b",
+      blue: "#61afef",
+      purple: "#c678dd",
+      cyan: "#56b6c2",
+      white: "#abb2bf",
+    },
     background: {
       paper: "#282c34",
       default: "#282c34",

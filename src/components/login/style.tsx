@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { ButtonBase, TextField } from "@material-ui/core";
+import { ButtonBase, TextField } from "@mui/material";
 import React from "react";
 import GoogleLogin from "react-google-login";
 import { Link } from "react-router-dom";

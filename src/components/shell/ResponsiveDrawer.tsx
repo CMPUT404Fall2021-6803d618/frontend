@@ -4,18 +4,20 @@ import React, {
   useState,
   useCallback,
 } from "react";
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import { Theme } from "@mui/material/styles";
+import makeStyles from '@mui/styles/makeStyles';
+import createStyles from '@mui/styles/createStyles';
 import UserControl from "./UserControl";
 import { LINK_LIST } from "router/drawerLinks";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ErrorIcon from "@material-ui/icons/Error";
-import Divider from "@material-ui/core/Divider";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Hidden from "@material-ui/core/Hidden";
-import Drawer from "@material-ui/core/Drawer";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ErrorIcon from "@mui/icons-material/Error";
+import Divider from "@mui/material/Divider";
+import CssBaseline from "@mui/material/CssBaseline";
+import Hidden from "@mui/material/Hidden";
+import Drawer from "@mui/material/Drawer";
 import { Link } from "react-router-dom";
-import { useTheme } from "@material-ui/core/styles";
+import { useTheme } from "@mui/material/styles";
 
 const drawerWidth = 240;
 
@@ -138,7 +140,7 @@ const ResponsiveDrawer: FunctionComponent<IProps> = ({
             {DrawerContent}
           </Drawer>
         </Hidden>
-        <Hidden xsDown implementation="css">
+        <Hidden smDown implementation="css">
           <Drawer
             classes={{
               paper: classes.drawerPaper,

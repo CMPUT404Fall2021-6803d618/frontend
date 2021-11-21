@@ -10,7 +10,7 @@ import useSocial from "hooks/SocialHook";
 import FriendsModal from "./FriendsModal";
 import { Author } from "shared/interfaces";
 import { PostPayload } from "services/PostService";
-import ButtonBase from "@material-ui/core/ButtonBase";
+import ButtonBase from "@mui/material/ButtonBase";
 
 const Container = styled.div`
   display: flex;

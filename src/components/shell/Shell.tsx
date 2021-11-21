@@ -3,11 +3,11 @@ import { routes } from "router/routes";
 import Router from "router/Router";
 import styled from "styled-components";
 import ResponsiveDrawer from "./ResponsiveDrawer";
-import Toolbar from "@material-ui/core/Toolbar";
-import AppBar from "@material-ui/core/AppBar";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import Typography from "@material-ui/core/Typography";
+import Toolbar from "@mui/material/Toolbar";
+import AppBar from "@mui/material/AppBar";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import Typography from "@mui/material/Typography";
 
 const Root = styled.div`
   display: flex;

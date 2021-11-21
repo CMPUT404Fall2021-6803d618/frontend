@@ -14,7 +14,7 @@ import { withParamId } from "decorators/withParamId";
 import { ProfileService } from "services/ProfileService";
 import { Author, Post } from "shared/interfaces";
 import Loading from "components/common/components/Loading";
-import { Container } from "@material-ui/core";
+import { Container } from "@mui/material";
 import theme from "theme";
 
 const ProfileDiv = styled.div`
