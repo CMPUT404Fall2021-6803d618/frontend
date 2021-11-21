@@ -5,8 +5,8 @@ import React, {
   useCallback,
 } from "react";
 import { Theme } from "@mui/material/styles";
-import makeStyles from '@mui/styles/makeStyles';
-import createStyles from '@mui/styles/createStyles';
+import makeStyles from "@mui/styles/makeStyles";
+import createStyles from "@mui/styles/createStyles";
 import UserControl from "./UserControl";
 import { LINK_LIST } from "router/drawerLinks";
 import List from "@mui/material/List";
@@ -53,10 +53,10 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     listItemSelected: {
-      color: theme.palette.text.secondary,
+      color: theme.palette.colors.black,
       backgroundColor: theme.palette.secondary.main + "!important",
       "&:hover": {
-        color: theme.palette.text.secondary,
+        color: theme.palette.colors.black,
         backgroundColor: theme.palette.secondary.main + "!important",
       },
     },

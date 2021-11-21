@@ -3,6 +3,20 @@ import { createTheme } from "@mui/material";
 declare module "@mui/material/styles" {
   interface PaletteOptions {
     colors: {
+      black?: string;
+      red?: string;
+      green?: string;
+      yellow?: string;
+      blue?: string;
+      purple?: string;
+      cyan?: string;
+      white?: string;
+    };
+  }
+
+  interface Palette {
+    colors: {
+      black?: string;
       red?: string;
       green?: string;
       yellow?: string;
@@ -18,7 +32,8 @@ export default createTheme({
   palette: {
     mode: "dark",
     colors: {
-      red: "e06c75",
+      black: "#282c34",
+      red: "#e06c75",
       green: "#98c379",
       yellow: "#e5c07b",
       blue: "#61afef",
@@ -32,8 +47,8 @@ export default createTheme({
     },
     primary: {
       light: "#282c34",
-      dark: "#3E4452",
-      main: "#3E4452",
+      dark: "#e06c75",
+      main: "#e06c75",
     },
     secondary: {
       light: "#61afef",
@@ -48,7 +63,7 @@ export default createTheme({
     },
     text: {
       primary: "#abb2bf",
-      secondary: "#282c34",
+      secondary: "#abb2bf",
     },
   },
 });
