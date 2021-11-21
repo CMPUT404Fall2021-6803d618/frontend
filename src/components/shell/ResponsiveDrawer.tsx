@@ -25,9 +25,9 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     drawer: {
       [theme.breakpoints.up("sm")]: {
-        flex: 1,
+        flex: 0,
         flexShrink: 0,
-        borderRight: "1px solid rgba(0, 0, 0, 0.12)",
+        borderRight: `1px solid ${theme.palette.divider}`,
       },
     },
     drawerPaper: {

@@ -65,5 +65,6 @@ export default createTheme({
       primary: "#abb2bf",
       secondary: "#abb2bf",
     },
+    divider: "rgba(0, 0, 0, 0.12)",
   },
 });

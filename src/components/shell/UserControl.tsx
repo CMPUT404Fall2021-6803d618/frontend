@@ -8,6 +8,7 @@ import ButtonBase from "@mui/material/ButtonBase";
 import { useAuth } from "hooks/AuthHook";
 import { useAuthStore } from "hooks/AuthStoreHook";
 import { extractIdFromUrl } from "utils";
+import theme from "theme";
 
 const Header = styled.div`
   display: flex;
@@ -29,6 +30,7 @@ const Control = styled.div`
   width: 100%;
   p {
     margin-bottom: 0;
+    color: ${theme.palette.colors.red};
     font-weight: bold;
     text-align: center;
   }

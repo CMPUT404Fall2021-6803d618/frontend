@@ -12,6 +12,19 @@ import PostDetail from "components/home/PostDetail";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "theme";
 import { CssBaseline } from "@mui/material";
+import { styled } from "@mui/material/styles";
+
+const ResponsiveContainer = styled("div")(({ theme }) => ({
+  [theme.breakpoints.down("sm")]: {
+    padding: "0 0",
+  },
+  [theme.breakpoints.up("md")]: {
+    padding: "0 8rem",
+  },
+  [theme.breakpoints.up("lg")]: {
+    padding: "0 12rem",
+  },
+}));
 
 const App: FunctionComponent = () => {
   const { renewToken, isAuthenticated } = useAuth();
@@ -40,18 +53,20 @@ const App: FunctionComponent = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline enableColorScheme />
-      {isLoading ? (
-        <Loading />
-      ) : (
-        <Switch>
-          <Route path={paths.LOGIN} exact component={Login} />
-          <Route path={paths.REGISTER} exact component={Register} />
-          <Route path={paths.PROFILE} exact component={Profile} />
-          <Route path={paths.POST_DETAIL} exact component={PostDetail} />
-          <Route path="/404" component={NotFound} />
-          <Route path="/" component={Shell} />
-        </Switch>
-      )}
+      <ResponsiveContainer>
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <Switch>
+            <Route path={paths.LOGIN} exact component={Login} />
+            <Route path={paths.REGISTER} exact component={Register} />
+            <Route path={paths.PROFILE} exact component={Profile} />
+            <Route path={paths.POST_DETAIL} exact component={PostDetail} />
+            <Route path="/404" component={NotFound} />
+            <Route path="/" component={Shell} />
+          </Switch>
+        )}
+      </ResponsiveContainer>
     </ThemeProvider>
   );
 };
