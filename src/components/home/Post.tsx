@@ -88,6 +88,10 @@ const PostContent = styled.div`
   }
 `;
 
+const PostTitle = styled.h2`
+  margin: 0;
+`;
+
 // Post Action
 const PostAction = styled.div`
   display: flex;
@@ -117,7 +121,7 @@ interface PostProps {
 const Post: FC<PostProps> = (props) => {
   const { user } = useAuthStore();
   const { post, onDeleteClick, onEditClick, onLikeClick, onShareFriendsClick, onShareFollowersClick } = props;
-  const { content, author, published } = post;
+  const { content, author, published, title } = post;
   const isPostAuthor = user?.id === post?.author.id;
 
   const handleDeleteClick = useCallback(async () => {
@@ -170,6 +174,7 @@ const Post: FC<PostProps> = (props) => {
             </PostAuthorMenuDiv>
           </HeaderDiv>
           <PostContent>
+            <PostTitle>{title}</PostTitle>
             <ReactMarkdown>{content}</ReactMarkdown>
           </PostContent>
           <PostAction>

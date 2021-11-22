@@ -1,10 +1,11 @@
 import { useMemo, useCallback } from "react";
+import { PaginateResponse } from "services/BaseService";
 import { PostPayload, PostService } from "services/PostService";
 import { PostObject, Author } from "shared/interfaces";
 
 interface IPostHook {
   getPosts: () => Promise<PostObject[]>;
-  getStreamPosts: () => Promise<PostObject[]>;
+  getStreamPosts: (page: number) => Promise<Pick<PaginateResponse<PostObject>, "count" | "items">>;
   getPostById: (id: string) => Promise<PostObject>;
   createPost: (payload: PostPayload) => Promise<PostObject | null>;
   updatePost: (post: PostObject, newContent: string) => Promise<PostObject | null>;
@@ -25,14 +26,17 @@ const usePost = (user: Author | null): IPostHook => {
     }
   }, [postService, user]);
 
-  const getStreamPosts = useCallback(async () => {
-    if (user) {
-      const data = await postService.getStreamPosts(user.id);
-      return data;
-    } else {
-      return [];
-    }
-  }, [postService, user]);
+  const getStreamPosts = useCallback(
+    async (page: number) => {
+      if (user) {
+        const data = await postService.getStreamPosts(user.id, page);
+        return data;
+      } else {
+        return { count: 0, items: [] };
+      }
+    },
+    [postService, user]
+  );
 
   const getPostById = useCallback(
     async (id: string) => {
