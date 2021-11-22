@@ -21,6 +21,18 @@ interface IPostService {
   deletePost: (postId: string) => Promise<void>;
 }
 
+interface IPostService {
+  createPost: (authorId: string, payload: PostPayload) => Promise<PostObject>;
+  getPosts: (authorId: string) => Promise<PostObject[]>;
+  getPostById: (postId: string) => Promise<PostObject>;
+  updatePost: (postId: string, payload: PostPayload) => Promise<PostObject>;
+  deletePost: (postId: string) => Promise<void>;
+}
+
+interface IStreamPostService {
+  getPosts: (authorId: string) => Promise<PostObject[]>;
+}
+
 export class PostService implements IPostService {
   // private getPostId(id: string): string {
   //   const decoded = decodeURIComponent(id);
@@ -77,5 +89,12 @@ export class PostService implements IPostService {
 
   public async sharePostToFollowers(postId: string): Promise<void> {
     await axios.post(`${formatId(postId)}/share/followers/`);
+  }
+}
+
+export class StreamPostService implements IStreamPostService {
+  public async getPosts(authorId: string): Promise<PostObject[]> {
+    const { data } = await axios.get(`${authorId}stream/`);
+    return data.items;
   }
 }

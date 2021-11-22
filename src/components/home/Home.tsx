@@ -27,7 +27,8 @@ const PostList: FC = ({ children }) => (
 
 const Home: FC = () => {
   const { user } = useAuthStore();
-  const { deletePost, updatePost, getPosts, sharePostToFriends, sharePostToFollowers } = usePost(user);
+  const { deletePost, updatePost, getStreamPosts, sharePostToFriends, sharePostToFollowers } = usePost(user);
+
   const { getLiked, likePost } = useLike();
   const [posts, setPosts] = useState<IPost[] | null>(null);
   const [selectedPost, setSelectedPost] = useState<IPost | null>(null);
@@ -36,7 +37,7 @@ const Home: FC = () => {
 
   const loadData = useCallback(async () => {
     if (user) {
-      const [postsData, likedData] = await Promise.all([getPosts(), getLiked()]);
+      const [postsData, likedData] = await Promise.all([getStreamPosts(), getLiked()]);
       const newPosts = postsData.map((post) => {
         const liked = likedData.find((l) => l.object === post.id);
         return {
@@ -46,7 +47,7 @@ const Home: FC = () => {
       });
       setPosts(newPosts);
     }
-  }, [user, getPosts, getLiked]);
+  }, [user, getStreamPosts, getLiked]);
 
   useEffect(() => {
     loadData();
