@@ -2,6 +2,7 @@ import { ContentType, Visibility } from "shared/enums";
 import { Author, PostObject } from "shared/interfaces";
 import { formatId } from "utils";
 import { axios } from "utils/axios";
+import { BaseService, PaginateResponse } from "./BaseService";
 
 export interface PostPayload {
   title: string;
@@ -19,21 +20,10 @@ interface IPostService {
   getPostById: (postId: string) => Promise<PostObject>;
   updatePost: (postId: string, payload: PostPayload) => Promise<PostObject>;
   deletePost: (postId: string) => Promise<void>;
+  getStreamPosts: (authorId: string, page: number) => Promise<Pick<PaginateResponse<PostObject>, "count" | "items">>;
 }
 
-interface IPostService {
-  createPost: (authorId: string, payload: PostPayload) => Promise<PostObject>;
-  getPosts: (authorId: string) => Promise<PostObject[]>;
-  getPostById: (postId: string) => Promise<PostObject>;
-  updatePost: (postId: string, payload: PostPayload) => Promise<PostObject>;
-  deletePost: (postId: string) => Promise<void>;
-}
-
-interface IStreamPostService {
-  getPosts: (authorId: string) => Promise<PostObject[]>;
-}
-
-export class PostService implements IPostService {
+export class PostService extends BaseService<PostObject> implements IPostService {
   // private getPostId(id: string): string {
   //   const decoded = decodeURIComponent(id);
   //   const url = new URL(decoded);
@@ -90,11 +80,12 @@ export class PostService implements IPostService {
   public async sharePostToFollowers(postId: string): Promise<void> {
     await axios.post(`${formatId(postId)}/share/followers/`);
   }
-}
 
-export class StreamPostService implements IStreamPostService {
-  public async getPosts(authorId: string): Promise<PostObject[]> {
-    const { data } = await axios.get(`${authorId}stream/`);
-    return data.items;
+  public async getStreamPosts(
+    authorId: string,
+    page: number
+  ): Promise<Pick<PaginateResponse<PostObject>, "count" | "items">> {
+    const { count, items } = await this.getPaginate(`${authorId}stream/`, page);
+    return { count, items };
   }
 }

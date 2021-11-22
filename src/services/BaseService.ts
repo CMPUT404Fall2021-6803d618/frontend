@@ -5,7 +5,7 @@ interface IBaseService<T> {
   getPaginate: (url: string, page: number, size: number, dataKey?: string) => Promise<PaginateResponse<T>>;
 }
 
-interface PaginateResponse<T> {
+export interface PaginateResponse<T> {
   page: number;
   size: number;
   count: number;
@@ -36,7 +36,12 @@ export class BaseService<T> implements IBaseService<T> {
     }
   }
 
-  public async getPaginate(url: string, page: number, size: number, dataKey = "items"): Promise<PaginateResponse<T>> {
+  public async getPaginate(
+    url: string,
+    page: number,
+    size: number = this.DEFAULT_SIZE,
+    dataKey = "items"
+  ): Promise<PaginateResponse<T>> {
     const { data } = await axios.get(url, {
       params: {
         page,

@@ -4,13 +4,14 @@ import usePost from "hooks/PostHook";
 import React, { FC, useCallback, useState, useEffect } from "react";
 import Post from "./Post";
 import { Link } from "react-router-dom";
-import { Post as IPost } from "shared/interfaces";
+import { Like, Post as IPost, PostObject } from "shared/interfaces";
 import useLike from "hooks/LikeHook";
 import EditPostModal from "./EditPostModal";
 import ShareModal from "./ShareModal";
 import styled from "styled-components";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import { PaginateResponse } from "services/BaseService";
 
 const Container = styled(Stack)`
   padding: 12px;
@@ -20,7 +21,7 @@ const Container = styled(Stack)`
 `;
 
 const PostList: FC = ({ children }) => (
-  <Stack spacing={1} maxWidth={600}>
+  <Stack spacing={1} maxWidth={800}>
     {children}
   </Stack>
 );
@@ -28,26 +29,39 @@ const PostList: FC = ({ children }) => (
 const Home: FC = () => {
   const { user } = useAuthStore();
   const { deletePost, updatePost, getStreamPosts, sharePostToFriends, sharePostToFollowers } = usePost(user);
-
   const { getLiked, likePost } = useLike();
+  const [liked, setLiked] = useState<Like[] | null>(null);
   const [posts, setPosts] = useState<IPost[] | null>(null);
   const [selectedPost, setSelectedPost] = useState<IPost | null>(null);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openShareModal, setOpenShareModal] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isAllPostLoaded, setIsAllPostLoaded] = useState(false);
+
+  const setNewPosts = useCallback(
+    (currentPosts: IPost[], postsData: Pick<PaginateResponse<PostObject>, "count" | "items">, likedData: Like[]) => {
+      const newPosts = postsData.items.map((post) => {
+        return {
+          ...post,
+          liked: !!likedData.find((l) => l.object === post.id),
+        };
+      });
+      const combined = [...currentPosts, ...newPosts];
+      if (combined.length === postsData.count) {
+        setIsAllPostLoaded(true);
+      }
+      setPosts(combined);
+    },
+    []
+  );
 
   const loadData = useCallback(async () => {
     if (user) {
-      const [postsData, likedData] = await Promise.all([getStreamPosts(), getLiked()]);
-      const newPosts = postsData.map((post) => {
-        const liked = likedData.find((l) => l.object === post.id);
-        return {
-          ...post,
-          liked: !!liked,
-        };
-      });
-      setPosts(newPosts);
+      const [postsData, likedData] = await Promise.all([getStreamPosts(1), getLiked()]);
+      setLiked(likedData);
+      setNewPosts([], postsData, likedData);
     }
-  }, [user, getStreamPosts, getLiked]);
+  }, [user, getStreamPosts, getLiked, setNewPosts]);
 
   useEffect(() => {
     loadData();
@@ -140,32 +154,59 @@ const Home: FC = () => {
     [sharePostToFollowers]
   );
 
+  const handleLoadMoreClick = useCallback(async () => {
+    if (liked && posts) {
+      const newPage = currentPage + 1;
+      const postsData = await getStreamPosts(newPage);
+      setNewPosts(posts, postsData, liked);
+      setCurrentPage(newPage);
+    }
+  }, [currentPage, getStreamPosts, liked, posts, setNewPosts]);
+
   const render = useCallback(() => {
     if (posts === null) {
       return <Loading />;
     } else if (posts.length === 0) {
       return <div>No posts</div>;
     } else {
-      return posts.map((post) => {
-        return (
-          <Post
-            key={post.id}
-            post={post}
-            onDeleteClick={handleDeletePost}
-            onEditClick={handleOpenEditModal}
-            onLikeClick={handleLikePost}
-            onShareFriendsClick={handleOpenShareModal}
-            onShareFollowersClick={handleShareFollowers}
-          />
-        );
-      });
+      return (
+        <>
+          {posts.map((post) => {
+            return (
+              <Post
+                key={post.id}
+                post={post}
+                onDeleteClick={handleDeletePost}
+                onEditClick={handleOpenEditModal}
+                onLikeClick={handleLikePost}
+                onShareFriendsClick={handleOpenShareModal}
+                onShareFollowersClick={handleShareFollowers}
+              />
+            );
+          })}
+          {
+            <Button onClick={handleLoadMoreClick} disabled={isAllPostLoaded}>
+              Load More
+            </Button>
+          }
+        </>
+      );
     }
-  }, [posts, handleDeletePost, handleOpenEditModal, handleLikePost, handleOpenShareModal, handleShareFollowers]);
+  }, [
+    posts,
+    isAllPostLoaded,
+    handleLoadMoreClick,
+    handleDeletePost,
+    handleOpenEditModal,
+    handleLikePost,
+    handleOpenShareModal,
+    handleShareFollowers,
+  ]);
 
   return (
     <Container spacing={1} sx={{ margin: 1 }}>
       <Link to="/posts/create">
-        <Button variant="contained" color="secondary" sx={{ maxWidth: "600px", width: "100%" }}>
+        <Button variant="contained" color="secondary" sx={{ maxWidth: "800px", width: "100%" }}>
           Create Post
         </Button>
       </Link>
