@@ -17,23 +17,7 @@ import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import { CssBaseline } from "@mui/material";
-
-// Post Wrapper
-const PostWrapper = styled(Link)`
-  color: darkslategray;
-  &:hover {
-    color: darkslategray;
-  }
-`;
-
-const DisplayName = styled.span`
-  margin-bottom: 0;
-  font-weight: bold;
-`;
 
 const Dot = styled.span`
   margin: 0 5px;
@@ -44,19 +28,95 @@ const PublishedDate = styled.span`
   margin-bottom: 0;
 `;
 
+const PostWrapper = styled(Link)`
+  height: fit-content;
+  display: flex;
+  width: 100%;
+  color: darkslategray;
+  &:hover {
+    color: darkslategray;
+  }
+`;
+
+// Post container
+const PostCard = styled(Card)`
+  height: fit-content;
+  padding: 12px;
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+`;
+
+const HeaderDiv = styled.div`
+  display: flex;
+`;
+
+const ProfileImage = styled.img`
+  max-width: 50px;
+  max-height: 50px;
+  border-radius: 50%;
+  object-fit: contain;
+  margin-right: 12px;
+`;
+
+const PostBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+`;
+
+const PostAuthorMenuDiv = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  font-size: 14px;
+  width: 100%;
+`;
+
+const PostAuthorDiv = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+// Post content
+const PostContent = styled.div`
+  margin: 1rem 0;
+  overflow-wrap: anywhere;
+  img {
+    height: auto;
+    max-width: 100%;
+  }
+`;
+
+// Post Action
+const PostAction = styled.div`
+  display: flex;
+  height: fit-content;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-left: -12px;
+  max-width: 425px;
+`;
+
+const DisplayName = styled.span`
+  margin-bottom: 0;
+  font-weight: bold;
+`;
+
 interface PostProps {
   post: IPost;
   onDeleteClick: (post: IPost) => Promise<void>;
   onLikeClick: (post: IPost) => Promise<void>;
   onEditClick: (post: IPost) => void;
-  onShareClick: (post: IPost) => void;
+  onShareFriendsClick: (post: IPost) => void;
+  onShareFollowersClick: (post: IPost) => Promise<void>;
 }
 
 // const Posts:FunctionComponent<PostProps> = (props) => {
 
 const Post: FC<PostProps> = (props) => {
   const { user } = useAuthStore();
-  const { post, onDeleteClick, onEditClick, onLikeClick, onShareClick } = props;
+  const { post, onDeleteClick, onEditClick, onLikeClick, onShareFriendsClick, onShareFollowersClick } = props;
   const { content, author, published } = post;
   const isPostAuthor = user?.id === post?.author.id;
 
@@ -72,9 +132,13 @@ const Post: FC<PostProps> = (props) => {
     await onLikeClick(post);
   }, [onLikeClick, post]);
 
-  const handleShareClick = useCallback(() => {
-    onShareClick(post);
-  }, [onShareClick, post]);
+  const handleShareFriendsClick = useCallback(() => {
+    onShareFriendsClick(post);
+  }, [onShareFriendsClick, post]);
+
+  const handleShareFollowersClick = useCallback(() => {
+    onShareFollowersClick(post);
+  }, [onShareFollowersClick, post]);
 
   const meatballMenuItems = [
     {
@@ -91,38 +155,38 @@ const Post: FC<PostProps> = (props) => {
 
   return (
     <PostWrapper to={`/post/${encodeURIComponent(post.id)}`}>
-      <Card>
-        <CardContent>
-          <Grid container spacing={1}>
-            <Grid item sm={1} textAlign="center" alignSelf="center">
-              <img width={30} src={profilePic} alt="Profile Image" />
-            </Grid>
-            <Grid item sm={3}>
-              <Stack spacing={0}>
+      <PostCard>
+        <ProfileImage src={profilePic} alt="Profile Image" />
+        <PostBody>
+          <HeaderDiv>
+            <PostAuthorMenuDiv>
+              <PostAuthorDiv>
                 <DisplayName>{author.displayName}</DisplayName>
+                <Dot>🞄</Dot>
                 <PublishedDate>{formatDate(published)}</PublishedDate>
-              </Stack>
-            </Grid>
-            <Grid item sm />
-            <Grid item sm={1}>
-              {isPostAuthor && <MeatballMenu items={meatballMenuItems} />}
-            </Grid>
-          </Grid>
+              </PostAuthorDiv>
 
-          <Box sx={{ typography: "body2" }}>
+              {isPostAuthor && <MeatballMenu items={meatballMenuItems} />}
+            </PostAuthorMenuDiv>
+          </HeaderDiv>
+          <PostContent>
             <ReactMarkdown>{content}</ReactMarkdown>
-          </Box>
-        </CardContent>
-        <CardActions>
-          <CommentButton
-            onClick={() => {
-              return Promise.resolve();
-            }}
-          />
-          <LikeButton liked={post.liked} onClick={handleLikeClick} />
-          <ShareButton onClick={handleShareClick} />
-        </CardActions>
-      </Card>
+          </PostContent>
+          <PostAction>
+            <CommentButton
+              onClick={() => {
+                return Promise.resolve();
+              }}
+            />
+            <LikeButton liked={post.liked} onClick={handleLikeClick} />
+            <ShareButton
+              onFriendsClick={handleShareFriendsClick}
+              onFollowersClick={handleShareFollowersClick}
+              postVisibility={post.visibility}
+            />
+          </PostAction>
+        </PostBody>
+      </PostCard>
     </PostWrapper>
   );
 };

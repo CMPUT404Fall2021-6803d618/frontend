@@ -53,20 +53,18 @@ const App: FunctionComponent = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline enableColorScheme />
-      <ResponsiveContainer>
-        {isLoading ? (
-          <Loading />
-        ) : (
-          <Switch>
-            <Route path={paths.LOGIN} exact component={Login} />
-            <Route path={paths.REGISTER} exact component={Register} />
-            <Route path={paths.PROFILE} exact component={Profile} />
-            <Route path={paths.POST_DETAIL} exact component={PostDetail} />
-            <Route path="/404" component={NotFound} />
-            <Route path="/" component={Shell} />
-          </Switch>
-        )}
-      </ResponsiveContainer>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <Switch>
+          <Route path={paths.LOGIN} exact component={Login} />
+          <Route path={paths.REGISTER} exact component={Register} />
+          <Route path={paths.PROFILE} exact component={Profile} />
+          <Route path={paths.POST_DETAIL} exact component={PostDetail} />
+          <Route path="/404" component={NotFound} />
+          <Route path="/" component={Shell} />
+        </Switch>
+      )}
     </ThemeProvider>
   );
 };

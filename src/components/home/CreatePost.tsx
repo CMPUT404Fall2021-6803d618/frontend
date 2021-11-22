@@ -1,16 +1,8 @@
 import { useAuthStore } from "hooks/AuthStoreHook";
 import usePost from "hooks/PostHook";
-import React, {
-  useState,
-  FC,
-  MouseEvent,
-  useCallback,
-  ChangeEvent,
-  useEffect,
-} from "react";
+import React, { useState, FC, MouseEvent, useCallback, ChangeEvent, useEffect } from "react";
 import { paths } from "router/paths";
 import { ContentType, Visibility } from "shared/enums";
-import { styled } from "@mui/material/styles";
 import { Redirect } from "react-router-dom";
 import FileUploader from "./FileUploader";
 import useSocial from "hooks/SocialHook";
@@ -28,6 +20,7 @@ import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
+import styled from "styled-components";
 
 const FriendButton = styled(ButtonBase)`
   padding: 0.75rem !important;
@@ -104,23 +97,17 @@ const CreatePost: FC = () => {
     [content, title, description, visibility, selectedFriends, createPost]
   );
 
-  const handleContentChange = useCallback(
-    (e: ChangeEvent<HTMLTextAreaElement>) => {
-      setContent(e.target.value);
-    },
-    []
-  );
+  const handleContentChange = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
+    setContent(e.target.value);
+  }, []);
 
   const handleTitleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   }, []);
 
-  const handleDescriptionChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      setDescription(e.target.value);
-    },
-    []
-  );
+  const handleDescriptionChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setDescription(e.target.value);
+  }, []);
 
   const handleVisibilityChange = useCallback(
     (e: SelectChangeEvent) => {
@@ -166,12 +153,7 @@ const CreatePost: FC = () => {
       return (
         <Box sx={{ margin: 1 }}>
           <Stack spacing={1}>
-            <TextField
-              variant="outlined"
-              placeholder="Title"
-              onChange={handleTitleChange}
-              value={title}
-            />
+            <TextField variant="outlined" placeholder="Title" onChange={handleTitleChange} value={title} />
             <TextField
               variant="outlined"
               placeholder="Description"
@@ -188,10 +170,7 @@ const CreatePost: FC = () => {
             />
           </Stack>
 
-          <FileUploader
-            onFileSelectError={handleFileSelectError}
-            onFileSelectSuccess={handleFileSelectSuccess}
-          />
+          <FileUploader onFileSelectError={handleFileSelectError} onFileSelectSuccess={handleFileSelectSuccess} />
 
           <Grid container spacing={1} sx={{ marginTop: 1 }}>
             <Grid item xs={12} sm>
@@ -212,21 +191,13 @@ const CreatePost: FC = () => {
 
             <Grid item xs={12} sm>
               <FormControl fullWidth sx={{ height: "100%" }}>
-                <FriendButton
-                  disabled={visibility !== Visibility.FRIENDS}
-                  onClick={handleOpenFriendsModal}
-                >
+                <FriendButton disabled={visibility !== Visibility.FRIENDS} onClick={handleOpenFriendsModal}>
                   Select Friends
                 </FriendButton>
               </FormControl>
             </Grid>
           </Grid>
-          <Button
-            fullWidth
-            variant="contained"
-            sx={{ marginTop: 2 }}
-            onClick={handleSubmit}
-          >
+          <Button fullWidth variant="contained" sx={{ marginTop: 2 }} onClick={handleSubmit}>
             Create
           </Button>
           <FriendsModal

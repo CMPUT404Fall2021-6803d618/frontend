@@ -24,14 +24,7 @@ interface UserCardProps {
 }
 
 const UserCard: FC<UserCardProps> = (props) => {
-  const {
-    id,
-    displayName,
-    followStatus,
-    onFollowerRemove,
-    onFollow,
-    onUnfollow,
-  } = props;
+  const { id, displayName, followStatus, onFollowerRemove, onFollow, onUnfollow } = props;
 
   const handleRemoveFollower = useCallback(
     async (_e: MouseEvent<HTMLButtonElement>) => {
@@ -74,21 +67,13 @@ const UserCard: FC<UserCardProps> = (props) => {
       <Grid container spacing={0} alignItems="center">
         <Grid xs sm>
           <Stack direction="row" alignItems="center" spacing={1}>
-            <Avatar
-              src="https://via.placeholder.com/500?text=User+Profile+Image"
-              alt=""
-            />
+            <Avatar src="https://via.placeholder.com/500?text=User+Profile+Image" alt="" />
             <span>{displayName}</span>
           </Stack>
         </Grid>
 
         <Grid xs sm="auto">
-          <Stack
-            direction="row"
-            justifyContent="flex-end"
-            spacing={1}
-            sx={{ m: 1 }}
-          >
+          <Stack direction="row" justifyContent="flex-end" spacing={1} sx={{ m: 1 }}>
             <Button
               variant="contained"
               color="primary"
@@ -97,13 +82,11 @@ const UserCard: FC<UserCardProps> = (props) => {
             >
               {getFollowText()}
             </Button>
-            <Button
-              variant="outlined"
-              onClick={handleRemoveFollower}
-              disabled={!onFollowerRemove}
-            >
-              Remove
-            </Button>
+            {onFollowerRemove && (
+              <Button variant="outlined" onClick={handleRemoveFollower}>
+                Remove
+              </Button>
+            )}
           </Stack>
         </Grid>
       </Grid>

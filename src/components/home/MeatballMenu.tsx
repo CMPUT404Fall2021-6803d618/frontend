@@ -1,15 +1,8 @@
-/* eslint-disable @typescript-eslint/ban-types */
 import React, { FC, useState, MouseEvent, useCallback } from "react";
 import styled from "styled-components";
-import Popover from "@mui/material/Popover";
 import MeatballIcon from "@mui/icons-material/MoreHoriz";
 import IconButton from "@mui/material/IconButton";
-import MenuItem from "@mui/material/MenuItem";
-import MenuList from "@mui/material/MenuList";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import { OverridableComponent } from "@mui/material/OverridableComponent";
-import { SvgIconTypeMap } from "@mui/material/SvgIcon";
+import PopoverMenu, { PopoverMenuItem } from "components/PopoverMenu";
 
 const MeatballButton = styled(IconButton)`
   padding: 0 !important;
@@ -18,17 +11,12 @@ const MeatballButton = styled(IconButton)`
 `;
 
 interface MenuProps {
-  items: {
-    text: string;
-    Icon: OverridableComponent<SvgIconTypeMap<{}, "svg">>;
-    onClick: () => void;
-  }[];
+  items: PopoverMenuItem[];
 }
 
 const MeatballMenu: FC<MenuProps> = (props) => {
   const { items } = props;
-  const [anchorEl, setAnchorEl] = useState<null | HTMLButtonElement>(null);
-  const menuOpen = Boolean(anchorEl);
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const handleMenuClick = useCallback((e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -36,8 +24,7 @@ const MeatballMenu: FC<MenuProps> = (props) => {
     setAnchorEl(e.currentTarget);
   }, []);
 
-  const handleMenuClose = useCallback((e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+  const handleMenuClose = useCallback(() => {
     setAnchorEl(null);
   }, []);
 
@@ -46,38 +33,7 @@ const MeatballMenu: FC<MenuProps> = (props) => {
       <MeatballButton onClick={handleMenuClick}>
         <MeatballIcon />
       </MeatballButton>
-      <Popover
-        open={menuOpen}
-        anchorEl={anchorEl}
-        onClose={handleMenuClose}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }}
-      >
-        <MenuList>
-          {items.map((item) => {
-            const { text, Icon, onClick } = item;
-            const handleClick = (e: MouseEvent<HTMLLIElement>): void => {
-              e.preventDefault();
-              onClick();
-              setAnchorEl(null);
-            };
-            return (
-              <MenuItem key={`menu-item-${text}`} onClick={handleClick}>
-                <ListItemIcon>
-                  <Icon fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>{text}</ListItemText>
-              </MenuItem>
-            );
-          })}
-        </MenuList>
-      </Popover>
+      <PopoverMenu anchorEl={anchorEl} onClose={handleMenuClose} items={items} />
     </>
   );
 };

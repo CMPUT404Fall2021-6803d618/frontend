@@ -1,7 +1,7 @@
 import Loading from "components/common/components/Loading";
 import { useAuthStore } from "hooks/AuthStoreHook";
 import usePost from "hooks/PostHook";
-import React, { FC, useCallback, useState, useEffect, Fragment } from "react";
+import React, { FC, useCallback, useState, useEffect } from "react";
 import Post from "./Post";
 import { Link } from "react-router-dom";
 import { Post as IPost } from "shared/interfaces";
@@ -12,17 +12,22 @@ import styled from "styled-components";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 
-const Container = styled.div`
+const Container = styled(Stack)`
   padding: 12px;
   overflow-y: scroll;
   flex: 1;
+  margin: 0;
 `;
 
-const PostList: FC = ({ children }) => <Stack spacing={1}>{children}</Stack>;
+const PostList: FC = ({ children }) => (
+  <Stack spacing={1} maxWidth={600}>
+    {children}
+  </Stack>
+);
 
 const Home: FC = () => {
   const { user } = useAuthStore();
-  const { deletePost, updatePost, getPosts } = usePost(user);
+  const { deletePost, updatePost, getPosts, sharePostToFriends, sharePostToFollowers } = usePost(user);
   const { getLiked, likePost } = useLike();
   const [posts, setPosts] = useState<IPost[] | null>(null);
   const [selectedPost, setSelectedPost] = useState<IPost | null>(null);
@@ -31,10 +36,7 @@ const Home: FC = () => {
 
   const loadData = useCallback(async () => {
     if (user) {
-      const [postsData, likedData] = await Promise.all([
-        getPosts(),
-        getLiked(),
-      ]);
+      const [postsData, likedData] = await Promise.all([getPosts(), getLiked()]);
       const newPosts = postsData.map((post) => {
         const liked = likedData.find((l) => l.object === post.id);
         return {
@@ -121,13 +123,20 @@ const Home: FC = () => {
     setOpenShareModal(false);
   }, []);
 
-  const handleSharePost = useCallback(
-    (friends) => {
-      console.log(`Sharing post ${selectedPost?.id}`);
-      console.log(friends);
-      return Promise.resolve();
+  const handleShareFriends = useCallback(
+    async (friends) => {
+      if (selectedPost) {
+        sharePostToFriends(selectedPost, friends);
+      }
     },
-    [selectedPost?.id]
+    [selectedPost, sharePostToFriends]
+  );
+
+  const handleShareFollowers = useCallback(
+    async (post: IPost) => {
+      sharePostToFollowers(post);
+    },
+    [sharePostToFollowers]
   );
 
   const render = useCallback(() => {
@@ -144,23 +153,18 @@ const Home: FC = () => {
             onDeleteClick={handleDeletePost}
             onEditClick={handleOpenEditModal}
             onLikeClick={handleLikePost}
-            onShareClick={handleOpenShareModal}
+            onShareFriendsClick={handleOpenShareModal}
+            onShareFollowersClick={handleShareFollowers}
           />
         );
       });
     }
-  }, [
-    posts,
-    handleDeletePost,
-    handleOpenEditModal,
-    handleLikePost,
-    handleOpenShareModal,
-  ]);
+  }, [posts, handleDeletePost, handleOpenEditModal, handleLikePost, handleOpenShareModal, handleShareFollowers]);
 
   return (
-    <Stack spacing={1} sx={{ margin: 1 }}>
+    <Container spacing={1} sx={{ margin: 1 }}>
       <Link to="/posts/create">
-        <Button variant="contained" color="secondary" fullWidth>
+        <Button variant="contained" color="secondary" sx={{ maxWidth: "600px", width: "100%" }}>
           Create Post
         </Button>
       </Link>
@@ -172,12 +176,8 @@ const Home: FC = () => {
         onUpdate={handleUpdatePost}
         onUpdateSuccess={handleUpdatePostSuccess}
       />
-      <ShareModal
-        open={openShareModal}
-        onClose={handleCloseShareModal}
-        onShare={handleSharePost}
-      />
-    </Stack>
+      <ShareModal open={openShareModal} onClose={handleCloseShareModal} onShare={handleShareFriends} />
+    </Container>
   );
 };
 

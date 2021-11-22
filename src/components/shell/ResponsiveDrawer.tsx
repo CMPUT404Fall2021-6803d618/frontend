@@ -1,9 +1,4 @@
-import React, {
-  Fragment,
-  FunctionComponent,
-  useState,
-  useCallback,
-} from "react";
+import React, { Fragment, FunctionComponent, useState, useCallback } from "react";
 import { Theme } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
 import createStyles from "@mui/styles/createStyles";
@@ -17,15 +12,14 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Hidden from "@mui/material/Hidden";
 import Drawer from "@mui/material/Drawer";
 import { Link } from "react-router-dom";
-import { useTheme } from "@mui/material/styles";
 
-const drawerWidth = 200;
+const drawerWidth = 240;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     drawer: {
       [theme.breakpoints.up("sm")]: {
-        flex: 0,
+        flex: 1,
         flexShrink: 0,
         borderRight: `1px solid ${theme.palette.divider}`,
       },
@@ -79,13 +73,8 @@ interface IProps {
   onDrawerToggle: () => void;
 }
 
-const ResponsiveDrawer: FunctionComponent<IProps> = ({
-  currentUrl,
-  onDrawerToggle,
-  mobileOpen,
-}) => {
+const ResponsiveDrawer: FunctionComponent<IProps> = ({ currentUrl, onDrawerToggle, mobileOpen }) => {
   const classes = useStyles();
-  const theme = useTheme();
 
   const DrawerContent = (
     <div>
@@ -100,11 +89,7 @@ const ResponsiveDrawer: FunctionComponent<IProps> = ({
                 key={link.name}
                 component={Link}
                 to={link.path}
-                selected={
-                  link.subpath
-                    ? link.subpath.includes(currentUrl)
-                    : link.path === currentUrl
-                }
+                selected={link.subpath ? link.subpath.includes(currentUrl) : link.path === currentUrl}
                 classes={{
                   root: classes.listItem,
                   selected: classes.listItemSelected,
