@@ -6,18 +6,31 @@ import profilePic from "./images.jpeg";
 import MeatballMenu from "./MeatballMenu";
 import { Link } from "react-router-dom";
 import LikeButton from "../common/components/LikeButton/LikeButton";
-import Delete from "@material-ui/icons/Delete";
-import Edit from "@material-ui/icons/Edit";
+import Delete from "@mui/icons-material/Delete";
+import Edit from "@mui/icons-material/Edit";
 import ShareButton from "components/common/components/ShareButton";
 import { useAuthStore } from "hooks/AuthStoreHook";
 import CommentButton from "components/common/components/CommentButton";
 import ReactMarkdown from "react-markdown";
+import Card from "@mui/material/Card";
+import Grid from "@mui/material/Grid";
+import Stack from "@mui/material/Stack";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import Box from "@mui/material/Box";
 
-// Post Wrapper
+const Dot = styled.span`
+  margin: 0 5px;
+  color: grey;
+`;
+
+const PublishedDate = styled.span`
+  margin-bottom: 0;
+`;
+
 const PostWrapper = styled(Link)`
   height: fit-content;
   display: flex;
-  border: 1px solid #ccc;
   width: 100%;
   color: darkslategray;
   &:hover {
@@ -26,9 +39,9 @@ const PostWrapper = styled(Link)`
 `;
 
 // Post container
-const PostContainer = styled.div`
+const PostCard = styled(Card)`
   height: fit-content;
-  margin: 12px;
+  padding: 12px;
   display: flex;
   width: 100%;
   overflow: hidden;
@@ -90,15 +103,6 @@ const DisplayName = styled.span`
   font-weight: bold;
 `;
 
-const Dot = styled.span`
-  margin: 0 5px;
-  color: grey;
-`;
-
-const PublishedDate = styled.span`
-  margin-bottom: 0;
-`;
-
 interface PostProps {
   post: IPost;
   onDeleteClick: (post: IPost) => Promise<void>;
@@ -151,7 +155,7 @@ const Post: FC<PostProps> = (props) => {
 
   return (
     <PostWrapper to={`/post/${encodeURIComponent(post.id)}`}>
-      <PostContainer>
+      <PostCard>
         <ProfileImage src={profilePic} alt="Profile Image" />
         <PostBody>
           <HeaderDiv>
@@ -182,7 +186,7 @@ const Post: FC<PostProps> = (props) => {
             />
           </PostAction>
         </PostBody>
-      </PostContainer>
+      </PostCard>
     </PostWrapper>
   );
 };

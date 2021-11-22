@@ -1,16 +1,18 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import React, { FC, MouseEvent, useCallback } from "react";
-import Popover from "@material-ui/core/Popover";
-import { OverridableComponent } from "@material-ui/core/OverridableComponent";
-import { SvgIconTypeMap } from "@material-ui/core/SvgIcon";
-import MenuItem from "@material-ui/core/MenuItem";
-import MenuList from "@material-ui/core/MenuList";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
+import Popover from "@mui/material/Popover";
+import { OverridableComponent } from "@mui/material/OverridableComponent";
+import { SvgIconTypeMap } from "@mui/material/SvgIcon";
+import MenuItem from "@mui/material/MenuItem";
+import MenuList from "@mui/material/MenuList";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
 
 export interface PopoverMenuItem {
   text: string;
-  Icon?: OverridableComponent<SvgIconTypeMap<{}, "svg">>;
+  Icon?: OverridableComponent<SvgIconTypeMap<{}, "svg">> & {
+    muiName: string;
+  };
   onClick: () => void;
 }
 

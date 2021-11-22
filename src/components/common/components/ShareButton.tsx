@@ -1,7 +1,7 @@
 import React, { useCallback, MouseEvent, FC, useState, useMemo } from "react";
 import styled from "styled-components";
-import { IconButton } from "@material-ui/core";
-import ShareIcon from "@material-ui/icons/Share";
+import IconButton from "@mui/material/IconButton";
+import ShareIcon from "@mui/icons-material/Share";
 import PopoverMenu, { PopoverMenuItem } from "components/PopoverMenu";
 import { Visibility } from "shared/enums";
 

@@ -1,26 +1,18 @@
 import React, { FC, MouseEvent, useCallback } from "react";
-import Card from "@material-ui/core/Card";
-import CardMedia from "@material-ui/core/CardMedia";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import Button from "@material-ui/core/Button";
+import Card from "@mui/material/Card";
+import CardMedia from "@mui/material/CardMedia";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import Button from "@mui/material/Button";
 import styled from "styled-components";
 import { FollowStatus } from "hooks/SocialHook";
 
-// Styling Card/CardContent/CardActions
-const StyledCard = styled(Card)`
-  height: fit-content;
-  margin-bottom: 10px;
-`;
-
-const StyledCardContent = styled(CardContent)`
-  text-align: center;
-`;
-
-const StyledCardActions = styled(CardActions)`
-  display: flex;
-  justify-content: space-evenly;
-`;
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Grid from "@mui/material/Grid";
+import Avatar from "@mui/material/Avatar";
+import Container from "@mui/material/Container";
 
 interface UserCardProps {
   id: string;
@@ -63,30 +55,42 @@ const UserCard: FC<UserCardProps> = (props) => {
   }, [followStatus]);
 
   return (
-    <div className="col-3" key={id}>
-      <StyledCard>
-        <CardMedia component="img" src="https://via.placeholder.com/500?text=User+Profile+Image" alt="test" />
-        <StyledCardContent>
-          <div>{displayName}</div>
-        </StyledCardContent>
-        <StyledCardActions>
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            onClick={handleFollowClick}
-            disabled={followStatus === FollowStatus.PENDING}
-          >
-            {getFollowText()}
-          </Button>
-          {onFollowerRemove && (
-            <Button variant="contained" size="large" onClick={handleRemoveFollower}>
-              Remove
+    <Card
+      sx={{
+        width: "100%",
+        p: 1,
+        paddingLeft: 2,
+        typography: "body2",
+      }}
+      key={id}
+    >
+      <Grid container spacing={0} alignItems="center">
+        <Grid xs sm>
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Avatar src="https://via.placeholder.com/500?text=User+Profile+Image" alt="" />
+            <span>{displayName}</span>
+          </Stack>
+        </Grid>
+
+        <Grid xs sm="auto">
+          <Stack direction="row" justifyContent="flex-end" spacing={1} sx={{ m: 1 }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleFollowClick}
+              disabled={followStatus === FollowStatus.PENDING}
+            >
+              {getFollowText()}
             </Button>
-          )}
-        </StyledCardActions>
-      </StyledCard>
-    </div>
+            {onFollowerRemove && (
+              <Button variant="outlined" onClick={handleRemoveFollower}>
+                Remove
+              </Button>
+            )}
+          </Stack>
+        </Grid>
+      </Grid>
+    </Card>
   );
 };
 

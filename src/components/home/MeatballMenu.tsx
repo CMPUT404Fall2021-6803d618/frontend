@@ -1,7 +1,7 @@
 import React, { FC, useState, MouseEvent, useCallback } from "react";
 import styled from "styled-components";
-import MeatballIcon from "@material-ui/icons/MoreHoriz";
-import IconButton from "@material-ui/core/IconButton";
+import MeatballIcon from "@mui/icons-material/MoreHoriz";
+import IconButton from "@mui/material/IconButton";
 import PopoverMenu, { PopoverMenuItem } from "components/PopoverMenu";
 
 const MeatballButton = styled(IconButton)`

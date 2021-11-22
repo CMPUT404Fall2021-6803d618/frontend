@@ -9,16 +9,21 @@ import useLike from "hooks/LikeHook";
 import EditPostModal from "./EditPostModal";
 import ShareModal from "./ShareModal";
 import styled from "styled-components";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
 
-const Container = styled.div`
+const Container = styled(Stack)`
   padding: 12px;
   overflow-y: scroll;
   flex: 1;
+  margin: 0;
 `;
 
-const PostList = styled.div`
-  max-width: 600px;
-`;
+const PostList: FC = ({ children }) => (
+  <Stack spacing={1} maxWidth={600}>
+    {children}
+  </Stack>
+);
 
 const Home: FC = () => {
   const { user } = useAuthStore();
@@ -157,8 +162,12 @@ const Home: FC = () => {
   }, [posts, handleDeletePost, handleOpenEditModal, handleLikePost, handleOpenShareModal, handleShareFollowers]);
 
   return (
-    <Container>
-      <Link to="/posts/create">Create Post</Link>
+    <Container spacing={1} sx={{ margin: 1 }}>
+      <Link to="/posts/create">
+        <Button variant="contained" color="secondary" sx={{ maxWidth: "600px", width: "100%" }}>
+          Create Post
+        </Button>
+      </Link>
       <PostList>{render()}</PostList>
       <EditPostModal
         open={openEditModal}

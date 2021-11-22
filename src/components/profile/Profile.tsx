@@ -1,4 +1,12 @@
-import React, { FC, useMemo, useEffect, useState, useCallback, MouseEvent, ChangeEvent } from "react";
+import React, {
+  FC,
+  useMemo,
+  useEffect,
+  useState,
+  useCallback,
+  MouseEvent,
+  ChangeEvent,
+} from "react";
 import usePost from "hooks/PostHook";
 import styled from "styled-components";
 import useSocial, { FollowStatus } from "hooks/SocialHook";
@@ -6,11 +14,8 @@ import { withParamId } from "decorators/withParamId";
 import { ProfileService } from "services/ProfileService";
 import { Author, Post } from "shared/interfaces";
 import Loading from "components/common/components/Loading";
-
-const Container = styled.div`
-  height: 100%;
-  width: 100%;
-`;
+import { Container } from "@mui/material";
+import theme from "theme";
 
 const ProfileDiv = styled.div`
   display: flex;
@@ -80,7 +85,9 @@ const Profile: FC<IProps> = (props) => {
   }, [id, profileService]);
 
   useEffect(() => {
-    getPosts().then((data) => setPosts(data.map((d) => ({ ...d, liked: false }))));
+    getPosts().then((data) =>
+      setPosts(data.map((d) => ({ ...d, liked: false })))
+    );
   }, [getPosts]);
 
   useEffect(() => {
@@ -99,7 +106,11 @@ const Profile: FC<IProps> = (props) => {
             github: editGithub === "" ? undefined : editGithub,
             displayName: editDisplayName,
           });
-          setProfile({ ...profile, github: editGithub, displayName: editDisplayName });
+          setProfile({
+            ...profile,
+            github: editGithub,
+            displayName: editDisplayName,
+          });
         }
         setEditing(false);
       } else {
@@ -109,9 +120,12 @@ const Profile: FC<IProps> = (props) => {
     [editDisplayName, editGithub, editing, id, profile, profileService]
   );
 
-  const handleDisplayNameChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setEditDisplayName(e.target.value);
-  }, []);
+  const handleDisplayNameChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setEditDisplayName(e.target.value);
+    },
+    []
+  );
 
   const handleGithubChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setEditGithub(e.target.value);
@@ -134,7 +148,11 @@ const Profile: FC<IProps> = (props) => {
           </ProfileImageDiv>
           <ProfileInfoDiv>
             {editing ? (
-              <input type="text" onChange={handleDisplayNameChange} value={editDisplayName} />
+              <input
+                type="text"
+                onChange={handleDisplayNameChange}
+                value={editDisplayName}
+              />
             ) : (
               <DisplayName>{profile?.displayName}</DisplayName>
             )}
@@ -148,16 +166,39 @@ const Profile: FC<IProps> = (props) => {
                 <span>followers</span>
               </div>
               <div>
-                <span>{followings?.filter((f) => f.followStatus === FollowStatus.FOLLOWED).length ?? 0} </span>
+                <span>
+                  {followings?.filter(
+                    (f) => f.followStatus === FollowStatus.FOLLOWED
+                  ).length ?? 0}{" "}
+                </span>
                 <span>followings</span>
               </div>
             </SocialStats>
             {editing ? (
-              <div className="info" style={{ display: "flex", flexDirection: "row", marginTop: "2rem" }}>
-                Github: <input style={{ flex: 1 }} onChange={handleGithubChange} value={editGithub} />
+              <div
+                className="info"
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  marginTop: "2rem",
+                }}
+              >
+                Github:{" "}
+                <input
+                  style={{ flex: 1 }}
+                  onChange={handleGithubChange}
+                  value={editGithub}
+                />
               </div>
             ) : (
-              <div className="info" style={{ display: "flex", flexDirection: "row", marginTop: "2rem" }}>
+              <div
+                className="info"
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  marginTop: "2rem",
+                }}
+              >
                 <span style={{ flex: 1 }}>Github: {profile?.github}</span>
               </div>
             )}
