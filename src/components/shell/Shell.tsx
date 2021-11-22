@@ -1,13 +1,16 @@
-import React, { FC, useState, useCallback } from "react";
+import React, { FC, useState, useCallback, Fragment } from "react";
 import { routes } from "router/routes";
 import Router from "router/Router";
 import styled from "styled-components";
 import ResponsiveDrawer from "./ResponsiveDrawer";
-import Toolbar from "@material-ui/core/Toolbar";
-import AppBar from "@material-ui/core/AppBar";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import Typography from "@material-ui/core/Typography";
+import Toolbar from "@mui/material/Toolbar";
+import AppBar from "@mui/material/AppBar";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { Divider } from "@mui/material";
+import Grid from "@mui/material/Grid";
 
 const Root = styled.div`
   display: flex;
@@ -19,7 +22,6 @@ const Main = styled.main`
   height: 100%;
   display: flex;
   flex-flow: column;
-  background: white;
   flex: 2;
 `;
 
@@ -53,18 +55,22 @@ const Shell: FC<IProps> = () => {
   return (
     <Root>
       <ResponsiveDrawer currentUrl={currentUrl} onDrawerToggle={handleDrawerToggle} mobileOpen={mobileOpen} />
+
       <Main>
         {currentTitle && (
-          <AppBar position="relative" elevation={0}>
-            <Toolbar>
-              <DrawerToggleButton color="inherit" aria-label="open drawer" edge="start" onClick={handleDrawerToggle}>
-                <MenuIcon />
-              </DrawerToggleButton>
-              <Typography variant="h6" noWrap>
-                {currentTitle}
-              </Typography>
-            </Toolbar>
-          </AppBar>
+          <Fragment>
+            <AppBar position="relative" elevation={0}>
+              <Toolbar>
+                <DrawerToggleButton color="inherit" aria-label="open drawer" edge="start" onClick={handleDrawerToggle}>
+                  <MenuIcon />
+                </DrawerToggleButton>
+                <Typography variant="h6" noWrap>
+                  {currentTitle}
+                </Typography>
+              </Toolbar>
+            </AppBar>
+            <Divider />
+          </Fragment>
         )}
         <Router routes={routes} onRouteChange={handleRouteChange} />
       </Main>

@@ -9,11 +9,8 @@ import { ProfileService } from "services/ProfileService";
 import { Author, Post as IPost } from "shared/interfaces";
 import Loading from "components/common/components/Loading";
 import { Visibility } from "shared/enums";
-
-const Container = styled.div`
-  height: 100%;
-  width: 100%;
-`;
+import { Container } from "@mui/material";
+import theme from "theme";
 
 const ProfileDiv = styled.div`
   display: flex;
@@ -107,7 +104,11 @@ const Profile: FC<IProps> = (props) => {
             github: editGithub === "" ? undefined : editGithub,
             displayName: editDisplayName,
           });
-          setProfile({ ...profile, github: editGithub, displayName: editDisplayName });
+          setProfile({
+            ...profile,
+            github: editGithub,
+            displayName: editDisplayName,
+          });
         }
         setEditing(false);
       } else {
@@ -161,11 +162,25 @@ const Profile: FC<IProps> = (props) => {
               </div>
             </SocialStats>
             {editing ? (
-              <div className="info" style={{ display: "flex", flexDirection: "row", marginTop: "2rem" }}>
+              <div
+                className="info"
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  marginTop: "2rem",
+                }}
+              >
                 Github: <input style={{ flex: 1 }} onChange={handleGithubChange} value={editGithub} />
               </div>
             ) : (
-              <div className="info" style={{ display: "flex", flexDirection: "row", marginTop: "2rem" }}>
+              <div
+                className="info"
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  marginTop: "2rem",
+                }}
+              >
                 <span style={{ flex: 1 }}>Github: {profile?.github}</span>
               </div>
             )}

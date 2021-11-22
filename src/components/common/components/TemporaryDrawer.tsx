@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Drawer from "@material-ui/core/Drawer";
+import makeStyles from '@mui/styles/makeStyles';
+import Drawer from "@mui/material/Drawer";
 
 interface StyleProps {
   width?: number;

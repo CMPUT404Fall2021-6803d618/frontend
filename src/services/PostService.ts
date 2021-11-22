@@ -47,12 +47,12 @@ export class PostService implements IPostService {
   // }
 
   public async getPosts(authorId: string): Promise<PostObject[]> {
-    const { data } = await axios.get(`${authorId}posts/`);
+    const { data } = await axios.get(`${formatId(authorId)}/posts/`);
     return data.items;
   }
 
   public async createPost(authorId: string, payload: PostPayload): Promise<PostObject> {
-    const { data } = await axios.post(`${authorId}posts/`, {
+    const { data } = await axios.post(`${formatId(authorId)}/posts/`, {
       ...payload,
     });
     return data;
@@ -75,16 +75,20 @@ export class PostService implements IPostService {
   }
 
   public async createPostWithId(authorId: string, postId: string, payload: PostPayload): Promise<PostObject> {
-    const { data } = await axios.post(`${authorId}posts/${postId}`, {
+    const { data } = await axios.post(`${authorId}posts/${formatId(postId)}/`, {
       ...payload,
     });
     return data;
   }
 
-  public async sharePost(postId: string, friends: Author[]): Promise<void> {
-    await axios.post(`${formatId(postId)}/share`, {
+  public async sharePostToFriends(postId: string, friends: Author[]): Promise<void> {
+    await axios.post(`${formatId(postId)}/share/friends/`, {
       friends,
     });
+  }
+
+  public async sharePostToFollowers(postId: string): Promise<void> {
+    await axios.post(`${formatId(postId)}/share/followers/`);
   }
 }
 

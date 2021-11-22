@@ -1,14 +1,8 @@
 import React, { FC, useCallback } from "react";
 import { Person } from "hooks/SocialHook";
 import UserCard from "./UserCard";
-import styled from "styled-components";
 import Loading from "components/common/components/Loading";
-
-const Container = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  margin: 1rem auto;
-`;
+import UsersList from "./UsersList";
 
 interface IProps {
   people: Person[] | null;
@@ -36,7 +30,7 @@ const PeopleTab: FC<IProps> = (props) => {
     }
   }, [people, onFollow, onUnfollow]);
 
-  return <Container>{people ? render() : <Loading />}</Container>;
+  return <UsersList>{people ? render() : <Loading />}</UsersList>;
 };
 
 export default PeopleTab;
