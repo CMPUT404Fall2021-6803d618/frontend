@@ -1,7 +1,14 @@
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
-import React, { useState, ChangeEvent, PropsWithChildren, FC, useCallback, useEffect } from "react";
+import React, {
+  useState,
+  ChangeEvent,
+  PropsWithChildren,
+  FC,
+  useCallback,
+  useEffect,
+} from "react";
 
 interface TabPanelProps {
   value: number;
@@ -77,11 +84,22 @@ const SocialTabs: FC<IProps> = (props) => {
   );
 
   return (
-    <Box sx={{ width: "100%" }}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs value={value} onChange={handleChange} aria-label="friend tabs">
-          {tabs.map((tab) => (
-            <Tab label={tab.label} {...a11yProps(0)} key={`tab-${tab.label}`} />
+    <Box sx={{ width: "100%", overflow: "hidden" }}>
+      <Box sx={{ borderBottom: 1, borderColor: "divider", overflow: "hidden" }}>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label="friend tabs"
+          scrollButtons
+          allowScrollButtonsMobile
+        >
+          {tabs.map((tab, index) => (
+            <Tab
+              label={tab.label}
+              {...a11yProps(index)}
+              key={`tab-${tab.label}`}
+              wrapped
+            />
           ))}
         </Tabs>
       </Box>

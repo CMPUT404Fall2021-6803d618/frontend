@@ -19,7 +19,7 @@ import Drawer from "@mui/material/Drawer";
 import { Link } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 
-const drawerWidth = 240;
+const drawerWidth = 180;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

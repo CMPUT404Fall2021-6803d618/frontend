@@ -55,7 +55,7 @@ const Shell: FC<IProps> = () => {
 
   return (
     <Grid container spacing={0}>
-      <Grid item xs={12} sm="auto">
+      <Grid item xs="auto" sm="auto">
         <ResponsiveDrawer
           currentUrl={currentUrl}
           onDrawerToggle={handleDrawerToggle}
@@ -63,7 +63,7 @@ const Shell: FC<IProps> = () => {
         />
       </Grid>
 
-      <Grid item xs={12} sm>
+      <Grid item xs sm>
         <Main>
           {currentTitle && (
             <Fragment>
