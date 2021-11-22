@@ -1,7 +1,9 @@
-import React, { useCallback, MouseEvent, FC } from "react";
+import React, { useCallback, MouseEvent, FC, useState, useMemo } from "react";
 import styled from "styled-components";
 import { IconButton } from "@material-ui/core";
 import ShareIcon from "@material-ui/icons/Share";
+import PopoverMenu, { PopoverMenuItem } from "components/PopoverMenu";
+import { Visibility } from "shared/enums";
 
 const Button = styled(IconButton)`
   width: 40px;
@@ -14,25 +16,54 @@ const Button = styled(IconButton)`
 `;
 
 interface IProps {
-  onClick: () => void;
+  onFriendsClick: () => void;
+  onFollowersClick: () => void;
+  postVisibility: Visibility;
 }
 
 const ShareButton: FC<IProps> = (props) => {
-  const { onClick } = props;
-
-  const handleClick = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => {
-      e.preventDefault();
-      e.stopPropagation();
-      onClick();
-    },
-    [onClick]
+  const { onFriendsClick, onFollowersClick, postVisibility } = props;
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const followersMenuItem: PopoverMenuItem = useMemo(
+    () => ({
+      text: "Followers",
+      onClick: onFollowersClick,
+    }),
+    [onFollowersClick]
+  );
+  const friendsMenuItem: PopoverMenuItem = useMemo(
+    () => ({
+      text: "Friends",
+      onClick: onFriendsClick,
+    }),
+    [onFriendsClick]
   );
 
+  const handleClick = useCallback((e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setAnchorEl(e.currentTarget);
+  }, []);
+
+  const handleMenuClose = useCallback(() => {
+    setAnchorEl(null);
+  }, []);
+
+  const getMenuItems = useCallback(() => {
+    if (postVisibility === Visibility.PUBLIC) {
+      return [followersMenuItem, friendsMenuItem];
+    } else {
+      return [friendsMenuItem];
+    }
+  }, [followersMenuItem, friendsMenuItem, postVisibility]);
+
   return (
-    <Button onClick={handleClick}>
-      <ShareIcon fontSize="small" />
-    </Button>
+    <>
+      <Button onClick={handleClick}>
+        <ShareIcon fontSize="small" />
+      </Button>
+      <PopoverMenu onClose={handleMenuClose} items={getMenuItems()} anchorEl={anchorEl} />
+    </>
   );
 };
 

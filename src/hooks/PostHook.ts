@@ -8,6 +8,8 @@ interface IPostHook {
   createPost: (payload: PostPayload) => Promise<PostObject | null>;
   updatePost: (post: PostObject, newContent: string) => Promise<PostObject | null>;
   deletePost: (post: PostObject) => Promise<void>;
+  sharePostToFriends: (post: PostObject, friends: Author[]) => Promise<void>;
+  sharePostToFollowers: (post: PostObject) => Promise<void>;
 }
 
 const usePost = (user: Author | null): IPostHook => {
@@ -70,12 +72,28 @@ const usePost = (user: Author | null): IPostHook => {
     [postService]
   );
 
+  const sharePostToFriends = useCallback(
+    async (post: PostObject, friends: Author[]) => {
+      postService.sharePostToFriends(post.id, friends);
+    },
+    [postService]
+  );
+
+  const sharePostToFollowers = useCallback(
+    async (post: PostObject) => {
+      postService.sharePostToFollowers(post.id);
+    },
+    [postService]
+  );
+
   return {
     getPosts,
     getPostById,
     createPost,
     updatePost,
     deletePost,
+    sharePostToFriends,
+    sharePostToFollowers,
   };
 };
 

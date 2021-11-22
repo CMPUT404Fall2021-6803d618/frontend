@@ -19,14 +19,16 @@ const ModalWrapper = styled(MuiModal)`
 const ModalBody = styled.div`
   display: flex;
   background-color: white;
-  min-width: 350px;
   min-height: 200px;
-  max-height: calc(100% - 100px);
-  margin: 1rem;
+  max-height: calc(100% - 64px);
+  margin: 32px;
   flex-direction: column;
   border-radius: 5px;
   justify-content: center;
   align-items: center;
+  max-width: 600px;
+  width: 100%;
+  transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, height 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms !important;
 `;
 
 const Content = styled.div`
@@ -114,16 +116,8 @@ const Modal = <T extends object | void>(props: IProps<T>) => {
   };
 
   return (
-    <ModalWrapper
-      open={open}
-      onClose={handleClose}
-      closeAfterTransition
-      BackdropComponent={Backdrop}
-      BackdropProps={{
-        timeout: 500,
-      }}
-    >
-      <Zoom in={open} onExited={handleExit}>
+    <ModalWrapper open={open} onClose={handleClose} closeAfterTransition BackdropComponent={Backdrop}>
+      <Fade in={open} onExited={handleExit}>
         <ModalBody>
           {state === State.SUCCESS ? (
             <Zoom in={true} unmountOnExit>
@@ -151,7 +145,7 @@ const Modal = <T extends object | void>(props: IProps<T>) => {
             </Fragment>
           )}
         </ModalBody>
-      </Zoom>
+      </Fade>
     </ModalWrapper>
   );
 };

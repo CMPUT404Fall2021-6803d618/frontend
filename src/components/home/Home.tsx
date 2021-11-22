@@ -22,7 +22,7 @@ const PostList = styled.div`
 
 const Home: FC = () => {
   const { user } = useAuthStore();
-  const { deletePost, updatePost, getPosts } = usePost(user);
+  const { deletePost, updatePost, getPosts, sharePostToFriends, sharePostToFollowers } = usePost(user);
   const { getLiked, likePost } = useLike();
   const [posts, setPosts] = useState<IPost[] | null>(null);
   const [selectedPost, setSelectedPost] = useState<IPost | null>(null);
@@ -118,13 +118,20 @@ const Home: FC = () => {
     setOpenShareModal(false);
   }, []);
 
-  const handleSharePost = useCallback(
-    (friends) => {
-      console.log(`Sharing post ${selectedPost?.id}`);
-      console.log(friends);
-      return Promise.resolve();
+  const handleShareFriends = useCallback(
+    async (friends) => {
+      if (selectedPost) {
+        sharePostToFriends(selectedPost, friends);
+      }
     },
-    [selectedPost?.id]
+    [selectedPost, sharePostToFriends]
+  );
+
+  const handleShareFollowers = useCallback(
+    async (post: IPost) => {
+      sharePostToFollowers(post);
+    },
+    [sharePostToFollowers]
   );
 
   const render = useCallback(() => {
@@ -141,12 +148,13 @@ const Home: FC = () => {
             onDeleteClick={handleDeletePost}
             onEditClick={handleOpenEditModal}
             onLikeClick={handleLikePost}
-            onShareClick={handleOpenShareModal}
+            onShareFriendsClick={handleOpenShareModal}
+            onShareFollowersClick={handleShareFollowers}
           />
         );
       });
     }
-  }, [posts, handleDeletePost, handleOpenEditModal, handleLikePost, handleOpenShareModal]);
+  }, [posts, handleDeletePost, handleOpenEditModal, handleLikePost, handleOpenShareModal, handleShareFollowers]);
 
   return (
     <Container>
@@ -159,7 +167,7 @@ const Home: FC = () => {
         onUpdate={handleUpdatePost}
         onUpdateSuccess={handleUpdatePostSuccess}
       />
-      <ShareModal open={openShareModal} onClose={handleCloseShareModal} onShare={handleSharePost} />
+      <ShareModal open={openShareModal} onClose={handleCloseShareModal} onShare={handleShareFriends} />
     </Container>
   );
 };

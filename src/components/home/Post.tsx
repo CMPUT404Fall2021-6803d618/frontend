@@ -104,14 +104,15 @@ interface PostProps {
   onDeleteClick: (post: IPost) => Promise<void>;
   onLikeClick: (post: IPost) => Promise<void>;
   onEditClick: (post: IPost) => void;
-  onShareClick: (post: IPost) => void;
+  onShareFriendsClick: (post: IPost) => void;
+  onShareFollowersClick: (post: IPost) => Promise<void>;
 }
 
 // const Posts:FunctionComponent<PostProps> = (props) => {
 
 const Post: FC<PostProps> = (props) => {
   const { user } = useAuthStore();
-  const { post, onDeleteClick, onEditClick, onLikeClick, onShareClick } = props;
+  const { post, onDeleteClick, onEditClick, onLikeClick, onShareFriendsClick, onShareFollowersClick } = props;
   const { content, author, published } = post;
   const isPostAuthor = user?.id === post?.author.id;
 
@@ -127,9 +128,13 @@ const Post: FC<PostProps> = (props) => {
     await onLikeClick(post);
   }, [onLikeClick, post]);
 
-  const handleShareClick = useCallback(() => {
-    onShareClick(post);
-  }, [onShareClick, post]);
+  const handleShareFriendsClick = useCallback(() => {
+    onShareFriendsClick(post);
+  }, [onShareFriendsClick, post]);
+
+  const handleShareFollowersClick = useCallback(() => {
+    onShareFollowersClick(post);
+  }, [onShareFollowersClick, post]);
 
   const meatballMenuItems = [
     {
@@ -170,7 +175,11 @@ const Post: FC<PostProps> = (props) => {
               }}
             />
             <LikeButton liked={post.liked} onClick={handleLikeClick} />
-            <ShareButton onClick={handleShareClick} />
+            <ShareButton
+              onFriendsClick={handleShareFriendsClick}
+              onFollowersClick={handleShareFollowersClick}
+              postVisibility={post.visibility}
+            />
           </PostAction>
         </PostBody>
       </PostContainer>
