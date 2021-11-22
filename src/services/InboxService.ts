@@ -2,6 +2,7 @@
 import { Author } from "shared/interfaces";
 import { formatId } from "utils";
 import { axios } from "utils/axios";
+import { BaseService } from "./BaseService";
 
 interface IInboxService {
   getInbox: (authorId: string) => Promise<Record<string, any>[]>;
@@ -15,10 +16,9 @@ interface LikePayload {
   object: string;
 }
 
-export class InboxService implements IInboxService {
+export class InboxService extends BaseService<Record<string, any>> implements IInboxService {
   public async getInbox(authorId: string): Promise<Record<string, any>[]> {
-    const { data } = await axios.get(`${formatId(authorId)}/inbox`);
-    return data.items;
+    return this.getAll(`${formatId(authorId)}/inbox/`);
   }
 
   public async sendLike(authorId: string, payload: LikePayload): Promise<void> {
