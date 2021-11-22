@@ -1,13 +1,19 @@
 import React, { useRef, FC, ChangeEvent, useCallback } from "react";
-
+import { styled } from "@mui/material/styles";
+import Button from "@mui/material/Button";
 interface IProps {
   onFileSelectError: (error: any) => void;
   onFileSelectSuccess: (file: File) => void;
 }
 
-const FileUploader: FC<IProps> = ({ onFileSelectError, onFileSelectSuccess }) => {
-  const fileInput = useRef<HTMLInputElement | null>(null);
+const Input = styled("input")({
+  display: "none",
+});
 
+const FileUploader: FC<IProps> = ({
+  onFileSelectError,
+  onFileSelectSuccess,
+}) => {
   const handleFileInput = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       // handle validations
@@ -15,7 +21,9 @@ const FileUploader: FC<IProps> = ({ onFileSelectError, onFileSelectSuccess }) =>
       if (file) {
         console.log(file.size);
         if (file.size > 10000 * 1000) {
-          onFileSelectError({ error: "File size cannot exceed more than 10MB" });
+          onFileSelectError({
+            error: "File size cannot exceed more than 10MB",
+          });
         } else {
           onFileSelectSuccess(file);
         }
@@ -25,9 +33,23 @@ const FileUploader: FC<IProps> = ({ onFileSelectError, onFileSelectSuccess }) =>
   );
 
   return (
-    <div className="file-uploader">
-      <input type="file" onChange={handleFileInput}></input>
-    </div>
+    <label htmlFor="contained-button-file">
+      <Input
+        accept="image/*"
+        id="contained-button-file"
+        onChange={handleFileInput}
+        type="file"
+      />
+      <Button
+        sx={{ marginTop: 1, padding: 1 }}
+        fullWidth
+        variant="outlined"
+        component="span"
+        color="secondary"
+      >
+        Upload Image
+      </Button>
+    </label>
   );
 };
 export default FileUploader;
