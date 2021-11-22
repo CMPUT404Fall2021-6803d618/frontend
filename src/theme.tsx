@@ -67,4 +67,12 @@ export default createTheme({
     },
     divider: "rgba(0, 0, 0, 0.12)",
   },
+  typography: {
+    body2: {
+      fontSize: "0.85rem",
+    },
+    button: {
+      fontSize: "0.8rem",
+    },
+  },
 });

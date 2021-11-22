@@ -62,9 +62,17 @@ const UserCard: FC<UserCardProps> = (props) => {
   }, [followStatus]);
 
   return (
-    <Card sx={{ width: "100%", padding: 2 }} key={id}>
+    <Card
+      sx={{
+        width: "100%",
+        p: 1,
+        paddingLeft: 2,
+        typography: "body2",
+      }}
+      key={id}
+    >
       <Grid container spacing={0} alignItems="center">
-        <Grid xs="auto" sm="auto">
+        <Grid xs sm>
           <Stack direction="row" alignItems="center" spacing={1}>
             <Avatar
               src="https://via.placeholder.com/500?text=User+Profile+Image"
@@ -74,17 +82,12 @@ const UserCard: FC<UserCardProps> = (props) => {
           </Stack>
         </Grid>
 
-        <Grid xs sm>
+        <Grid xs sm="auto">
           <Stack
             direction="row"
-            justifyContent="center"
+            justifyContent="flex-end"
             spacing={1}
-            sx={{
-              justifyContent: {
-                xs: "center",
-                sm: "flex-end",
-              },
-            }}
+            sx={{ m: 1 }}
           >
             <Button
               variant="contained"
