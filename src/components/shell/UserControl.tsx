@@ -2,19 +2,19 @@
 import React, { Fragment, FunctionComponent, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { paths } from "router/paths";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import styled from "styled-components";
-import ButtonBase from "@material-ui/core/ButtonBase";
+import ButtonBase from "@mui/material/ButtonBase";
 import { useAuth } from "hooks/AuthHook";
 import { useAuthStore } from "hooks/AuthStoreHook";
 import { extractIdFromUrl } from "utils";
+import theme from "theme";
 
 const Header = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   font-family: "Nunito Sans";
-  color: #dd2020;
   flex-direction: column;
   svg {
     font-size: 5rem;
@@ -29,16 +29,16 @@ const Control = styled.div`
   padding: 0 1rem 1rem 1rem;
   width: 100%;
   p {
-    color: #203e55;
     margin-bottom: 0;
+    color: ${theme.palette.colors.red};
     font-weight: bold;
     text-align: center;
   }
 `;
 
-const PrimaryButton = styled(({ navigate, ...props }) => <ButtonBase {...props} />)`
-  background-color: #dd2020 !important;
-  color: white !important;
+const PrimaryButton = styled(({ navigate, ...props }) => (
+  <ButtonBase {...props} />
+))`
   padding: 0.25rem !important;
   border-radius: 1rem !important;
   transition: 100ms all linear !important;
@@ -49,17 +49,13 @@ const PrimaryButton = styled(({ navigate, ...props }) => <ButtonBase {...props} 
   }
 `;
 
-const SecondaryButton = styled(({ navigate, ...props }) => <ButtonBase {...props} />)`
-  color: #dd2020 !important;
+const SecondaryButton = styled(({ navigate, ...props }) => (
+  <ButtonBase {...props} />
+))`
   padding: 0.25rem !important;
   border-radius: 1rem !important;
   transition: 100ms all linear !important;
-  background: rgba(221, 32, 32, 0.08) !important;
   margin-top: 0.5rem !important;
-  &:hover {
-    background: rgba(221, 32, 32, 0.15) !important;
-    color: #dd2020 !important;
-  }
 `;
 
 const UserControl: FunctionComponent = () => {
@@ -69,7 +65,10 @@ const UserControl: FunctionComponent = () => {
     () =>
       isAuthenticated ? (
         <Fragment>
-          <Link to={`/profile/${extractIdFromUrl(user?.id)}`} component={PrimaryButton}>
+          <Link
+            to={`/profile/${extractIdFromUrl(user?.id)}`}
+            component={PrimaryButton}
+          >
             Profile
           </Link>
           <SecondaryButton onClick={logout}>Logout</SecondaryButton>

@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
 import styled from "styled-components";
-import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
 const Container = styled.div`
   display: flex;
@@ -32,7 +32,9 @@ const InDevelopmentView: FunctionComponent = () => {
     <Container className="container">
       <ErrorOutlineIcon />
       <Header>In Development</Header>
-      <Body>Sorry, this page is still in development. It will be available soon!</Body>
+      <Body>
+        Sorry, this page is still in development. It will be available soon!
+      </Body>
     </Container>
   );
 };

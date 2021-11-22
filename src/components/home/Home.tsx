@@ -1,7 +1,7 @@
 import Loading from "components/common/components/Loading";
 import { useAuthStore } from "hooks/AuthStoreHook";
 import usePost from "hooks/PostHook";
-import React, { FC, useCallback, useState, useEffect } from "react";
+import React, { FC, useCallback, useState, useEffect, Fragment } from "react";
 import Post from "./Post";
 import { Link } from "react-router-dom";
 import { Post as IPost } from "shared/interfaces";
@@ -9,6 +9,8 @@ import useLike from "hooks/LikeHook";
 import EditPostModal from "./EditPostModal";
 import ShareModal from "./ShareModal";
 import styled from "styled-components";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
 
 const Container = styled.div`
   padding: 12px;
@@ -16,9 +18,7 @@ const Container = styled.div`
   flex: 1;
 `;
 
-const PostList = styled.div`
-  max-width: 600px;
-`;
+const PostList: FC = ({ children }) => <Stack spacing={1}>{children}</Stack>;
 
 const Home: FC = () => {
   const { user } = useAuthStore();
@@ -31,7 +31,10 @@ const Home: FC = () => {
 
   const loadData = useCallback(async () => {
     if (user) {
-      const [postsData, likedData] = await Promise.all([getPosts(), getLiked()]);
+      const [postsData, likedData] = await Promise.all([
+        getPosts(),
+        getLiked(),
+      ]);
       const newPosts = postsData.map((post) => {
         const liked = likedData.find((l) => l.object === post.id);
         return {
@@ -146,11 +149,21 @@ const Home: FC = () => {
         );
       });
     }
-  }, [posts, handleDeletePost, handleOpenEditModal, handleLikePost, handleOpenShareModal]);
+  }, [
+    posts,
+    handleDeletePost,
+    handleOpenEditModal,
+    handleLikePost,
+    handleOpenShareModal,
+  ]);
 
   return (
-    <Container>
-      <Link to="/posts/create">Create Post</Link>
+    <Stack spacing={1} sx={{ margin: 1 }}>
+      <Link to="/posts/create">
+        <Button variant="contained" color="secondary" fullWidth>
+          Create Post
+        </Button>
+      </Link>
       <PostList>{render()}</PostList>
       <EditPostModal
         open={openEditModal}
@@ -159,8 +172,12 @@ const Home: FC = () => {
         onUpdate={handleUpdatePost}
         onUpdateSuccess={handleUpdatePostSuccess}
       />
-      <ShareModal open={openShareModal} onClose={handleCloseShareModal} onShare={handleSharePost} />
-    </Container>
+      <ShareModal
+        open={openShareModal}
+        onClose={handleCloseShareModal}
+        onShare={handleSharePost}
+      />
+    </Stack>
   );
 };
 

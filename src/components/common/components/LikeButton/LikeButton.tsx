@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useState, MouseEvent, useMemo } from "react";
 import "./LikeButton.style.css";
 import classnames from "classnames";
-import { IconButton } from "@material-ui/core";
+import { IconButton } from "@mui/material";
 import styled from "styled-components";
 
 const Button = styled(IconButton)`

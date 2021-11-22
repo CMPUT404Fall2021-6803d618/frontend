@@ -1,7 +1,7 @@
 import React, { useCallback, MouseEvent, FC } from "react";
 import styled from "styled-components";
-import { IconButton } from "@material-ui/core";
-import ShareIcon from "@material-ui/icons/Share";
+import { IconButton } from "@mui/material";
+import ShareIcon from "@mui/icons-material/Share";
 
 const Button = styled(IconButton)`
   width: 40px;

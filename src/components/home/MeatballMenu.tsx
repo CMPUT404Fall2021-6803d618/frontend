@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import React, { FC, useState, MouseEvent, useCallback } from "react";
 import styled from "styled-components";
-import Popover from "@material-ui/core/Popover";
-import MeatballIcon from "@material-ui/icons/MoreHoriz";
-import IconButton from "@material-ui/core/IconButton";
-import MenuItem from "@material-ui/core/MenuItem";
-import MenuList from "@material-ui/core/MenuList";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import { OverridableComponent } from "@material-ui/core/OverridableComponent";
-import { SvgIconTypeMap } from "@material-ui/core/SvgIcon";
+import Popover from "@mui/material/Popover";
+import MeatballIcon from "@mui/icons-material/MoreHoriz";
+import IconButton from "@mui/material/IconButton";
+import MenuItem from "@mui/material/MenuItem";
+import MenuList from "@mui/material/MenuList";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import { OverridableComponent } from "@mui/material/OverridableComponent";
+import { SvgIconTypeMap } from "@mui/material/SvgIcon";
 
 const MeatballButton = styled(IconButton)`
   padding: 0 !important;

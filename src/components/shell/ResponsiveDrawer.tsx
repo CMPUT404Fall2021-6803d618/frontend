@@ -1,27 +1,33 @@
-import React, { Fragment, FunctionComponent, useState, useCallback } from "react";
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import React, {
+  Fragment,
+  FunctionComponent,
+  useState,
+  useCallback,
+} from "react";
+import { Theme } from "@mui/material/styles";
+import makeStyles from "@mui/styles/makeStyles";
+import createStyles from "@mui/styles/createStyles";
 import UserControl from "./UserControl";
 import { LINK_LIST } from "router/drawerLinks";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ErrorIcon from "@material-ui/icons/Error";
-import Divider from "@material-ui/core/Divider";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Hidden from "@material-ui/core/Hidden";
-import Drawer from "@material-ui/core/Drawer";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ErrorIcon from "@mui/icons-material/Error";
+import Divider from "@mui/material/Divider";
+import CssBaseline from "@mui/material/CssBaseline";
+import Hidden from "@mui/material/Hidden";
+import Drawer from "@mui/material/Drawer";
 import { Link } from "react-router-dom";
-import { useTheme } from "@material-ui/core/styles";
+import { useTheme } from "@mui/material/styles";
 
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     drawer: {
-      background: "white",
       [theme.breakpoints.up("sm")]: {
-        flex: 1,
+        flex: 0,
         flexShrink: 0,
-        borderRight: "1px solid rgba(0, 0, 0, 0.12)",
+        borderRight: `1px solid ${theme.palette.divider}`,
       },
     },
     drawerPaper: {
@@ -38,19 +44,20 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     listItem: {
       width: "auto",
+      color: theme.palette.text.primary,
       margin: "8px",
       borderRadius: "5px",
-      color: "#203e55",
       "&:hover": {
-        backgroundColor: "rgba(221, 32, 32, 0.08)",
-        color: "#dd2020",
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.primary,
       },
     },
     listItemSelected: {
-      backgroundColor: "rgba(221, 32, 32, 0.12) !important",
-      color: "#dd2020",
+      color: theme.palette.colors.black,
+      backgroundColor: theme.palette.secondary.main + "!important",
       "&:hover": {
-        backgroundColor: "rgba(221, 32, 32, 0.12)",
+        color: theme.palette.colors.black,
+        backgroundColor: theme.palette.secondary.main + "!important",
       },
     },
     listItemText: {
@@ -72,7 +79,11 @@ interface IProps {
   onDrawerToggle: () => void;
 }
 
-const ResponsiveDrawer: FunctionComponent<IProps> = ({ currentUrl, onDrawerToggle, mobileOpen }) => {
+const ResponsiveDrawer: FunctionComponent<IProps> = ({
+  currentUrl,
+  onDrawerToggle,
+  mobileOpen,
+}) => {
   const classes = useStyles();
   const theme = useTheme();
 
@@ -89,7 +100,11 @@ const ResponsiveDrawer: FunctionComponent<IProps> = ({ currentUrl, onDrawerToggl
                 key={link.name}
                 component={Link}
                 to={link.path}
-                selected={link.subpath ? link.subpath.includes(currentUrl) : link.path === currentUrl}
+                selected={
+                  link.subpath
+                    ? link.subpath.includes(currentUrl)
+                    : link.path === currentUrl
+                }
                 classes={{
                   root: classes.listItem,
                   selected: classes.listItemSelected,
@@ -125,7 +140,7 @@ const ResponsiveDrawer: FunctionComponent<IProps> = ({ currentUrl, onDrawerToggl
             {DrawerContent}
           </Drawer>
         </Hidden>
-        <Hidden xsDown implementation="css">
+        <Hidden smDown implementation="css">
           <Drawer
             classes={{
               paper: classes.drawerPaper,

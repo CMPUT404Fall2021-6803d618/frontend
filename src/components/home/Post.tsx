@@ -6,83 +6,28 @@ import profilePic from "./images.jpeg";
 import MeatballMenu from "./MeatballMenu";
 import { Link } from "react-router-dom";
 import LikeButton from "../common/components/LikeButton/LikeButton";
-import Delete from "@material-ui/icons/Delete";
-import Edit from "@material-ui/icons/Edit";
+import Delete from "@mui/icons-material/Delete";
+import Edit from "@mui/icons-material/Edit";
 import ShareButton from "components/common/components/ShareButton";
 import { useAuthStore } from "hooks/AuthStoreHook";
 import CommentButton from "components/common/components/CommentButton";
 import ReactMarkdown from "react-markdown";
+import Card from "@mui/material/Card";
+import Grid from "@mui/material/Grid";
+import Stack from "@mui/material/Stack";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import { CssBaseline } from "@mui/material";
 
 // Post Wrapper
 const PostWrapper = styled(Link)`
-  height: fit-content;
-  display: flex;
-  border: 1px solid #ccc;
-  width: 100%;
   color: darkslategray;
   &:hover {
     color: darkslategray;
   }
-`;
-
-// Post container
-const PostContainer = styled.div`
-  height: fit-content;
-  margin: 12px;
-  display: flex;
-  width: 100%;
-  overflow: hidden;
-`;
-
-const HeaderDiv = styled.div`
-  display: flex;
-`;
-
-const ProfileImage = styled.img`
-  max-width: 50px;
-  max-height: 50px;
-  border-radius: 50%;
-  object-fit: contain;
-  margin-right: 12px;
-`;
-
-const PostBody = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-`;
-
-const PostAuthorMenuDiv = styled.div`
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: nowrap;
-  font-size: 14px;
-  width: 100%;
-`;
-
-const PostAuthorDiv = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-// Post content
-const PostContent = styled.div`
-  margin: 1rem 0;
-  overflow-wrap: anywhere;
-  img {
-    height: auto;
-    max-width: 100%;
-  }
-`;
-
-// Post Action
-const PostAction = styled.div`
-  display: flex;
-  height: fit-content;
-  flex-direction: row;
-  justify-content: space-between;
-  margin-left: -12px;
-  max-width: 425px;
 `;
 
 const DisplayName = styled.span`
@@ -146,34 +91,38 @@ const Post: FC<PostProps> = (props) => {
 
   return (
     <PostWrapper to={`/post/${encodeURIComponent(post.id)}`}>
-      <PostContainer>
-        <ProfileImage src={profilePic} alt="Profile Image" />
-        <PostBody>
-          <HeaderDiv>
-            <PostAuthorMenuDiv>
-              <PostAuthorDiv>
+      <Card>
+        <CardContent>
+          <Grid container spacing={1}>
+            <Grid item sm={1} textAlign="center" alignSelf="center">
+              <img width={30} src={profilePic} alt="Profile Image" />
+            </Grid>
+            <Grid item sm={3}>
+              <Stack spacing={0}>
                 <DisplayName>{author.displayName}</DisplayName>
-                <Dot>🞄</Dot>
                 <PublishedDate>{formatDate(published)}</PublishedDate>
-              </PostAuthorDiv>
-
+              </Stack>
+            </Grid>
+            <Grid item sm />
+            <Grid item sm={1}>
               {isPostAuthor && <MeatballMenu items={meatballMenuItems} />}
-            </PostAuthorMenuDiv>
-          </HeaderDiv>
-          <PostContent>
+            </Grid>
+          </Grid>
+
+          <Box sx={{ typography: "body2" }}>
             <ReactMarkdown>{content}</ReactMarkdown>
-          </PostContent>
-          <PostAction>
-            <CommentButton
-              onClick={() => {
-                return Promise.resolve();
-              }}
-            />
-            <LikeButton liked={post.liked} onClick={handleLikeClick} />
-            <ShareButton onClick={handleShareClick} />
-          </PostAction>
-        </PostBody>
-      </PostContainer>
+          </Box>
+        </CardContent>
+        <CardActions>
+          <CommentButton
+            onClick={() => {
+              return Promise.resolve();
+            }}
+          />
+          <LikeButton liked={post.liked} onClick={handleLikeClick} />
+          <ShareButton onClick={handleShareClick} />
+        </CardActions>
+      </Card>
     </PostWrapper>
   );
 };

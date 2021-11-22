@@ -1,14 +1,19 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Fade from "@material-ui/core/Fade";
-import MuiModal from "@material-ui/core/Modal";
+import CircularProgress from "@mui/material/CircularProgress";
+import Fade from "@mui/material/Fade";
+import MuiModal from "@mui/material/Modal";
 import React, { Fragment, ReactNode, useCallback, useState, FC } from "react";
 import styled from "styled-components";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import Zoom from "@material-ui/core/Zoom";
-import Backdrop from "@material-ui/core/Backdrop";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import Zoom from "@mui/material/Zoom";
+import Backdrop from "@mui/material/Backdrop";
+import Container from "@mui/material/Container";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
+import Button from "@mui/material/Button";
 
 const ModalWrapper = styled(MuiModal)`
   display: flex;
@@ -17,8 +22,8 @@ const ModalWrapper = styled(MuiModal)`
 `;
 
 const ModalBody = styled.div`
+  z-index: 9999;
   display: flex;
-  background-color: white;
   min-width: 350px;
   min-height: 200px;
   max-height: calc(100% - 100px);
@@ -132,16 +137,22 @@ const Modal = <T extends object | void>(props: IProps<T>) => {
           ) : (
             <Fragment>
               <Fade in={state === State.IDLE}>
-                <FadeContent>
-                  <Content>
+                <Card sx={{ minWidth: 300, maxWidth: 500, width: "90vw" }}>
+                  <CardContent>
                     <Title>{title}</Title>
                     {children}
-                  </Content>
-                  <Footer>
-                    <button onClick={handleClose}>Cancel</button>
-                    {actionOption && <button onClick={handleClick}>{actionOption.text}</button>}
-                  </Footer>
-                </FadeContent>
+                  </CardContent>
+                  <CardActions>
+                    <Button onClick={handleClose} variant="outlined">
+                      Cancel
+                    </Button>
+                    {actionOption && (
+                      <Button onClick={handleClick} variant="contained">
+                        {actionOption.text}
+                      </Button>
+                    )}
+                  </CardActions>
+                </Card>
               </Fade>
               <Fade in={state === State.IN_PROGRESS} unmountOnExit>
                 <FadeLoading>

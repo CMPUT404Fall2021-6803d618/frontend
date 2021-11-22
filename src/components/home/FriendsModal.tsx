@@ -1,4 +1,4 @@
-import { Checkbox, FormControlLabel, FormGroup } from "@material-ui/core";
+import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 import Loading from "components/common/components/Loading";
 import React, { FC, useCallback, useState, ChangeEvent, useEffect } from "react";
 import { Author } from "shared/interfaces";
