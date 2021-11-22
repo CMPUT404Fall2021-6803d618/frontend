@@ -13,15 +13,14 @@ import { useAuthStore } from "hooks/AuthStoreHook";
 import CommentButton from "components/common/components/CommentButton";
 import ReactMarkdown from "react-markdown";
 import Card from "@mui/material/Card";
-import Grid from "@mui/material/Grid";
-import Stack from "@mui/material/Stack";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import Box from "@mui/material/Box";
 
 const Dot = styled.span`
-  margin: 0 5px;
-  color: grey;
+  margin: 0 6px;
+  height: 3px;
+  width: 3px;
+  background-color: grey;
+  border-radius: 50%;
+  display: inline-block;
 `;
 
 const PublishedDate = styled.span`
@@ -49,6 +48,7 @@ const PostCard = styled(Card)`
 
 const HeaderDiv = styled.div`
   display: flex;
+  height: 40px;
 `;
 
 const ProfileImage = styled.img`
@@ -162,7 +162,7 @@ const Post: FC<PostProps> = (props) => {
             <PostAuthorMenuDiv>
               <PostAuthorDiv>
                 <DisplayName>{author.displayName}</DisplayName>
-                <Dot>🞄</Dot>
+                <Dot />
                 <PublishedDate>{formatDate(published)}</PublishedDate>
               </PostAuthorDiv>
 

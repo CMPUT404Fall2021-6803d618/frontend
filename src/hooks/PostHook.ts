@@ -1,5 +1,5 @@
 import { useMemo, useCallback } from "react";
-import { PostPayload, PostService, StreamPostService } from "services/PostService";
+import { PostPayload, PostService } from "services/PostService";
 import { PostObject, Author } from "shared/interfaces";
 
 interface IPostHook {
@@ -15,7 +15,6 @@ interface IPostHook {
 
 const usePost = (user: Author | null): IPostHook => {
   const postService = useMemo(() => new PostService(), []);
-  const streamPostService = useMemo(() => new StreamPostService(), []);
 
   const getPosts = useCallback(async () => {
     if (user) {
@@ -28,12 +27,12 @@ const usePost = (user: Author | null): IPostHook => {
 
   const getStreamPosts = useCallback(async () => {
     if (user) {
-      const data = await streamPostService.getPosts(user.id);
+      const data = await postService.getStreamPosts(user.id);
       return data;
     } else {
       return [];
     }
-  }, [streamPostService, user]);
+  }, [postService, user]);
 
   const getPostById = useCallback(
     async (id: string) => {

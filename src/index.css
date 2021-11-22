@@ -28,6 +28,9 @@ input::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
+a {
+  text-decoration: none !important;
+}
 
 a:hover {
   text-decoration: none !important;
