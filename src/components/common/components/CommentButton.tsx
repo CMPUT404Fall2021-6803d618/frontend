@@ -1,7 +1,7 @@
 import React, { useCallback, MouseEvent, FC } from "react";
 import styled from "styled-components";
-import { IconButton } from "@material-ui/core";
-import CommentIcon from "@material-ui/icons/TextsmsOutlined";
+import { IconButton } from "@mui/material";
+import CommentIcon from "@mui/icons-material/TextsmsOutlined";
 
 const Button = styled(IconButton)`
   width: 40px;

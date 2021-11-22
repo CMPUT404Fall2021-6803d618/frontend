@@ -1,16 +1,16 @@
 import React, { FC, useMemo, useEffect, useState, useCallback, MouseEvent, ChangeEvent } from "react";
 import usePost from "hooks/PostHook";
 import styled from "styled-components";
+import Post from "../home/Post";
 import useSocial, { FollowStatus } from "hooks/SocialHook";
+import { useAuthStore } from "hooks/AuthStoreHook";
 import { withParamId } from "decorators/withParamId";
 import { ProfileService } from "services/ProfileService";
-import { Author, Post } from "shared/interfaces";
+import { Author, Post as IPost } from "shared/interfaces";
 import Loading from "components/common/components/Loading";
-
-const Container = styled.div`
-  height: 100%;
-  width: 100%;
-`;
+import { Visibility } from "shared/enums";
+import { Container } from "@mui/material";
+import theme from "theme";
 
 const ProfileDiv = styled.div`
   display: flex;
@@ -55,19 +55,18 @@ const SocialStats = styled.div`
     }
   }
 `;
-
 interface IProps {
   id: string;
 }
 
 const Profile: FC<IProps> = (props) => {
   const { id } = props;
-  // const { isAuthenticated } = useAuthStore();
+  const { user } = useAuthStore();
   const { followers, followings } = useSocial();
   const profileService = useMemo(() => new ProfileService(), []);
   const [profile, setProfile] = useState<Author | null>(null);
   const { getPosts } = usePost(profile);
-  const [posts, setPosts] = useState<Post[] | null>(null);
+  const [posts, setPosts] = useState<IPost[] | null>(null);
 
   const [editing, setEditing] = useState(false);
   const [editGithub, setEditGithub] = useState("");
@@ -80,8 +79,14 @@ const Profile: FC<IProps> = (props) => {
   }, [id, profileService]);
 
   useEffect(() => {
-    getPosts().then((data) => setPosts(data.map((d) => ({ ...d, liked: false }))));
-  }, [getPosts]);
+    if (user?.id === profile?.id) {
+      getPosts().then((data) => setPosts(data.map((d) => ({ ...d, liked: false }))));
+    } else {
+      getPosts().then((data) =>
+        setPosts(data.filter((d) => d.visibility === Visibility.PUBLIC).map((d) => ({ ...d, liked: false })))
+      );
+    }
+  }, [getPosts, profile?.id, user?.id]);
 
   useEffect(() => {
     if (profile) {
@@ -99,7 +104,11 @@ const Profile: FC<IProps> = (props) => {
             github: editGithub === "" ? undefined : editGithub,
             displayName: editDisplayName,
           });
-          setProfile({ ...profile, github: editGithub, displayName: editDisplayName });
+          setProfile({
+            ...profile,
+            github: editGithub,
+            displayName: editDisplayName,
+          });
         }
         setEditing(false);
       } else {
@@ -153,11 +162,25 @@ const Profile: FC<IProps> = (props) => {
               </div>
             </SocialStats>
             {editing ? (
-              <div className="info" style={{ display: "flex", flexDirection: "row", marginTop: "2rem" }}>
+              <div
+                className="info"
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  marginTop: "2rem",
+                }}
+              >
                 Github: <input style={{ flex: 1 }} onChange={handleGithubChange} value={editGithub} />
               </div>
             ) : (
-              <div className="info" style={{ display: "flex", flexDirection: "row", marginTop: "2rem" }}>
+              <div
+                className="info"
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  marginTop: "2rem",
+                }}
+              >
                 <span style={{ flex: 1 }}>Github: {profile?.github}</span>
               </div>
             )}
@@ -166,6 +189,7 @@ const Profile: FC<IProps> = (props) => {
       ) : (
         <Loading />
       )}
+      {posts && posts.length > 0 && posts?.map((post) => <Post key={post.id} post={post} />)}
     </Container>
   );
 };

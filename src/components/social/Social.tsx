@@ -14,13 +14,27 @@ interface IProps {
 
 const Social: FC<IProps> = (props) => {
   const { id } = props;
-  const { people, followers, followings, friends, handleFollow, handleRemoveFollower, handleUnfollow } = useSocial();
+  const {
+    people,
+    followers,
+    followings,
+    friends,
+    handleFollow,
+    handleRemoveFollower,
+    handleUnfollow,
+  } = useSocial();
   const tabs = useMemo(
     () => [
       {
         id: "people",
         label: "People",
-        render: () => <PeopleTab people={people} onFollow={handleFollow} onUnfollow={handleUnfollow} />,
+        render: () => (
+          <PeopleTab
+            people={people}
+            onFollow={handleFollow}
+            onUnfollow={handleUnfollow}
+          />
+        ),
       },
       {
         id: "followers",
@@ -37,19 +51,35 @@ const Social: FC<IProps> = (props) => {
       {
         id: "followings",
         label: "Followings",
-        render: () => <FollowingsTab followings={followings} onUnfollow={handleUnfollow} />,
+        render: () => (
+          <FollowingsTab followings={followings} onUnfollow={handleUnfollow} />
+        ),
       },
       {
         id: "friends",
         label: "Friends",
         render: () => (
-          <FriendsTab friends={friends} onUnfollow={handleUnfollow} onRemoveFollower={handleRemoveFollower} />
+          <FriendsTab
+            friends={friends}
+            onUnfollow={handleUnfollow}
+            onRemoveFollower={handleRemoveFollower}
+          />
         ),
       },
     ],
-    [followers, followings, friends, handleFollow, handleRemoveFollower, handleUnfollow, people]
+    [
+      followers,
+      followings,
+      friends,
+      handleFollow,
+      handleRemoveFollower,
+      handleUnfollow,
+      people,
+    ]
   );
-  const [currentTab, setCurrentTab] = useState(tabs.find((t) => t.id === id)?.id ?? tabs[0].id);
+  const [currentTab, setCurrentTab] = useState(
+    tabs.find((t) => t.id === id)?.id ?? tabs[0].id
+  );
 
   useEffect(() => {
     const unlisten = history.listen((data) => {
@@ -72,8 +102,12 @@ const Social: FC<IProps> = (props) => {
   }, []);
 
   return (
-    <div>
-      <SocialTabs currentTab={currentTab} tabs={tabs} onTabChange={handleTabChange} />
+    <div style={{ overflow: "hidden" }}>
+      <SocialTabs
+        currentTab={currentTab}
+        tabs={tabs}
+        onTabChange={handleTabChange}
+      />
     </div>
   );
 };

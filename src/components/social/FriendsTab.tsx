@@ -3,6 +3,7 @@ import { Person } from "hooks/SocialHook";
 import styled from "styled-components";
 import UserCard from "./UserCard";
 import Loading from "components/common/components/Loading";
+import UsersList from "./UsersList";
 
 const Container = styled.div`
   display: flex;
@@ -20,7 +21,7 @@ const FriendsTab: FC<IFriendsTabProps> = (props) => {
   const { friends, onRemoveFollower, onUnfollow } = props;
 
   return (
-    <Container>
+    <UsersList>
       {friends ? (
         friends.map(({ id, displayName, followStatus }) => (
           <UserCard
@@ -35,7 +36,7 @@ const FriendsTab: FC<IFriendsTabProps> = (props) => {
       ) : (
         <Loading />
       )}
-    </Container>
+    </UsersList>
   );
 };
 

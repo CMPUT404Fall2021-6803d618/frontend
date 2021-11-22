@@ -1,4 +1,4 @@
-import { Divider } from "@material-ui/core";
+import { Divider } from "@mui/material";
 import Loading from "components/common/components/Loading";
 import { withParamId } from "decorators/withParamId";
 import { useAuthStore } from "hooks/AuthStoreHook";

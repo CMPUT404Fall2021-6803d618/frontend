@@ -9,20 +9,26 @@ import useLike from "hooks/LikeHook";
 import EditPostModal from "./EditPostModal";
 import ShareModal from "./ShareModal";
 import styled from "styled-components";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
 
-const Container = styled.div`
+const Container = styled(Stack)`
   padding: 12px;
   overflow-y: scroll;
   flex: 1;
+  margin: 0;
 `;
 
-const PostList = styled.div`
-  max-width: 600px;
-`;
+const PostList: FC = ({ children }) => (
+  <Stack spacing={1} maxWidth={600}>
+    {children}
+  </Stack>
+);
 
 const Home: FC = () => {
   const { user } = useAuthStore();
-  const { deletePost, updatePost, getPosts } = usePost(user);
+  const { deletePost, updatePost, getStreamPosts, sharePostToFriends, sharePostToFollowers } = usePost(user);
+
   const { getLiked, likePost } = useLike();
   const [posts, setPosts] = useState<IPost[] | null>(null);
   const [selectedPost, setSelectedPost] = useState<IPost | null>(null);
@@ -31,7 +37,7 @@ const Home: FC = () => {
 
   const loadData = useCallback(async () => {
     if (user) {
-      const [postsData, likedData] = await Promise.all([getPosts(), getLiked()]);
+      const [postsData, likedData] = await Promise.all([getStreamPosts(), getLiked()]);
       const newPosts = postsData.map((post) => {
         const liked = likedData.find((l) => l.object === post.id);
         return {
@@ -41,7 +47,7 @@ const Home: FC = () => {
       });
       setPosts(newPosts);
     }
-  }, [user, getPosts, getLiked]);
+  }, [user, getStreamPosts, getLiked]);
 
   useEffect(() => {
     loadData();
@@ -118,13 +124,20 @@ const Home: FC = () => {
     setOpenShareModal(false);
   }, []);
 
-  const handleSharePost = useCallback(
-    (friends) => {
-      console.log(`Sharing post ${selectedPost?.id}`);
-      console.log(friends);
-      return Promise.resolve();
+  const handleShareFriends = useCallback(
+    async (friends) => {
+      if (selectedPost) {
+        sharePostToFriends(selectedPost, friends);
+      }
     },
-    [selectedPost?.id]
+    [selectedPost, sharePostToFriends]
+  );
+
+  const handleShareFollowers = useCallback(
+    async (post: IPost) => {
+      sharePostToFollowers(post);
+    },
+    [sharePostToFollowers]
   );
 
   const render = useCallback(() => {
@@ -141,16 +154,21 @@ const Home: FC = () => {
             onDeleteClick={handleDeletePost}
             onEditClick={handleOpenEditModal}
             onLikeClick={handleLikePost}
-            onShareClick={handleOpenShareModal}
+            onShareFriendsClick={handleOpenShareModal}
+            onShareFollowersClick={handleShareFollowers}
           />
         );
       });
     }
-  }, [posts, handleDeletePost, handleOpenEditModal, handleLikePost, handleOpenShareModal]);
+  }, [posts, handleDeletePost, handleOpenEditModal, handleLikePost, handleOpenShareModal, handleShareFollowers]);
 
   return (
-    <Container>
-      <Link to="/posts/create">Create Post</Link>
+    <Container spacing={1} sx={{ margin: 1 }}>
+      <Link to="/posts/create">
+        <Button variant="contained" color="secondary" sx={{ maxWidth: "600px", width: "100%" }}>
+          Create Post
+        </Button>
+      </Link>
       <PostList>{render()}</PostList>
       <EditPostModal
         open={openEditModal}
@@ -159,7 +177,7 @@ const Home: FC = () => {
         onUpdate={handleUpdatePost}
         onUpdateSuccess={handleUpdatePostSuccess}
       />
-      <ShareModal open={openShareModal} onClose={handleCloseShareModal} onShare={handleSharePost} />
+      <ShareModal open={openShareModal} onClose={handleCloseShareModal} onShare={handleShareFriends} />
     </Container>
   );
 };

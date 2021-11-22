@@ -1,17 +1,21 @@
 import { useMemo, useCallback } from "react";
-import { PostPayload, PostService } from "services/PostService";
+import { PostPayload, PostService, StreamPostService } from "services/PostService";
 import { PostObject, Author } from "shared/interfaces";
 
 interface IPostHook {
   getPosts: () => Promise<PostObject[]>;
+  getStreamPosts: () => Promise<PostObject[]>;
   getPostById: (id: string) => Promise<PostObject>;
   createPost: (payload: PostPayload) => Promise<PostObject | null>;
   updatePost: (post: PostObject, newContent: string) => Promise<PostObject | null>;
   deletePost: (post: PostObject) => Promise<void>;
+  sharePostToFriends: (post: PostObject, friends: Author[]) => Promise<void>;
+  sharePostToFollowers: (post: PostObject) => Promise<void>;
 }
 
 const usePost = (user: Author | null): IPostHook => {
   const postService = useMemo(() => new PostService(), []);
+  const streamPostService = useMemo(() => new StreamPostService(), []);
 
   const getPosts = useCallback(async () => {
     if (user) {
@@ -21,6 +25,15 @@ const usePost = (user: Author | null): IPostHook => {
       return [];
     }
   }, [postService, user]);
+
+  const getStreamPosts = useCallback(async () => {
+    if (user) {
+      const data = await streamPostService.getPosts(user.id);
+      return data;
+    } else {
+      return [];
+    }
+  }, [streamPostService, user]);
 
   const getPostById = useCallback(
     async (id: string) => {
@@ -70,12 +83,29 @@ const usePost = (user: Author | null): IPostHook => {
     [postService]
   );
 
+  const sharePostToFriends = useCallback(
+    async (post: PostObject, friends: Author[]) => {
+      postService.sharePostToFriends(post.id, friends);
+    },
+    [postService]
+  );
+
+  const sharePostToFollowers = useCallback(
+    async (post: PostObject) => {
+      postService.sharePostToFollowers(post.id);
+    },
+    [postService]
+  );
+
   return {
     getPosts,
+    getStreamPosts,
     getPostById,
     createPost,
     updatePost,
     deletePost,
+    sharePostToFriends,
+    sharePostToFollowers,
   };
 };
 

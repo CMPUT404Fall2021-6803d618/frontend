@@ -3,40 +3,29 @@ import usePost from "hooks/PostHook";
 import React, { useState, FC, MouseEvent, useCallback, ChangeEvent, useEffect } from "react";
 import { paths } from "router/paths";
 import { ContentType, Visibility } from "shared/enums";
-import styled from "styled-components";
 import { Redirect } from "react-router-dom";
-import { ButtonBase } from "@material-ui/core";
+import FileUploader from "./FileUploader";
 import useSocial from "hooks/SocialHook";
 import FriendsModal from "./FriendsModal";
 import { Author } from "shared/interfaces";
 import { PostPayload } from "services/PostService";
+import ButtonBase from "@mui/material/ButtonBase";
+import TextField from "@mui/material/TextField";
+import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  flex: 2;
-`;
-
-const TextArea = styled.textarea`
-  flex: 1;
-  resize: none;
-`;
-
-const ActionDiv = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-`;
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
+import styled from "styled-components";
 
 const FriendButton = styled(ButtonBase)`
   padding: 0.75rem !important;
-  width: 100px;
+  width: 100%;
+  height: 100%;
   border-radius: 5px !important;
   color: rgb(29, 155, 240) !important;
   font-weight: bold;
@@ -56,6 +45,7 @@ const CreatePost: FC = () => {
   const [isPostCreated, setIsPostCreated] = useState(false);
   const [openFriendsModal, setOpenFriendsModal] = useState(false);
   const [content, setContent] = useState("");
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [title, setTitle] = useState("");
   const [visibility, setVisibility] = useState(Visibility.PUBLIC);
   const [description, setDescription] = useState("");
@@ -120,7 +110,7 @@ const CreatePost: FC = () => {
   }, []);
 
   const handleVisibilityChange = useCallback(
-    (e: ChangeEvent<HTMLSelectElement>) => {
+    (e: SelectChangeEvent) => {
       if (e.target.value === Visibility.PUBLIC) {
         setVisibility(Visibility.PUBLIC);
       } else if (e.target.value === Visibility.FRIENDS) {
@@ -148,31 +138,68 @@ const CreatePost: FC = () => {
     setSelectedFriends(selected);
   }, []);
 
+  const handleFileSelectError = useCallback((e: any) => {
+    alert(e.error);
+  }, []);
+
+  const handleFileSelectSuccess = useCallback((file: File) => {
+    setSelectedImage(file);
+  }, []);
+
   const render = useCallback(() => {
     if (isPostCreated) {
       return <Redirect to={paths.HOME} />;
     } else {
       return (
-        <Container className="container">
-          <Form>
-            <input placeholder="Title" onChange={handleTitleChange} value={title} />
-            <input placeholder="Description" onChange={handleDescriptionChange} value={description} />
-            <TextArea placeholder="Content" onChange={handleContentChange} value={content} />
-          </Form>
-          <ActionDiv>
-            <select value={visibility} onChange={handleVisibilityChange}>
-              <option value="PUBLIC" label="Everyone can see">
-                Public
-              </option>
-              <option value="FRIENDS" label="Only friends can see">
-                Friends
-              </option>
-            </select>
-            <FriendButton disabled={visibility !== Visibility.FRIENDS} onClick={handleOpenFriendsModal}>
-              Friends
-            </FriendButton>
-            <button onClick={handleSubmit}>Create</button>
-          </ActionDiv>
+        <Box sx={{ margin: 1 }}>
+          <Stack spacing={1}>
+            <TextField variant="outlined" placeholder="Title" onChange={handleTitleChange} value={title} />
+            <TextField
+              variant="outlined"
+              placeholder="Description"
+              onChange={handleDescriptionChange}
+              value={description}
+            />
+            <TextField
+              variant="outlined"
+              multiline
+              rows={3}
+              placeholder="Content"
+              onChange={handleContentChange}
+              value={content}
+            />
+          </Stack>
+
+          <FileUploader onFileSelectError={handleFileSelectError} onFileSelectSuccess={handleFileSelectSuccess} />
+
+          <Grid container spacing={1} sx={{ marginTop: 1 }}>
+            <Grid item xs={12} sm>
+              <FormControl fullWidth>
+                <InputLabel id="select-visibility-label">Visibility</InputLabel>
+                <Select
+                  labelId="select-visibility-label"
+                  id="select-visibility"
+                  value={visibility}
+                  label="Visibility"
+                  onChange={handleVisibilityChange}
+                >
+                  <MenuItem value={"PUBLIC"}>Everyone can see</MenuItem>
+                  <MenuItem value={"FRIENDS"}>Only friends can see</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12} sm>
+              <FormControl fullWidth sx={{ height: "100%" }}>
+                <FriendButton disabled={visibility !== Visibility.FRIENDS} onClick={handleOpenFriendsModal}>
+                  Select Friends
+                </FriendButton>
+              </FormControl>
+            </Grid>
+          </Grid>
+          <Button fullWidth variant="contained" sx={{ marginTop: 2 }} onClick={handleSubmit}>
+            Create
+          </Button>
           <FriendsModal
             open={openFriendsModal}
             onClose={handleCloseFriendsModal}
@@ -180,26 +207,28 @@ const CreatePost: FC = () => {
             currentSelectedFriends={selectedFriends}
             onFriendsSelected={handleFriendsSelected}
           />
-        </Container>
+        </Box>
       );
     }
   }, [
-    content,
+    isPostCreated,
+    handleTitleChange,
+    title,
+    handleDescriptionChange,
     description,
+    handleContentChange,
+    content,
+    visibility,
+    handleVisibilityChange,
+    handleOpenFriendsModal,
+    handleFileSelectError,
+    handleFileSelectSuccess,
+    handleSubmit,
+    openFriendsModal,
+    handleCloseFriendsModal,
     friends,
     selectedFriends,
-    handleCloseFriendsModal,
-    handleContentChange,
-    handleDescriptionChange,
     handleFriendsSelected,
-    handleOpenFriendsModal,
-    handleSubmit,
-    handleTitleChange,
-    handleVisibilityChange,
-    isPostCreated,
-    openFriendsModal,
-    title,
-    visibility,
   ]);
 
   return render();
