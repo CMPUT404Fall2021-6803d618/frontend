@@ -189,7 +189,7 @@ const Profile: FC<IProps> = (props) => {
       ) : (
         <Loading />
       )}
-      {posts && posts.length > 0 && posts?.map((post) => <Post key={post.id} post={post} />)}
+      {/* {posts && posts.length > 0 && posts?.map((post) => <Post key={post.id} post={post} />)} */}
     </Container>
   );
 };
