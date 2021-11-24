@@ -1,5 +1,6 @@
 import { useAuthStore } from "hooks/AuthStoreHook";
 import usePost from "hooks/PostHook";
+import useImage from "hooks/ImageHook";
 import React, { useState, FC, MouseEvent, useCallback, ChangeEvent, useEffect } from "react";
 import { paths } from "router/paths";
 import { ContentType, Visibility } from "shared/enums";
@@ -9,6 +10,7 @@ import useSocial from "hooks/SocialHook";
 import FriendsModal from "./FriendsModal";
 import { Author } from "shared/interfaces";
 import { PostPayload } from "services/PostService";
+import { ImagePayload } from "services/ImageService";
 import ButtonBase from "@mui/material/ButtonBase";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
@@ -51,6 +53,7 @@ const CreatePost: FC = () => {
   const [description, setDescription] = useState("");
   const { user } = useAuthStore();
   const { createPost } = usePost(user);
+  const { uploadImage } = useImage(user);
   const { friends } = useSocial(shouldLoadFriends);
   const [selectedFriends, setSelectedFriends] = useState<Author[]>([]);
 
@@ -142,9 +145,18 @@ const CreatePost: FC = () => {
     alert(e.error);
   }, []);
 
-  const handleFileSelectSuccess = useCallback((file: File) => {
-    setSelectedImage(file);
-  }, []);
+  const handleFileSelectSuccess = useCallback(
+    (file: File) => {
+      const imagePayload: ImagePayload = {
+        file,
+        visibility,
+        unlisted: true,
+      };
+      setSelectedImage(file);
+      const a = uploadImage(imagePayload);
+    },
+    [uploadImage, visibility]
+  );
 
   const render = useCallback(() => {
     if (isPostCreated) {
