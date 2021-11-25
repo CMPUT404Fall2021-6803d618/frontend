@@ -58,7 +58,6 @@ const UserCard: FC<UserCardProps> = (props) => {
     <Card
       sx={{
         width: "100%",
-        maxWidth: "800px",
         p: 1,
         paddingLeft: 2,
         typography: "body2",

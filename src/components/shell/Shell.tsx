@@ -25,6 +25,14 @@ const Main = styled.main`
   flex: 2;
 `;
 
+const ScrollerDiv = styled.div`
+  overflow-y: scroll;
+`;
+
+const MaxWidthDiv = styled.div`
+  max-width: 800px;
+`;
+
 const DrawerToggleButton = styled(IconButton)`
   @media (min-width: 600px) {
     display: none !important;
@@ -72,7 +80,11 @@ const Shell: FC<IProps> = () => {
             <Divider />
           </Fragment>
         )}
-        <Router routes={routes} onRouteChange={handleRouteChange} />
+        <ScrollerDiv>
+          <MaxWidthDiv>
+            <Router routes={routes} onRouteChange={handleRouteChange} />
+          </MaxWidthDiv>
+        </ScrollerDiv>
       </Main>
     </Root>
   );

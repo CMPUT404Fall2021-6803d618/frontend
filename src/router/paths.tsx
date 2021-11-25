@@ -1,7 +1,9 @@
 const LOGIN = "/login";
 const REGISTER = "/register";
 const HOME = "/home";
-const INBOX = "/inbox";
+const INBOX = "/inbox/:id";
+const INBOX_NOTIFICATIONS = "/inbox/notifications";
+const INBOX_FOLLOW_REQUESTS = "/inbox/follow-requests";
 const SOCIAL = "/social/:id";
 const SOCIAL_PEOPLE = "/social/people";
 const SOCIAL_FOLLOWERS = "/social/followers";
@@ -23,6 +25,8 @@ export const paths = {
   SOCIAL_FRIENDS,
   PROFILE,
   INBOX,
+  INBOX_NOTIFICATIONS,
+  INBOX_FOLLOW_REQUESTS,
   POST_CREATE,
   POST_DETAIL,
 };

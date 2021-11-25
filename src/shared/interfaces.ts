@@ -60,3 +60,8 @@ export interface Like {
   author: Author;
   object: string;
 }
+
+export interface Node {
+  id: number;
+  name: string;
+}

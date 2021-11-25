@@ -2,6 +2,7 @@ import { BASE_URL } from "shared/constants";
 import { Author, FollowingData } from "shared/interfaces";
 import { formatId } from "utils";
 import { axios } from "utils/axios";
+import { BaseService } from "./BaseService";
 
 interface ISocialService {
   getFollowers: (authorId: string) => Promise<Author[]>;
@@ -14,6 +15,7 @@ interface ISocialService {
 
 interface Endpoints {
   LIST_AUTHORS: () => string;
+  LIST_FOREIGN_AUTHORS: (nodeId: number) => string;
   LIST_FOLLOWERS: (authorId: string) => string;
   FOLLOWERS: (authorId: string, foreignAuthorId: string) => string;
   LIST_FOLLOWINGS: (authorId: string) => string;
@@ -24,11 +26,13 @@ interface Following extends Author {
   status: "PENDING" | "ACCEPTED";
 }
 
-export class SocialService implements ISocialService {
+export class SocialService extends BaseService<Author> implements ISocialService {
   private endpoints: Endpoints;
   constructor() {
+    super();
     this.endpoints = {
       LIST_AUTHORS: () => `${BASE_URL}/authors/`,
+      LIST_FOREIGN_AUTHORS: (nodeId: number) => `${BASE_URL}/foreign-authors/${nodeId}/`,
       LIST_FOLLOWERS: (authorId: string) => `${formatId(authorId)}/followers/`,
       FOLLOWERS: (authorId: string, foreignAuthorId: string) =>
         `${formatId(authorId)}/followers/${encodeURIComponent(foreignAuthorId)}`,
@@ -79,7 +83,12 @@ export class SocialService implements ISocialService {
   }
 
   public async getAuthors(): Promise<Author[]> {
-    const { data } = await axios.get(this.endpoints.LIST_AUTHORS());
-    return data.items;
+    const data = await this.getAll(this.endpoints.LIST_AUTHORS(), "items");
+    return data;
+  }
+
+  public async getForeignAuthors(nodeId: number): Promise<Author[]> {
+    const data = await this.getAll(this.endpoints.LIST_FOREIGN_AUTHORS(nodeId), "items");
+    return data;
   }
 }
