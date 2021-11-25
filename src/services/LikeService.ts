@@ -1,12 +1,12 @@
 import { BASE_URL } from "shared/constants";
-import { Author, BaseObject, Like } from "shared/interfaces";
+import { Author, BaseObject, Like, Post } from "shared/interfaces";
 import { formatId } from "utils";
 import { axios } from "utils/axios";
 
 interface ILikeService {
   getLikes: (id: string) => Promise<Like[]>;
   getLiked: (authorId: string) => Promise<Like[]>;
-  sendLike: (sender: Author, receiver: Author, object: BaseObject) => Promise<Like>;
+  sendLike: (sender: Author, receiver: Author, object: Post) => Promise<Like>;
 }
 
 export default class LikeService implements ILikeService {
@@ -20,12 +20,12 @@ export default class LikeService implements ILikeService {
     return data.items;
   }
 
-  public async sendLike(sender: Author, receiver: Author, object: BaseObject): Promise<Like> {
+  public async sendLike(sender: Author, receiver: Author, object: Post): Promise<Like> {
     const payload = {
       type: "like",
       summary: `${sender.displayName} liked ${receiver.displayName} ${object.type.toLowerCase()}`,
       author: sender,
-      object: object.url,
+      object: object.source,
     };
     await axios.post(`${formatId(sender.id)}/liked/`, payload);
     return {
