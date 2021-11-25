@@ -1,18 +1,18 @@
 import { useCallback, useMemo } from "react";
-import { ImagePayload, ImageService } from "services/ImageService";
+import { ImageService } from "services/ImageService";
 import { Author } from "shared/interfaces";
 
 interface IImageHook {
-  uploadImage: (file: ImagePayload) => Promise<string | null>;
+  uploadImage: (file: FormData) => Promise<string | null>;
 }
 
 const useImage = (user: Author | null): IImageHook => {
   const imageService = useMemo(() => new ImageService(), []);
 
   const uploadImage = useCallback(
-    async (file: ImagePayload) => {
+    async (file: FormData) => {
       if (user) {
-        const url = await imageService.uploadImage(user.id, file);
+        const { url } = await imageService.uploadImage(user.id, file);
         return url;
       } else {
         return null;

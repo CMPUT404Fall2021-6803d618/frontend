@@ -22,6 +22,10 @@ export interface User extends Author {
   username: string;
 }
 
+export interface ImageObject {
+  url: string;
+}
+
 export interface PostObject extends BaseObject {
   title: string;
   source: string;

@@ -10,7 +10,6 @@ import useSocial from "hooks/SocialHook";
 import FriendsModal from "./FriendsModal";
 import { Author } from "shared/interfaces";
 import { PostPayload } from "services/PostService";
-import { ImagePayload } from "services/ImageService";
 import ButtonBase from "@mui/material/ButtonBase";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
@@ -47,7 +46,6 @@ const CreatePost: FC = () => {
   const [isPostCreated, setIsPostCreated] = useState(false);
   const [openFriendsModal, setOpenFriendsModal] = useState(false);
   const [content, setContent] = useState("");
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [title, setTitle] = useState("");
   const [visibility, setVisibility] = useState(Visibility.PUBLIC);
   const [description, setDescription] = useState("");
@@ -146,16 +144,15 @@ const CreatePost: FC = () => {
   }, []);
 
   const handleFileSelectSuccess = useCallback(
-    (file: File) => {
-      const imagePayload: ImagePayload = {
-        file,
-        visibility,
-        unlisted: true,
-      };
-      setSelectedImage(file);
-      const a = uploadImage(imagePayload);
+    async (file: File) => {
+      const form = new FormData();
+      form.append("image", file);
+      form.append("visibility", visibility);
+      form.append("unlisted", "true");
+      const url = await uploadImage(form);
+      setContent(content + "\n" + "![image]" + "(" + url + ")");
     },
-    [uploadImage, visibility]
+    [content, uploadImage, visibility]
   );
 
   const render = useCallback(() => {
