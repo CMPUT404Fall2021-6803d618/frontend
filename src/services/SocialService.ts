@@ -63,7 +63,12 @@ export class SocialService extends BaseService<Author> implements ISocialService
   }
 
   public async getFollowings(authorId: string): Promise<Following[]> {
-    const { data } = await axios.get(this.endpoints.LIST_FOLLOWINGS(authorId));
+    const { data } = await axios.get(this.endpoints.LIST_FOLLOWINGS(authorId), {
+      params: {
+        page: 1,
+        size: 1000,
+      },
+    });
     return data.items.map((item: FollowingData) => {
       const { object, status } = item;
       const { id, host, displayName, url, github } = object;
