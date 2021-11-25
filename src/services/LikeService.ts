@@ -1,3 +1,4 @@
+import { BASE_URL } from "shared/constants";
 import { Author, BaseObject, Like } from "shared/interfaces";
 import { formatId } from "utils";
 import { axios } from "utils/axios";
@@ -26,7 +27,7 @@ export default class LikeService implements ILikeService {
       author: sender,
       object: object.id,
     };
-    await axios.post(`${formatId(receiver.id)}/liked/`, payload);
+    await axios.post(`${formatId(sender.id)}/liked/`, payload);
     return {
       summary: payload.summary,
       author: payload.author,
