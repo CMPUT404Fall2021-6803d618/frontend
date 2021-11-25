@@ -1,5 +1,6 @@
 import { useAuthStore } from "hooks/AuthStoreHook";
 import usePost from "hooks/PostHook";
+import useImage from "hooks/ImageHook";
 import React, { useState, FC, MouseEvent, useCallback, ChangeEvent, useEffect } from "react";
 import { paths } from "router/paths";
 import { ContentType, Visibility } from "shared/enums";
@@ -45,12 +46,12 @@ const CreatePost: FC = () => {
   const [isPostCreated, setIsPostCreated] = useState(false);
   const [openFriendsModal, setOpenFriendsModal] = useState(false);
   const [content, setContent] = useState("");
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [title, setTitle] = useState("");
   const [visibility, setVisibility] = useState(Visibility.PUBLIC);
   const [description, setDescription] = useState("");
   const { user } = useAuthStore();
   const { createPost } = usePost(user);
+  const { uploadImage } = useImage(user);
   const { friends } = useSocial(shouldLoadFriends);
   const [selectedFriends, setSelectedFriends] = useState<Author[]>([]);
 
@@ -142,9 +143,17 @@ const CreatePost: FC = () => {
     alert(e.error);
   }, []);
 
-  const handleFileSelectSuccess = useCallback((file: File) => {
-    setSelectedImage(file);
-  }, []);
+  const handleFileSelectSuccess = useCallback(
+    async (file: File) => {
+      const form = new FormData();
+      form.append("image", file);
+      form.append("visibility", visibility);
+      form.append("unlisted", "true");
+      const url = await uploadImage(form);
+      setContent(content + "\n" + "![image]" + "(" + url + ")");
+    },
+    [content, uploadImage, visibility]
+  );
 
   const render = useCallback(() => {
     if (isPostCreated) {
