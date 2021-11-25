@@ -25,7 +25,7 @@ export default class LikeService implements ILikeService {
       type: "like",
       summary: `${sender.displayName} liked ${receiver.displayName} ${object.type.toLowerCase()}`,
       author: sender,
-      object: object.id,
+      object: object.url,
     };
     await axios.post(`${formatId(sender.id)}/liked/`, payload);
     return {
