@@ -15,16 +15,11 @@ import { PaginateResponse } from "services/BaseService";
 
 const Container = styled(Stack)`
   padding: 12px;
-  overflow-y: scroll;
   flex: 1;
   margin: 0;
 `;
 
-const PostList: FC = ({ children }) => (
-  <Stack spacing={1} maxWidth={800}>
-    {children}
-  </Stack>
-);
+const PostList: FC = ({ children }) => <Stack spacing={1}>{children}</Stack>;
 
 const Home: FC = () => {
   const { user } = useAuthStore();
@@ -206,7 +201,7 @@ const Home: FC = () => {
   return (
     <Container spacing={1} sx={{ margin: 1 }}>
       <Link to="/posts/create">
-        <Button variant="contained" color="secondary" sx={{ maxWidth: "800px", width: "100%" }}>
+        <Button variant="contained" color="secondary" sx={{ width: "100%" }}>
           Create Post
         </Button>
       </Link>

@@ -19,8 +19,9 @@ export const SOCIAL: DrawerLink = {
 };
 
 export const INBOX: DrawerLink = {
-  path: paths.INBOX,
+  path: paths.INBOX_NOTIFICATIONS,
   name: "Inbox",
+  subpath: [paths.INBOX_NOTIFICATIONS, paths.INBOX_FOLLOW_REQUESTS],
 };
 
 export const MAIN_LIST: DrawerLink[] = [HOME, SOCIAL, INBOX];

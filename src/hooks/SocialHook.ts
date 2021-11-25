@@ -2,8 +2,9 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import faker from "faker";
 import { SocialService } from "services/SocialService";
 import { useAuthStore } from "./AuthStoreHook";
-import { Author } from "shared/interfaces";
+import { Author, Node } from "shared/interfaces";
 import { InboxService } from "services/InboxService";
+import { NodeService } from "services/NodeService";
 
 export enum FollowStatus {
   FOLLOWED,
@@ -42,6 +43,8 @@ faker.seed(100);
 // );
 
 interface ISocialHook {
+  currentNode: Node;
+  nodes: Node[];
   people: null | Person[];
   followers: null | Person[];
   followings: null | Person[];
@@ -50,24 +53,40 @@ interface ISocialHook {
   handleUnfollow: (id: string) => Promise<void>;
   handleRemoveFollower: (id: string) => Promise<void>;
   handleAddFollower: (author: Author, inboxId: string) => Promise<void>;
+  handleNodeChange: (nodeId: number) => Promise<void>;
 }
+
+const DEFAULT_NODE = { id: -1, name: "Social Distance" };
 
 export default function useSocial(shouldLoadData = true): ISocialHook {
   const { user } = useAuthStore();
   const socialService = useMemo(() => new SocialService(), []);
   const inboxService = useMemo(() => new InboxService(), []);
+  const nodeService = useMemo(() => new NodeService(), []);
+  const [nodes, setNodes] = useState<Node[]>([DEFAULT_NODE]);
+  const [currentNode, setCurrentNode] = useState<Node>(nodes[0]);
   const [people, setPeople] = useState<Person[] | null>(null);
   const [followers, setFollowers] = useState<Person[] | null>(null);
   const [friends, setFriends] = useState<Person[] | null>(null);
   const [followings, setFollowings] = useState<Person[] | null>(null);
 
+  const parsePeopleData = useCallback((userId: string, peopleData: Author[], followingsData: Person[]) => {
+    return peopleData
+      .filter((person) => person.id !== userId)
+      .map((person) => {
+        const following = followingsData.find((f) => f.id === person.id);
+        return following ? { ...following } : { ...person, followStatus: FollowStatus.NOT_FOLLOWED };
+      });
+  }, []);
+
   const loadData = useCallback(async () => {
     if (user && shouldLoadData) {
       const { id } = user;
-      const [followersData, followingsData, peopleData] = await Promise.all([
+      const [followersData, followingsData, peopleData, nodesData] = await Promise.all([
         socialService.getFollowers(id),
         socialService.getFollowings(id),
         socialService.getAuthors(),
+        nodeService.getNodes(),
       ]);
       const newFollowings: Person[] = followingsData.map((f) => {
         const { status, ...rest } = f;
@@ -80,19 +99,15 @@ export default function useSocial(shouldLoadData = true): ISocialHook {
         const following = newFollowings.find((f) => f.id === follower.id);
         return following ? { ...following } : { ...follower, followStatus: FollowStatus.NOT_FOLLOWED };
       });
-      const newPeople: Person[] = peopleData
-        .filter((person) => person.id !== user.id)
-        .map((person) => {
-          const following = newFollowings.find((f) => f.id === person.id);
-          return following ? { ...following } : { ...person, followStatus: FollowStatus.NOT_FOLLOWED };
-        });
+      const newPeople: Person[] = parsePeopleData(id, peopleData, newFollowings);
       const newFriends: Person[] = newFollowers.filter((f) => f.followStatus === FollowStatus.FOLLOWED);
       setFollowings(newFollowings);
       setFollowers(newFollowers);
       setPeople(newPeople);
       setFriends(newFriends);
+      setNodes([DEFAULT_NODE, ...nodesData]);
     }
-  }, [shouldLoadData, socialService, user]);
+  }, [nodeService, parsePeopleData, shouldLoadData, socialService, user]);
 
   useEffect(() => {
     loadData();
@@ -180,7 +195,28 @@ export default function useSocial(shouldLoadData = true): ISocialHook {
     [inboxService, socialService, user]
   );
 
+  const handleNodeChange = useCallback(
+    async (nodeId: number) => {
+      const newNode = nodes.find((n) => n.id === nodeId);
+      console.log(newNode);
+      if (newNode && user?.id && followings) {
+        let authorsData: Author[];
+        if (newNode.id === -1) {
+          authorsData = await socialService.getAuthors();
+        } else {
+          authorsData = await socialService.getForeignAuthors(nodeId);
+        }
+        const newPeople = parsePeopleData(user.id, authorsData, followings);
+        setPeople(newPeople);
+        setCurrentNode(newNode);
+      }
+    },
+    [followings, nodes, parsePeopleData, socialService, user?.id]
+  );
+
   return {
+    nodes,
+    currentNode,
     people,
     followers,
     followings,
@@ -189,5 +225,6 @@ export default function useSocial(shouldLoadData = true): ISocialHook {
     handleUnfollow,
     handleRemoveFollower,
     handleAddFollower,
+    handleNodeChange,
   };
 }

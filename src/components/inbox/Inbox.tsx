@@ -1,47 +1,48 @@
-import Loading from "components/common/components/Loading";
+import TabsNav from "components/common/components/TabsNav";
+import { withParamId } from "decorators/withParamId";
 import useInbox from "hooks/InboxHook";
-import React, { FC, useCallback } from "react";
-import { FollowingData, Post } from "shared/interfaces";
-import FollowInboxItem from "./FollowInboxItem";
-import LikeInboxItem, { LikeInbox } from "./LikeInboxItem";
-import PostInboxItem from "./PostInboxItem";
+import React, { FC, useMemo } from "react";
+import { InboxItemType } from "shared/enums";
+import { FollowingData } from "shared/interfaces";
+import FollowRequestsTab from "./FollowRequestsTab";
+import NotificationsTab from "./NotificationsTab";
 
-enum InboxItemType {
-  FOLLOW = "follow",
-  LIKE = "like",
-  POST = "post",
+interface IProps {
+  id: string;
 }
 
-const Inbox: FC = () => {
+const Inbox: FC<IProps> = (props) => {
+  const { id } = props;
   const { items, handleAcceptFollowRequest } = useInbox();
+  console.log(items);
+  const notificationItems = useMemo(
+    () => (items ? items.filter((i) => i.type?.toLowerCase() !== InboxItemType.FOLLOW) : []),
+    [items]
+  );
+  const followRequestItems = useMemo(
+    () => (items ? items.filter((i) => i.type?.toLowerCase() === InboxItemType.FOLLOW) : []),
+    [items]
+  );
 
-  const render = useCallback(() => {
-    if (items === null) {
-      return <Loading />;
-    } else if (items?.length === 0) {
-      return <div>No inbox</div>;
-    } else {
-      return items?.map((item) => {
-        let type: string = item.type;
-        type = type?.toLowerCase?.();
-        if (type) {
-          if (type === InboxItemType.FOLLOW) {
-            return <FollowInboxItem item={item as FollowingData} onAccept={handleAcceptFollowRequest} />;
-          } else if (type === InboxItemType.LIKE) {
-            return <LikeInboxItem item={item as LikeInbox} />;
-          } else if (type === InboxItemType.POST) {
-            return <PostInboxItem item={item as Post} />;
-          } else {
-            return <div>Invalid inbox item</div>;
-          }
-        } else {
-          return <div>Invalid inbox item</div>;
-        }
-      });
-    }
-  }, [handleAcceptFollowRequest, items]);
+  const tabs = useMemo(
+    () => [
+      {
+        id: "notifications",
+        label: "Notifications",
+        render: () => <NotificationsTab items={notificationItems} />,
+      },
+      {
+        id: "follow-requests",
+        label: "Follow Requests",
+        render: () => (
+          <FollowRequestsTab items={followRequestItems as FollowingData[]} onAccept={handleAcceptFollowRequest} />
+        ),
+      },
+    ],
+    [followRequestItems, handleAcceptFollowRequest, notificationItems]
+  );
 
-  return <div>{render()}</div>;
+  return <TabsNav tabs={tabs} id={id} />;
 };
 
-export default Inbox;
+export default withParamId(Inbox);

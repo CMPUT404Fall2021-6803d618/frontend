@@ -2,7 +2,7 @@ import React, { FC, useCallback } from "react";
 import { Person } from "hooks/SocialHook";
 import UserCard from "./UserCard";
 import Loading from "components/common/components/Loading";
-import UsersList from "./UsersList";
+import ListContainer from "../common/components/ListContainer";
 export interface IFollowersTabProps {
   followers: null | Person[];
   onFollow: (id: string) => Promise<void>;
@@ -31,7 +31,7 @@ const FollowersTab: FC<IFollowersTabProps> = (props) => {
     }
   }, [followers, onFollow, onRemoveFollower, onUnfollow]);
 
-  return <UsersList>{followers ? render() : <Loading />}</UsersList>;
+  return <ListContainer>{followers ? render() : <Loading />}</ListContainer>;
 };
 
 export default FollowersTab;

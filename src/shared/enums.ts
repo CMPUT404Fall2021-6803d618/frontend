@@ -14,3 +14,9 @@ export enum Visibility {
   PUBLIC = "PUBLIC",
   FRIENDS = "FRIENDS",
 }
+
+export enum InboxItemType {
+  FOLLOW = "follow",
+  LIKE = "like",
+  POST = "post",
+}

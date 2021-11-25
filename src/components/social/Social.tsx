@@ -1,12 +1,11 @@
+import TabsNav from "components/common/components/TabsNav";
 import { withParamId } from "decorators/withParamId";
 import useSocial from "hooks/SocialHook";
-import React, { FC, useMemo, useState, useCallback, useEffect } from "react";
-import history from "utils/history";
+import React, { FC, useMemo } from "react";
 import FollowersTab from "./FollowersTab";
 import FollowingsTab from "./FollowingsTab";
 import FriendsTab from "./FriendsTab";
 import PeopleTab from "./PeopleTab";
-import SocialTabs from "./SocialTabs";
 
 interface IProps {
   id: string;
@@ -15,6 +14,8 @@ interface IProps {
 const Social: FC<IProps> = (props) => {
   const { id } = props;
   const {
+    currentNode,
+    nodes,
     people,
     followers,
     followings,
@@ -22,6 +23,7 @@ const Social: FC<IProps> = (props) => {
     handleFollow,
     handleRemoveFollower,
     handleUnfollow,
+    handleNodeChange,
   } = useSocial();
   const tabs = useMemo(
     () => [
@@ -33,6 +35,9 @@ const Social: FC<IProps> = (props) => {
             people={people}
             onFollow={handleFollow}
             onUnfollow={handleUnfollow}
+            nodes={nodes}
+            currentNode={currentNode}
+            onNodeChange={handleNodeChange}
           />
         ),
       },
@@ -51,65 +56,31 @@ const Social: FC<IProps> = (props) => {
       {
         id: "followings",
         label: "Followings",
-        render: () => (
-          <FollowingsTab followings={followings} onUnfollow={handleUnfollow} />
-        ),
+        render: () => <FollowingsTab followings={followings} onUnfollow={handleUnfollow} />,
       },
       {
         id: "friends",
         label: "Friends",
         render: () => (
-          <FriendsTab
-            friends={friends}
-            onUnfollow={handleUnfollow}
-            onRemoveFollower={handleRemoveFollower}
-          />
+          <FriendsTab friends={friends} onUnfollow={handleUnfollow} onRemoveFollower={handleRemoveFollower} />
         ),
       },
     ],
     [
+      currentNode,
       followers,
       followings,
       friends,
       handleFollow,
+      handleNodeChange,
       handleRemoveFollower,
       handleUnfollow,
+      nodes,
       people,
     ]
   );
-  const [currentTab, setCurrentTab] = useState(
-    tabs.find((t) => t.id === id)?.id ?? tabs[0].id
-  );
 
-  useEffect(() => {
-    const unlisten = history.listen((data) => {
-      if (data.location.state !== null) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const tabId = (data.location.state as any).id;
-        const tab = tabs.find((t) => t.id === tabId)?.id ?? tabs[0].id;
-        setCurrentTab(tab);
-      } else {
-        setCurrentTab(tabs[0].id);
-      }
-    });
-    return () => unlisten();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const handleTabChange = useCallback((newTab: string) => {
-    setCurrentTab(newTab);
-    history.push(newTab, { id: newTab });
-  }, []);
-
-  return (
-    <div style={{ overflow: "hidden" }}>
-      <SocialTabs
-        currentTab={currentTab}
-        tabs={tabs}
-        onTabChange={handleTabChange}
-      />
-    </div>
-  );
+  return <TabsNav tabs={tabs} id={id} />;
 };
 
 export default withParamId(Social);
