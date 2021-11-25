@@ -3,6 +3,7 @@ import { ContentType, Visibility } from "./enums";
 export interface BaseObject {
   id: string;
   type: string;
+  url: string;
 }
 
 export interface Likeable {
