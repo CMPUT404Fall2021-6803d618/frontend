@@ -9,8 +9,10 @@ import { ProfileService } from "services/ProfileService";
 import { Author, Post as IPost } from "shared/interfaces";
 import Loading from "components/common/components/Loading";
 import { Visibility } from "shared/enums";
-import { Container } from "@mui/material";
+import { Button, Container } from "@mui/material";
+import useImage from "hooks/ImageHook";
 import theme from "theme";
+import FileUploader from "components/home/FileUploader";
 
 const ProfileDiv = styled.div`
   display: flex;
@@ -67,9 +69,12 @@ const Profile: FC<IProps> = (props) => {
   const [profile, setProfile] = useState<Author | null>(null);
   const { getPosts } = usePost(profile);
   const [posts, setPosts] = useState<IPost[] | null>(null);
+  const { uploadImage } = useImage(user);
 
   const [editing, setEditing] = useState(false);
   const [editGithub, setEditGithub] = useState("");
+  const [editImageProfile, setEditImageProfile] = useState("");
+
   const [editDisplayName, setEditDisplayName] = useState("");
 
   useEffect(() => {
@@ -100,14 +105,17 @@ const Profile: FC<IProps> = (props) => {
       e.preventDefault();
       if (editing) {
         if (profile) {
+          console.log(editImageProfile);
           await profileService.updateProfile(id, {
             github: editGithub === "" ? undefined : editGithub,
             displayName: editDisplayName,
+            profileImage: editImageProfile,
           });
           setProfile({
             ...profile,
             github: editGithub,
             displayName: editDisplayName,
+            profileImage: editImageProfile,
           });
         }
         setEditing(false);
@@ -115,7 +123,7 @@ const Profile: FC<IProps> = (props) => {
         setEditing(true);
       }
     },
-    [editDisplayName, editGithub, editing, id, profile, profileService]
+    [editDisplayName, editGithub, editing, id, profile, profileService, editImageProfile]
   );
 
   const handleDisplayNameChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
@@ -125,6 +133,24 @@ const Profile: FC<IProps> = (props) => {
   const handleGithubChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setEditGithub(e.target.value);
   }, []);
+
+  const handleFileSelectError = useCallback((e: any) => {
+    alert(e.error);
+  }, []);
+
+  const handleFileSelectSuccess = useCallback(
+    async (file: File) => {
+      const form = new FormData();
+      form.append("image", file);
+      form.append("visibility", "PUBLIC");
+      form.append("unlisted", "true");
+      const url = await uploadImage(form);
+      if (url != null) {
+        setEditImageProfile(url);
+      }
+    },
+    [uploadImage]
+  );
 
   return (
     <Container className="container">
@@ -185,6 +211,11 @@ const Profile: FC<IProps> = (props) => {
               </div>
             )}
           </ProfileInfoDiv>
+          {editing ? (
+            <FileUploader onFileSelectError={handleFileSelectError} onFileSelectSuccess={handleFileSelectSuccess} />
+          ) : (
+            <div></div>
+          )}
         </ProfileDiv>
       ) : (
         <Loading />
