@@ -14,7 +14,7 @@ export interface PaginateResponse<T> {
 
 export class BaseService<T> implements IBaseService<T> {
   private DEFAULT_PAGE = 1;
-  private DEFAULT_SIZE = 5;
+  private DEFAULT_SIZE = 1000;
 
   public async getAll(url: string, dataKey = "items"): Promise<T[]> {
     const res = await this.getPaginate(url, this.DEFAULT_PAGE, this.DEFAULT_SIZE, dataKey);
@@ -51,8 +51,8 @@ export class BaseService<T> implements IBaseService<T> {
     const items: T[] = data[dataKey] ?? [];
 
     return {
-      page,
-      size,
+      page: data.page,
+      size: data.size,
       count: data.count,
       items,
     };
