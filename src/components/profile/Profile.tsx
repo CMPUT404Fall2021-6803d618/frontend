@@ -72,6 +72,8 @@ const Profile: FC<IProps> = (props) => {
   const [editGithub, setEditGithub] = useState("");
   const [editDisplayName, setEditDisplayName] = useState("");
 
+  const isUser = user?.id === profile?.id;
+
   useEffect(() => {
     profileService.getProfile(id).then((data) => {
       setProfile(data);
@@ -130,7 +132,7 @@ const Profile: FC<IProps> = (props) => {
     <Container className="container">
       {profile ? (
         <ProfileDiv>
-          <button onClick={handleToggle}>{editing ? "Update" : "Edit"}</button>
+          {isUser && <button onClick={handleToggle}>{editing ? "Update" : "Edit"}</button>}
           <ProfileImageDiv>
             <div>
               <img
