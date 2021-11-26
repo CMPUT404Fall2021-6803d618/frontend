@@ -9,6 +9,7 @@ import { useAuth } from "hooks/AuthHook";
 import { useAuthStore } from "hooks/AuthStoreHook";
 import { extractIdFromUrl } from "utils";
 import theme from "theme";
+import ListItem from "@mui/material/ListItem";
 
 const Header = styled.div`
   display: flex;
@@ -36,9 +37,7 @@ const Control = styled.div`
   }
 `;
 
-const PrimaryButton = styled(({ navigate, ...props }) => (
-  <ButtonBase {...props} />
-))`
+const PrimaryButton = styled(({ navigate, ...props }) => <ButtonBase {...props} />)`
   padding: 0.25rem !important;
   border-radius: 1rem !important;
   transition: 100ms all linear !important;
@@ -49,13 +48,20 @@ const PrimaryButton = styled(({ navigate, ...props }) => (
   }
 `;
 
-const SecondaryButton = styled(({ navigate, ...props }) => (
-  <ButtonBase {...props} />
-))`
+const SecondaryButton = styled(({ navigate, ...props }) => <ButtonBase {...props} />)`
   padding: 0.25rem !important;
   border-radius: 1rem !important;
   transition: 100ms all linear !important;
   margin-top: 0.5rem !important;
+`;
+
+const StyledProfileButton = styled(ListItem)`
+  justify-content: center;
+  border-radius: 20px;
+  &:hover {
+    background: transparent;
+    color: white;
+  }
 `;
 
 const UserControl: FunctionComponent = () => {
@@ -65,12 +71,9 @@ const UserControl: FunctionComponent = () => {
     () =>
       isAuthenticated ? (
         <Fragment>
-          <Link
-            to={`/profile/${extractIdFromUrl(user?.id)}`}
-            component={PrimaryButton}
-          >
+          <StyledProfileButton to={`/profile/${extractIdFromUrl(user?.id)}`} component={Link} button>
             Profile
-          </Link>
+          </StyledProfileButton>
           <SecondaryButton onClick={logout}>Logout</SecondaryButton>
         </Fragment>
       ) : (

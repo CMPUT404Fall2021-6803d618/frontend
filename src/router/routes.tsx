@@ -61,4 +61,20 @@ export const routes: IRoute[] = [
     fallback: <div> Loading... </div>,
     appBarTitle: "Create Post",
   },
+  {
+    path: paths.POST_DETAIL,
+    component: views.PostDetailView,
+    exact: true,
+    private: false,
+    fallback: <div> Loading... </div>,
+    appBarTitle: "Posts",
+  },
+  {
+    path: paths.PROFILE,
+    component: views.ProfileView,
+    exact: true,
+    private: false,
+    fallback: <div> Loading... </div>,
+    appBarTitle: "Profile",
+  },
 ];
