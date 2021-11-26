@@ -55,15 +55,6 @@ const SecondaryButton = styled(({ navigate, ...props }) => <ButtonBase {...props
   margin-top: 0.5rem !important;
 `;
 
-const StyledProfileButton = styled(ListItem)`
-  justify-content: center;
-  border-radius: 20px;
-  &:hover {
-    background: transparent;
-    color: white;
-  }
-`;
-
 const UserControl: FunctionComponent = () => {
   const { isAuthenticated, logout } = useAuth();
   const { user } = useAuthStore();
@@ -71,9 +62,23 @@ const UserControl: FunctionComponent = () => {
     () =>
       isAuthenticated ? (
         <Fragment>
-          <StyledProfileButton to={`/profile/${extractIdFromUrl(user?.id)}`} component={Link} button>
+          <ListItem
+            to={`/profile/${extractIdFromUrl(user?.id)}`}
+            component={Link}
+            sx={{
+              justifyContent: "center",
+              borderRadius: "20px",
+              "&:visited": {
+                color: "inherit",
+              },
+              "&:hover": {
+                background: "transparent",
+                color: "white",
+              },
+            }}
+          >
             Profile
-          </StyledProfileButton>
+          </ListItem>
           <SecondaryButton onClick={logout}>Logout</SecondaryButton>
         </Fragment>
       ) : (
