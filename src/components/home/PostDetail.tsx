@@ -113,7 +113,6 @@ const PostDetail: FC<IProps> = (props) => {
     } else {
       return (
         <div>
-          {user && <span>Logged in as {user.displayName}</span>}
           <h1>{post.title}</h1>
           <Description>{post.description}</Description>
           <div>

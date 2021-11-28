@@ -69,6 +69,7 @@ export default function useSocial(shouldLoadData = true): ISocialHook {
   const [followers, setFollowers] = useState<Person[] | null>(null);
   const [friends, setFriends] = useState<Person[] | null>(null);
   const [followings, setFollowings] = useState<Person[] | null>(null);
+  const [isNodeChanged, setIsNodeChanged] = useState(false);
 
   const parsePeopleData = useCallback((userId: string, peopleData: Author[], followingsData: Person[]) => {
     return peopleData
@@ -109,9 +110,37 @@ export default function useSocial(shouldLoadData = true): ISocialHook {
     }
   }, [nodeService, parsePeopleData, shouldLoadData, socialService, user]);
 
+  const loadNewNodeData = useCallback(async () => {
+    try {
+      if (user?.id && followings) {
+        let authorsData: Author[];
+        if (currentNode.id === -1) {
+          authorsData = await socialService.getAuthors();
+        } else {
+          authorsData = await socialService.getForeignAuthors(currentNode.id);
+        }
+        return parsePeopleData(user.id, authorsData, followings);
+      } else {
+        return [];
+      }
+    } catch (err) {
+      console.log(err);
+      return [];
+    }
+  }, [currentNode.id, followings, parsePeopleData, socialService, user?.id]);
+
   useEffect(() => {
     loadData();
   }, [loadData]);
+
+  useEffect(() => {
+    if (isNodeChanged) {
+      loadNewNodeData().then((data) => {
+        setPeople(data);
+        setIsNodeChanged(false);
+      });
+    }
+  }, [isNodeChanged, loadNewNodeData]);
 
   const getNewStatusData = useCallback((arr: Person[], id: string, newStatus: FollowStatus) => {
     const index = arr.findIndex((p) => p.id === id);
@@ -197,21 +226,16 @@ export default function useSocial(shouldLoadData = true): ISocialHook {
 
   const handleNodeChange = useCallback(
     async (nodeId: number) => {
-      const newNode = nodes.find((n) => n.id === nodeId);
-      console.log(newNode);
-      if (newNode && user?.id && followings) {
-        let authorsData: Author[];
-        if (newNode.id === -1) {
-          authorsData = await socialService.getAuthors();
-        } else {
-          authorsData = await socialService.getForeignAuthors(nodeId);
+      if (nodeId !== currentNode.id) {
+        const newNode = nodes.find((n) => n.id === nodeId);
+        if (newNode) {
+          setCurrentNode(newNode);
+          setIsNodeChanged(true);
+          setPeople(null);
         }
-        const newPeople = parsePeopleData(user.id, authorsData, followings);
-        setPeople(newPeople);
-        setCurrentNode(newNode);
       }
     },
-    [followings, nodes, parsePeopleData, socialService, user?.id]
+    [currentNode.id, nodes]
   );
 
   return {

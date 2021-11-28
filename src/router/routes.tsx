@@ -2,6 +2,7 @@
 import React, { ReactNode, LazyExoticComponent } from "react";
 import { views } from "./views";
 import { paths } from "./paths";
+import Loading from "components/common/components/Loading";
 
 export interface IRoute {
   // Path, like in basic prop
@@ -27,14 +28,14 @@ export const routes: IRoute[] = [
     path: "/",
     exact: true,
     redirect: paths.HOME,
-    fallback: <div> Loading... </div>,
+    fallback: <Loading />,
   },
   {
     path: paths.HOME,
     component: views.HomeView,
     exact: true,
     private: true,
-    fallback: <div> Loading... </div>,
+    fallback: <Loading />,
     appBarTitle: "Home",
   },
   {
@@ -42,7 +43,7 @@ export const routes: IRoute[] = [
     component: views.SocialView,
     exact: true,
     private: true,
-    fallback: <div> Loading... </div>,
+    fallback: <Loading />,
     appBarTitle: "Social",
   },
   {
@@ -50,7 +51,7 @@ export const routes: IRoute[] = [
     component: views.InboxView,
     exact: true,
     private: true,
-    fallback: <div> Loading... </div>,
+    fallback: <Loading />,
     appBarTitle: "Inbox",
   },
   {
@@ -58,7 +59,7 @@ export const routes: IRoute[] = [
     component: views.CreatePostView,
     exact: true,
     private: true,
-    fallback: <div> Loading... </div>,
+    fallback: <Loading />,
     appBarTitle: "Create Post",
   },
   {
@@ -66,7 +67,7 @@ export const routes: IRoute[] = [
     component: views.PostDetailView,
     exact: true,
     private: false,
-    fallback: <div> Loading... </div>,
+    fallback: <Loading />,
     appBarTitle: "Posts",
   },
   {
@@ -74,7 +75,7 @@ export const routes: IRoute[] = [
     component: views.ProfileView,
     exact: true,
     private: false,
-    fallback: <div> Loading... </div>,
+    fallback: <Loading />,
     appBarTitle: "Profile",
   },
 ];

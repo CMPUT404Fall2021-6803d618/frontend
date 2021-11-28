@@ -14,7 +14,6 @@ interface IProps {
 const Inbox: FC<IProps> = (props) => {
   const { id } = props;
   const { items, handleAcceptFollowRequest } = useInbox();
-  console.log(items);
   const notificationItems = useMemo(
     () => (items ? items.filter((i) => i.type?.toLowerCase() !== InboxItemType.FOLLOW) : []),
     [items]
