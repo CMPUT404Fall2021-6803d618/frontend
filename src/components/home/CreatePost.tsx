@@ -83,7 +83,7 @@ const CreatePost: FC = () => {
       const payload: PostPayload = {
         title,
         description,
-        contentType: ContentType.PLAIN_TEXT,
+        contentType: ContentType.MARKDOWN,
         content,
         visibility,
         unlisted: false,

@@ -12,16 +12,17 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Hidden from "@mui/material/Hidden";
 import Drawer from "@mui/material/Drawer";
 import { Link } from "react-router-dom";
+import { useAuthStore } from "hooks/AuthStoreHook";
 
-const drawerWidth = 240;
+export const drawerWidth = 240;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     drawer: {
       [theme.breakpoints.up("sm")]: {
-        flex: 1,
-        flexShrink: 0,
         borderRight: `1px solid ${theme.palette.divider}`,
+        position: "fixed",
+        height: "100%",
       },
     },
     drawerPaper: {
@@ -74,6 +75,7 @@ interface IProps {
 }
 
 const ResponsiveDrawer: FunctionComponent<IProps> = ({ currentUrl, onDrawerToggle, mobileOpen }) => {
+  const { user } = useAuthStore();
   const classes = useStyles();
 
   const DrawerContent = (
@@ -83,22 +85,24 @@ const ResponsiveDrawer: FunctionComponent<IProps> = ({ currentUrl, onDrawerToggl
         <Fragment key={`drawer-link-list-${index}`}>
           <Divider />
           <List>
-            {list.map((link) => (
-              <ListItem
-                button
-                key={link.name}
-                component={Link}
-                to={link.path}
-                selected={link.subpath ? link.subpath.includes(currentUrl) : link.path === currentUrl}
-                classes={{
-                  root: classes.listItem,
-                  selected: classes.listItemSelected,
-                }}
-              >
-                <span className={classes.listItemText}>{link.name}</span>
-                {link.wip && <ErrorIcon className={classes.warning} />}
-              </ListItem>
-            ))}
+            {list
+              .filter((link) => (link.private ? user !== null : true))
+              .map((link) => (
+                <ListItem
+                  button
+                  key={link.name}
+                  component={Link}
+                  to={link.path}
+                  selected={link.subpath ? link.subpath.includes(currentUrl) : link.path === currentUrl}
+                  classes={{
+                    root: classes.listItem,
+                    selected: classes.listItemSelected,
+                  }}
+                >
+                  <span className={classes.listItemText}>{link.name}</span>
+                  {link.wip && <ErrorIcon className={classes.warning} />}
+                </ListItem>
+              ))}
           </List>
         </Fragment>
       ))}

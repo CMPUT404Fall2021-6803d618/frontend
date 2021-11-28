@@ -10,6 +10,7 @@ import { useAuthStore } from "hooks/AuthStoreHook";
 import { extractIdFromUrl } from "utils";
 import theme from "theme";
 import ListItem from "@mui/material/ListItem";
+import { Typography } from "@mui/material";
 
 const Header = styled.div`
   display: flex;
@@ -53,6 +54,10 @@ const SecondaryButton = styled(({ navigate, ...props }) => <ButtonBase {...props
   border-radius: 1rem !important;
   transition: 100ms all linear !important;
   margin-top: 0.5rem !important;
+  &:hover {
+    filter: brightness(140%);
+    color: white !important;
+  }
 `;
 
 const UserControl: FunctionComponent = () => {
@@ -62,23 +67,15 @@ const UserControl: FunctionComponent = () => {
     () =>
       isAuthenticated ? (
         <Fragment>
-          <ListItem
+          <PrimaryButton
             to={`/profile/${extractIdFromUrl(user?.id)}`}
             component={Link}
             sx={{
               justifyContent: "center",
-              borderRadius: "20px",
-              "&:visited": {
-                color: "inherit",
-              },
-              "&:hover": {
-                background: "transparent",
-                color: "white",
-              },
             }}
           >
             Profile
-          </ListItem>
+          </PrimaryButton>
           <SecondaryButton onClick={logout}>Logout</SecondaryButton>
         </Fragment>
       ) : (
