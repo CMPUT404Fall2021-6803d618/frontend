@@ -2,7 +2,7 @@ import ListContainer from "components/common/components/ListContainer";
 import Loading from "components/common/components/Loading";
 import React, { FC, useCallback } from "react";
 import { InboxItemType } from "shared/enums";
-import { Post } from "shared/interfaces";
+import { Comment, Post } from "shared/interfaces";
 import LikeInboxItem, { LikeInbox } from "./LikeInboxItem";
 import PostInboxItem from "./PostInboxItem";
 
@@ -27,6 +27,8 @@ const NotificationsTab: FC<IProps> = (props) => {
             return <LikeInboxItem item={item as LikeInbox} index={index} />;
           } else if (type === InboxItemType.POST) {
             return <PostInboxItem item={item as Post} index={index} />;
+          } else if (type === InboxItemType.COMMENT) {
+            return <div>{item.comment}</div>;
           } else {
             return <div>Invalid inbox item</div>;
           }
