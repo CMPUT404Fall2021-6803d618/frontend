@@ -14,7 +14,7 @@ const Button = styled(IconButton)`
 `;
 
 interface IProps {
-  onClick: () => Promise<void>;
+  onClick: () => void;
 }
 
 const CommentButton: FC<IProps> = (props) => {

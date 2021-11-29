@@ -1,10 +1,4 @@
-import React, {
-  FC,
-  useCallback,
-  useEffect,
-  useState,
-  ChangeEvent,
-} from "react";
+import React, { FC, useCallback, useEffect, useState, ChangeEvent } from "react";
 import { Post } from "shared/interfaces";
 import Modal from "../common/components/Modal";
 import styled from "styled-components";
@@ -36,12 +30,9 @@ const EditPostModal: FC<IProps> = (props) => {
     setValue(post?.content ?? "");
   }, [post?.content]);
 
-  const handleValueChange = useCallback(
-    (e: ChangeEvent<HTMLTextAreaElement>) => {
-      setValue(e.currentTarget.value);
-    },
-    []
-  );
+  const handleValueChange = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
+    setValue(e.currentTarget.value);
+  }, []);
 
   const handleUpdate = useCallback(async () => {
     try {

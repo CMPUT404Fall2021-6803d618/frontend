@@ -30,7 +30,6 @@
       "allowExpressions": true
       }
     ],
-    "max-len": ["warn", { "code": 120 }],
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
     "import/prefer-default-export": "off",
@@ -42,7 +41,7 @@
         "varsIgnorePattern": "^_"
       }
     ],
-    "prettier/prettier": ["error", { "tabWidth": 2, "printWidth": 120 }]
+    "prettier/prettier": ["error", { "tabWidth": 2, "printWidth": 100 }]
   },
   "settings": {
     "import/resolver": {
