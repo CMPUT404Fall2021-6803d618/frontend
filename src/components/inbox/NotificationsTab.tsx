@@ -27,7 +27,7 @@ const NotificationsTab: FC<IProps> = (props) => {
             return <LikeInboxItem item={item as LikeInbox} index={index} />;
           } else if (type === InboxItemType.POST) {
             return <PostInboxItem item={item as Post} index={index} />;
-          } else if (type === InboxItemType.COMMENT) {
+          } else if (type === InboxItemType.COMMENTS) {
             return <div>{item.comment}</div>;
           } else {
             return <div>Invalid inbox item</div>;

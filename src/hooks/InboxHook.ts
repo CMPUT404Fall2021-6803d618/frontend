@@ -24,7 +24,7 @@ const useInbox = (): IInboxHook => {
         data.filter((d) => {
           const type = d.type?.toLowerCase?.();
           return (
-            type === InboxItemType.COMMENT ||
+            type === InboxItemType.COMMENTS ||
             type === InboxItemType.FOLLOW ||
             type === InboxItemType.LIKE ||
             type === InboxItemType.POST
