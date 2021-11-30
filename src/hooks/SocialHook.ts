@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import faker from "faker";
 import { SocialService } from "services/SocialService";
 import { useAuthStore } from "./AuthStoreHook";
 import { Author, Node } from "shared/interfaces";
@@ -15,32 +14,6 @@ export enum FollowStatus {
 export interface Person extends Author {
   followStatus: FollowStatus;
 }
-
-faker.seed(100);
-
-// function generateData(count: number, isFollowed?: boolean): Person[] {
-//   const list = [];
-//   for (let i = 0; i < count; i++) {
-//     const firstName = faker.name.firstName();
-//     const lastName = faker.name.lastName();
-
-//     const data: Person = {
-//       id: faker.datatype.string(10),
-//       userName: (firstName + lastName).toLowerCase(),
-//       displayName: `${firstName} ${lastName}`,
-//       isFollowed: isFollowed ?? faker.datatype.boolean(),
-//     };
-//     list.push(data);
-//   }
-//   return list;
-// }
-
-// const friends = generateData(faker.datatype.number({ min: 10, max: 20 }), true);
-// const followers = generateData(faker.datatype.number({ min: 10, max: 20 }));
-// const followings = generateData(
-//   faker.datatype.number({ min: 10, max: 20 }),
-//   true
-// );
 
 interface ISocialHook {
   currentNode: Node;
