@@ -19,4 +19,5 @@ export enum InboxItemType {
   FOLLOW = "follow",
   LIKE = "like",
   POST = "post",
+  COMMENTS = "comment",
 }

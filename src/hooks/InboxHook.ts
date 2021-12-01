@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { InboxService } from "services/InboxService";
+import { InboxItemType } from "shared/enums";
 import { FollowingData } from "shared/interfaces";
 import { useAuthStore } from "./AuthStoreHook";
 import useSocial from "./SocialHook";
@@ -19,7 +20,17 @@ const useInbox = (): IInboxHook => {
   const loadData = useCallback(async () => {
     if (user) {
       const data = await inboxService.getInbox(user.id);
-      setItems(data);
+      setItems(
+        data.filter((d) => {
+          const type = d.type?.toLowerCase?.();
+          return (
+            type === InboxItemType.COMMENTS ||
+            type === InboxItemType.FOLLOW ||
+            type === InboxItemType.LIKE ||
+            type === InboxItemType.POST
+          );
+        })
+      );
     }
   }, [inboxService, user]);
 
