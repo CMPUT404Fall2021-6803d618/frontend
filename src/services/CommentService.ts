@@ -2,16 +2,17 @@ import { ContentType } from "shared/enums";
 import { Author, Comment } from "shared/interfaces";
 import { formatId } from "utils";
 import { axios } from "utils/axios";
+import { BaseService } from "./BaseService";
 
 interface ICommentService {
   getComments: (postId: string) => Promise<Comment[]>;
 }
 
-export default class CommentService implements ICommentService {
+export default class CommentService extends BaseService<Comment> implements ICommentService {
   public async getComments(postId: string): Promise<Comment[]> {
     const id = decodeURIComponent(postId);
-    const { data } = await axios.get(`${formatId(id)}/comments/`);
-    return data.comments;
+    const data = await this.getAll(`${formatId(id)}/comments/`, "comments");
+    return data;
   }
 
   public async sendComment(postId: string, author: Author, comment: string): Promise<Comment> {

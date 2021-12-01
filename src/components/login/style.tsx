@@ -26,6 +26,11 @@ export const Container = styled.div`
   height: 100%;
 `;
 
+export const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+`;
+
 export const Input = styled(TextField)`
   width: 275px;
   margin-bottom: 1rem !important;
