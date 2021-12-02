@@ -12,6 +12,7 @@ import styled from "styled-components";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import { PaginateResponse } from "services/BaseService";
+import CommentModal from "./CommentModal";
 
 const Container = styled(Stack)`
   padding: 12px;
@@ -23,18 +24,24 @@ const PostList: FC = ({ children }) => <Stack spacing={1}>{children}</Stack>;
 
 const Home: FC = () => {
   const { user } = useAuthStore();
-  const { deletePost, updatePost, getStreamPosts, sharePostToFriends, sharePostToFollowers } = usePost(user);
+  const { deletePost, updatePost, getStreamPosts, sharePostToFriends, sharePostToFollowers } =
+    usePost(user);
   const { getLiked, likePost } = useLike();
   const [liked, setLiked] = useState<Like[] | null>(null);
   const [posts, setPosts] = useState<IPost[] | null>(null);
   const [selectedPost, setSelectedPost] = useState<IPost | null>(null);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openShareModal, setOpenShareModal] = useState(false);
+  const [openCommentModal, setOpenCommentModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [isAllPostLoaded, setIsAllPostLoaded] = useState(false);
 
   const setNewPosts = useCallback(
-    (currentPosts: IPost[], postsData: Pick<PaginateResponse<PostObject>, "count" | "items">, likedData: Like[]) => {
+    (
+      currentPosts: IPost[],
+      postsData: Pick<PaginateResponse<PostObject>, "count" | "items">,
+      likedData: Like[]
+    ) => {
       const newPosts = postsData.items.map((post) => {
         return {
           ...post,
@@ -149,6 +156,16 @@ const Home: FC = () => {
     [sharePostToFollowers]
   );
 
+  const handleOpenCommentModal = useCallback((post: IPost) => {
+    setSelectedPost(post);
+    setOpenCommentModal(true);
+  }, []);
+
+  const handleCloseCommentModal = useCallback(() => {
+    setSelectedPost(null);
+    setOpenCommentModal(false);
+  }, []);
+
   const handleLoadMoreClick = useCallback(async () => {
     if (liked && posts) {
       const newPage = currentPage + 1;
@@ -174,6 +191,7 @@ const Home: FC = () => {
                 onDeleteClick={handleDeletePost}
                 onEditClick={handleOpenEditModal}
                 onLikeClick={handleLikePost}
+                onCommentClick={handleOpenCommentModal}
                 onShareFriendsClick={handleOpenShareModal}
                 onShareFollowersClick={handleShareFollowers}
               />
@@ -189,11 +207,12 @@ const Home: FC = () => {
     }
   }, [
     posts,
-    isAllPostLoaded,
     handleLoadMoreClick,
+    isAllPostLoaded,
     handleDeletePost,
     handleOpenEditModal,
     handleLikePost,
+    handleOpenCommentModal,
     handleOpenShareModal,
     handleShareFollowers,
   ]);
@@ -213,7 +232,12 @@ const Home: FC = () => {
         onUpdate={handleUpdatePost}
         onUpdateSuccess={handleUpdatePostSuccess}
       />
-      <ShareModal open={openShareModal} onClose={handleCloseShareModal} onShare={handleShareFriends} />
+      <ShareModal
+        open={openShareModal}
+        onClose={handleCloseShareModal}
+        onShare={handleShareFriends}
+      />
+      <CommentModal open={openCommentModal} onClose={handleCloseCommentModal} post={selectedPost} />
     </Container>
   );
 };

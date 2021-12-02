@@ -9,11 +9,13 @@ import styled from "styled-components";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Zoom from "@mui/material/Zoom";
 import Backdrop from "@mui/material/Backdrop";
-import Container from "@mui/material/Container";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
+import theme from "theme";
 
 const ModalWrapper = styled(MuiModal)`
   display: flex;
@@ -22,6 +24,7 @@ const ModalWrapper = styled(MuiModal)`
 `;
 
 const ModalBody = styled(Card)`
+  position: relative;
   z-index: 9999;
   display: flex;
   min-height: 200px;
@@ -33,7 +36,8 @@ const ModalBody = styled(Card)`
   align-items: center;
   max-width: 600px;
   width: 100%;
-  transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, height 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms !important;
+  transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    height 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms !important;
 `;
 
 const Title = styled.h2`
@@ -51,16 +55,24 @@ const FadeLoading = styled.div`
   position: absolute;
 `;
 
+const CloseIconButton = styled(IconButton)`
+  position: absolute;
+  right: 8px;
+  top: 8px;
+`;
+
 interface IProps<T> {
   title: string;
   open: boolean;
   onClose: () => void;
+  onExit?: () => void;
   children?: ReactNode;
   actionOption?: {
     onClick: () => Promise<T>;
     onSuccess: (res: T) => void;
     text: string;
   };
+  closeVariant?: "button" | "icon";
 }
 
 enum State {
@@ -70,7 +82,7 @@ enum State {
 }
 
 const Modal = <T extends object | void>(props: IProps<T>) => {
-  const { title, open, onClose, actionOption, children } = props;
+  const { title, open, onClose, actionOption, children, closeVariant = "button", onExit } = props;
   const [state, setState] = useState<State>(State.IDLE);
 
   const handleClose = useCallback(() => {
@@ -94,12 +106,18 @@ const Modal = <T extends object | void>(props: IProps<T>) => {
     }
   }, [actionOption]);
 
-  const handleExit = () => {
+  const handleExit = useCallback(() => {
     setState(State.IDLE);
-  };
+    onExit?.();
+  }, [onExit]);
 
   return (
-    <ModalWrapper open={open} onClose={handleClose} closeAfterTransition BackdropComponent={Backdrop}>
+    <ModalWrapper
+      open={open}
+      onClose={handleClose}
+      closeAfterTransition
+      BackdropComponent={Backdrop}
+    >
       <Fade in={open} onExited={handleExit}>
         <ModalBody>
           {state === State.SUCCESS ? (
@@ -109,15 +127,30 @@ const Modal = <T extends object | void>(props: IProps<T>) => {
           ) : (
             <Fragment>
               <Fade in={state === State.IDLE}>
-                <Card sx={{ width: "100%" }}>
-                  <CardContent>
+                <Card
+                  sx={{
+                    width: "100%",
+                    flex: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                    background: `${theme.palette.background.default}`,
+                  }}
+                >
+                  {closeVariant === "icon" && (
+                    <CloseIconButton onClick={handleClose}>
+                      <CloseIcon fontSize="small" />
+                    </CloseIconButton>
+                  )}
+                  <CardContent sx={{ flex: 1 }}>
                     <Title>{title}</Title>
                     {children}
                   </CardContent>
                   <CardActions sx={{ justifyContent: "flex-end" }}>
-                    <Button onClick={handleClose} variant="outlined">
-                      Cancel
-                    </Button>
+                    {closeVariant === "button" && (
+                      <Button onClick={handleClose} variant="outlined">
+                        Cancel
+                      </Button>
+                    )}
                     {actionOption && (
                       <Button onClick={handleClick} variant="contained">
                         {actionOption.text}

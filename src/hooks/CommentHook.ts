@@ -4,7 +4,7 @@ import { Comment, User } from "shared/interfaces";
 
 interface ICommentHook {
   getComments: (postId: string) => Promise<Comment[]>;
-  sendComment: (postId: string, value: string) => Promise<Comment | null>;
+  sendComment: (postId: string, value: string) => Promise<Comment>;
 }
 
 const useComment = (user: User | null): ICommentHook => {
@@ -23,8 +23,7 @@ const useComment = (user: User | null): ICommentHook => {
         const comment = await commentService.sendComment(postId, user, value);
         return comment;
       } else {
-        alert("Please log in to comment");
-        return null;
+        throw new Error("Please log in to comment");
       }
     },
     [commentService, user]

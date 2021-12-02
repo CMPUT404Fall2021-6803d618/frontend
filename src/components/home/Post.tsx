@@ -112,6 +112,7 @@ interface PostProps {
   onDeleteClick: (post: IPost) => Promise<void>;
   onLikeClick: (post: IPost) => Promise<void>;
   onEditClick: (post: IPost) => void;
+  onCommentClick: (post: IPost) => void;
   onShareFriendsClick: (post: IPost) => void;
   onShareFollowersClick: (post: IPost) => Promise<void>;
 }
@@ -120,7 +121,15 @@ interface PostProps {
 
 const Post: FC<PostProps> = (props) => {
   const { user } = useAuthStore();
-  const { post, onDeleteClick, onEditClick, onLikeClick, onShareFriendsClick, onShareFollowersClick } = props;
+  const {
+    post,
+    onDeleteClick,
+    onEditClick,
+    onLikeClick,
+    onShareFriendsClick,
+    onShareFollowersClick,
+    onCommentClick,
+  } = props;
   const { content, author, published, title } = post;
   const isPostAuthor = user?.id === post?.author.id;
 
@@ -143,6 +152,10 @@ const Post: FC<PostProps> = (props) => {
   const handleShareFollowersClick = useCallback(() => {
     onShareFollowersClick(post);
   }, [onShareFollowersClick, post]);
+
+  const handleCommentClick = useCallback(() => {
+    onCommentClick(post);
+  }, [onCommentClick, post]);
 
   const meatballMenuItems = [
     {
@@ -178,11 +191,7 @@ const Post: FC<PostProps> = (props) => {
             <ReactMarkdown>{content}</ReactMarkdown>
           </PostContent>
           <PostAction>
-            <CommentButton
-              onClick={() => {
-                return Promise.resolve();
-              }}
-            />
+            <CommentButton onClick={handleCommentClick} />
             <LikeButton liked={post.liked} onClick={handleLikeClick} />
             <ShareButton
               onFriendsClick={handleShareFriendsClick}
