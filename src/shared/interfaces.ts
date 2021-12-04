@@ -8,6 +8,7 @@ export interface BaseObject {
 
 export interface Likeable {
   liked: boolean;
+  likeCount?: number;
 }
 
 export interface Author {
@@ -17,6 +18,7 @@ export interface Author {
   url: string;
   github?: string;
   profileImage?: string;
+  profileColor?: string;
 }
 
 export interface User extends Author {
@@ -53,12 +55,14 @@ export interface FollowingData {
   inbox_object: string;
 }
 
-export interface Comment extends BaseObject {
+export interface CommentObject extends BaseObject {
   author: Author;
   comment: string;
   contentType: ContentType.PLAIN_TEXT | ContentType.MARKDOWN;
   published: string;
 }
+
+export interface Comment extends CommentObject, Likeable {}
 
 export interface Like {
   summary: string;

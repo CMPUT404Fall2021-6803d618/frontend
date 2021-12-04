@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useCallback } from "react";
 import { Person } from "hooks/SocialHook";
 import styled from "styled-components";
 import UserCard from "./UserCard";
@@ -20,24 +20,26 @@ export interface IFriendsTabProps {
 const FriendsTab: FC<IFriendsTabProps> = (props) => {
   const { friends, onRemoveFollower, onUnfollow } = props;
 
-  return (
-    <ListContainer>
-      {friends ? (
-        friends.map(({ id, displayName, followStatus }) => (
-          <UserCard
-            id={id}
-            displayName={displayName}
-            followStatus={followStatus}
-            key={id}
-            onFollowerRemove={onRemoveFollower}
-            onUnfollow={onUnfollow}
-          />
-        ))
-      ) : (
-        <Loading />
-      )}
-    </ListContainer>
-  );
+  const render = useCallback(() => {
+    if (friends?.length === 0) {
+      return <div>No friends</div>;
+    } else {
+      return friends?.map(({ id, displayName, followStatus, profileColor, profileImage }) => (
+        <UserCard
+          id={id}
+          displayName={displayName}
+          followStatus={followStatus}
+          key={id}
+          onFollowerRemove={onRemoveFollower}
+          onUnfollow={onUnfollow}
+          profileColor={profileColor}
+          profileImage={profileImage}
+        />
+      ));
+    }
+  }, [friends, onRemoveFollower, onUnfollow]);
+
+  return <ListContainer>{friends ? render() : <Loading />}</ListContainer>;
 };
 
 export default FriendsTab;

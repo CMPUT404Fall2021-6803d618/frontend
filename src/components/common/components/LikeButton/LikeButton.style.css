@@ -9,7 +9,7 @@
     background-color: transparent;
     background-position: left;
     position: absolute;
-  }
+}
 
 .heart.liked {
     background-position: right;
@@ -17,6 +17,10 @@
 
 .heart.animate {
     animation: heart-burst 0.8s steps(28) 1;
+}
+
+.liked {
+    color: rgb(226, 38, 77) !important;
 }
 
 @keyframes heart-burst {

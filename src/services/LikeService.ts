@@ -6,7 +6,7 @@ import { axios } from "utils/axios";
 interface ILikeService {
   getLikes: (id: string) => Promise<Like[]>;
   getLiked: (authorId: string) => Promise<Like[]>;
-  sendLike: (sender: Author, receiver: Author, object: Post) => Promise<Like>;
+  sendLike: (sender: Author, receiver: Author, object: string, type: string) => Promise<Like>;
 }
 
 export default class LikeService implements ILikeService {
@@ -20,12 +20,17 @@ export default class LikeService implements ILikeService {
     return data.items;
   }
 
-  public async sendLike(sender: Author, receiver: Author, object: Post): Promise<Like> {
+  public async sendLike(
+    sender: Author,
+    receiver: Author,
+    object: string,
+    type: string
+  ): Promise<Like> {
     const payload = {
       type: "like",
-      summary: `${sender.displayName} liked ${receiver.displayName} ${object.type.toLowerCase()}`,
+      summary: `${sender.displayName} liked ${receiver.displayName} ${type.toLowerCase()}`,
       author: sender,
-      object: object.source,
+      object: object,
     };
     await axios.post(`${formatId(sender.id)}/liked/`, payload);
     return {

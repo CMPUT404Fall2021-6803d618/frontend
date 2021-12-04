@@ -2,7 +2,6 @@ import React, { FC, useCallback } from "react";
 import { Post as IPost } from "shared/interfaces";
 import styled from "styled-components";
 import { formatDate } from "utils";
-import profilePic from "./images.jpeg";
 import MeatballMenu from "./MeatballMenu";
 import { Link } from "react-router-dom";
 import LikeButton from "../common/components/LikeButton/LikeButton";
@@ -13,6 +12,8 @@ import { useAuthStore } from "hooks/AuthStoreHook";
 import CommentButton from "components/common/components/CommentButton";
 import ReactMarkdown from "react-markdown";
 import Card from "@mui/material/Card";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import ProfileImage from "components/common/components/ProfileImage";
 
 const Dot = styled.span`
   margin: 0 6px;
@@ -51,11 +52,7 @@ const HeaderDiv = styled.div`
   height: 40px;
 `;
 
-const ProfileImage = styled.img`
-  max-width: 50px;
-  max-height: 50px;
-  border-radius: 50%;
-  object-fit: contain;
+const ProfileImageDiv = styled.div`
   margin-right: 12px;
 `;
 
@@ -130,7 +127,7 @@ const Post: FC<PostProps> = (props) => {
     onShareFollowersClick,
     onCommentClick,
   } = props;
-  const { content, author, published, title } = post;
+  const { content, author, published, title, likeCount, liked, visibility, id } = post;
   const isPostAuthor = user?.id === post?.author.id;
 
   const handleDeleteClick = useCallback(async () => {
@@ -171,9 +168,15 @@ const Post: FC<PostProps> = (props) => {
   ];
 
   return (
-    <PostWrapper to={`/post/${encodeURIComponent(post.id)}`}>
+    <PostWrapper to={`/post/${encodeURIComponent(id)}`}>
       <PostCard>
-        <ProfileImage src={profilePic} alt="Profile Image" />
+        <ProfileImageDiv>
+          <ProfileImage
+            src={author.profileImage}
+            name={author.displayName}
+            color={author.profileColor}
+          />
+        </ProfileImageDiv>
         <PostBody>
           <HeaderDiv>
             <PostAuthorMenuDiv>
@@ -192,11 +195,11 @@ const Post: FC<PostProps> = (props) => {
           </PostContent>
           <PostAction>
             <CommentButton onClick={handleCommentClick} />
-            <LikeButton liked={post.liked} onClick={handleLikeClick} />
+            <LikeButton liked={liked} onClick={handleLikeClick} count={likeCount} />
             <ShareButton
               onFriendsClick={handleShareFriendsClick}
               onFollowersClick={handleShareFollowersClick}
-              postVisibility={post.visibility}
+              postVisibility={visibility}
             />
           </PostAction>
         </PostBody>

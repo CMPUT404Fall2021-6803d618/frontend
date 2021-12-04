@@ -44,14 +44,19 @@ export default function useSocial(shouldLoadData = true): ISocialHook {
   const [followings, setFollowings] = useState<Person[] | null>(null);
   const [isNodeChanged, setIsNodeChanged] = useState(false);
 
-  const parsePeopleData = useCallback((userId: string, peopleData: Author[], followingsData: Person[]) => {
-    return peopleData
-      .filter((person) => person.id !== userId)
-      .map((person) => {
-        const following = followingsData.find((f) => f.id === person.id);
-        return following ? { ...following } : { ...person, followStatus: FollowStatus.NOT_FOLLOWED };
-      });
-  }, []);
+  const parsePeopleData = useCallback(
+    (userId: string, peopleData: Author[], followingsData: Person[]) => {
+      return peopleData
+        .filter((person) => person.id !== userId)
+        .map((person) => {
+          const following = followingsData.find((f) => f.id === person.id);
+          return following
+            ? { ...following }
+            : { ...person, followStatus: FollowStatus.NOT_FOLLOWED };
+        });
+    },
+    []
+  );
 
   const loadData = useCallback(async () => {
     if (user && shouldLoadData) {
@@ -71,10 +76,14 @@ export default function useSocial(shouldLoadData = true): ISocialHook {
       });
       const newFollowers: Person[] = followersData.map((follower) => {
         const following = newFollowings.find((f) => f.id === follower.id);
-        return following ? { ...following } : { ...follower, followStatus: FollowStatus.NOT_FOLLOWED };
+        return following
+          ? { ...following }
+          : { ...follower, followStatus: FollowStatus.NOT_FOLLOWED };
       });
       const newPeople: Person[] = parsePeopleData(id, peopleData, newFollowings);
-      const newFriends: Person[] = newFollowers.filter((f) => f.followStatus === FollowStatus.FOLLOWED);
+      const newFriends: Person[] = newFollowers.filter(
+        (f) => f.followStatus === FollowStatus.FOLLOWED
+      );
       setFollowings(newFollowings);
       setFollowers(newFollowers);
       setPeople(newPeople);

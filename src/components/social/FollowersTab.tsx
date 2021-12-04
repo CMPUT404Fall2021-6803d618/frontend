@@ -17,7 +17,7 @@ const FollowersTab: FC<IFollowersTabProps> = (props) => {
     if (followers?.length === 0) {
       return <div>No followers</div>;
     } else {
-      return followers?.map(({ id, displayName, followStatus }) => (
+      return followers?.map(({ id, displayName, followStatus, profileColor, profileImage }) => (
         <UserCard
           id={id}
           displayName={displayName}
@@ -25,6 +25,8 @@ const FollowersTab: FC<IFollowersTabProps> = (props) => {
           onFollowerRemove={onRemoveFollower}
           onFollow={onFollow}
           onUnfollow={onUnfollow}
+          profileColor={profileColor}
+          profileImage={profileImage}
           key={id}
         />
       ));

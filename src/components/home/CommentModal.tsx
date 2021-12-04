@@ -10,29 +10,30 @@ import {
 import Loading from "components/common/components/Loading";
 import useSocial from "hooks/SocialHook";
 import React, { FC, useCallback, useEffect, useState, ChangeEvent, SyntheticEvent } from "react";
-import { Comment as IComment, Post } from "shared/interfaces";
+import { Comment as IComment, Like, Post } from "shared/interfaces";
 import Modal from "../common/components/Modal";
 import styled from "styled-components";
 import useComment from "hooks/CommentHook";
 import { useAuthStore } from "hooks/AuthStoreHook";
 import CircularProgress from "@mui/material/CircularProgress";
 import Comment from "./Comment";
+import useLike from "hooks/LikeHook";
 
 const Container = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
+  overflow-y: hidden;
 `;
 
 const CommentListContainer = styled.div`
-  display: flex;
-  flex-direction: column;
+  overflow-y: scroll;
 `;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-
+  margin-top: 2px;
   & > button {
     width: fit-content;
     margin-top: 1rem;
@@ -49,6 +50,7 @@ interface IProps {
   open: boolean;
   onClose: () => void;
   post: Post | null;
+  liked: Like[] | null;
 }
 
 enum State {
@@ -58,24 +60,41 @@ enum State {
 }
 
 const CommentModal: FC<IProps> = (props) => {
-  const { open, onClose, post } = props;
+  const { open, onClose, post, liked } = props;
   const { user } = useAuthStore();
   const [comments, setComments] = useState<IComment[] | null>(null);
   const { getComments, sendComment } = useComment(user);
+  const { likeComment, getLikes } = useLike();
   const [value, setValue] = useState("");
   const [isError, setIsError] = useState(false);
   const [state, setState] = useState<State>(State.IDLE);
 
+  const loadData = useCallback(async () => {
+    if (liked && post) {
+      const commentsData = await getComments(post.id);
+      const likes = await Promise.all(commentsData.map((c) => getLikes(c.id)));
+      setComments(
+        commentsData.map((comment, index) => ({
+          ...comment,
+          liked: !!liked.find((l) => l.object === comment.id),
+          likeCount: likes[index].length,
+        }))
+      );
+    }
+  }, [getComments, getLikes, liked, post]);
+
   useEffect(() => {
-    post && getComments(post.id).then((data) => setComments(data));
-  }, [getComments, post]);
+    if (open) {
+      loadData();
+    }
+  }, [loadData, open]);
 
   useEffect(() => {
     if (state === State.SENDING && post && value.length > 0 && comments) {
       setState(State.IN_PROGRESS);
       sendComment(post.id, value)
         .then((comment) => {
-          setComments([comment, ...comments]);
+          setComments([{ ...comment, liked: false }, ...comments]);
         })
         .catch((err) => {
           alert(err.message);
@@ -119,6 +138,21 @@ const CommentModal: FC<IProps> = (props) => {
     setState(State.IDLE);
   }, []);
 
+  const handleLikeComment = useCallback(
+    async (comment: IComment) => {
+      if (comments && post) {
+        const index = comments.findIndex((c) => c.id === comment.id);
+        if (index !== -1) {
+          const likedComment = await likeComment(post.author, comment);
+          const newComments = [...comments];
+          newComments[index] = { ...likedComment };
+          setComments(newComments);
+        }
+      }
+    },
+    [comments, likeComment, post]
+  );
+
   return (
     <Modal
       title="Comments"
@@ -157,17 +191,21 @@ const CommentModal: FC<IProps> = (props) => {
             <Typography variant="subtitle1" gutterBottom marginTop={2} fontWeight={700}>
               All Comments ({comments.length})
             </Typography>
-            <div>
-              <Stack spacing={1} sx={{ height: "300px", overflowY: "scroll" }}>
+            <CommentListContainer>
+              <Stack spacing={1}>
                 {comments.length > 0 ? (
                   comments.map((comment) => (
-                    <Comment key={`comment-${comment.id}`} comment={comment} />
+                    <Comment
+                      key={`comment-${comment.id}`}
+                      comment={comment}
+                      onLike={handleLikeComment}
+                    />
                   ))
                 ) : (
                   <Typography color={"rgba(255,255,255,0.3)"}>No comments</Typography>
                 )}
               </Stack>
-            </div>
+            </CommentListContainer>
           </>
         ) : (
           <Loading />

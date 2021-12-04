@@ -1,9 +1,9 @@
 import { Card } from "@mui/material";
-import React, { FC } from "react";
-import ReactMarkdown from "react-markdown";
+import LikeButton from "components/common/components/LikeButton/LikeButton";
+import ProfileImage from "components/common/components/ProfileImage";
+import React, { FC, useCallback } from "react";
 import { Comment as IComment } from "shared/interfaces";
 import styled from "styled-components";
-import theme from "theme";
 import { formatDate } from "utils";
 
 const Dot = styled.span`
@@ -25,7 +25,6 @@ const CommentCard = styled(Card)`
   padding: 12px;
   display: flex;
   width: 100%;
-  overflow: visible;
 `;
 
 const HeaderDiv = styled.div`
@@ -33,11 +32,7 @@ const HeaderDiv = styled.div`
   height: 40px;
 `;
 
-const ProfileImage = styled.img`
-  max-width: 50px;
-  max-height: 50px;
-  border-radius: 50%;
-  object-fit: contain;
+const ProfileImageDiv = styled.div`
   margin-right: 12px;
 `;
 
@@ -69,53 +64,48 @@ const CommentContent = styled.div`
   }
 `;
 
-const CommentTitle = styled.h2`
-  margin: 0;
-`;
-
-// Comment Action
-const CommentAction = styled.div`
-  display: flex;
-  height: fit-content;
-  flex-direction: row;
-  justify-content: space-between;
-  margin-left: -12px;
-  max-width: 425px;
-`;
-
 const DisplayName = styled.span`
   margin-bottom: 0;
   font-weight: bold;
 `;
 
+const LikeButtonDiv = styled.div`
+  align-self: flex-end;
+`;
+
 interface IProps {
   comment: IComment;
+  onLike: (comment: IComment) => Promise<void>;
 }
 
 const Comment: FC<IProps> = (props) => {
-  const { author, published, comment } = props.comment;
-  const { profileImage } = author;
+  const { onLike } = props;
+  const { author, published, comment, liked, likeCount } = props.comment;
+  const { profileImage, displayName, profileColor } = author;
+
+  const handleLikeClick = useCallback(async () => {
+    await onLike(props.comment);
+  }, [props.comment, onLike]);
 
   return (
     <CommentCard>
-      <ProfileImage
-        src={profileImage ?? "https://via.placeholder.com/500?text=User+Profile+Image"}
-        alt="Profile Image"
-      />
+      <ProfileImageDiv>
+        <ProfileImage src={profileImage} name={displayName} size={50} color={profileColor} />
+      </ProfileImageDiv>
       <CommentBody>
         <HeaderDiv>
           <CommentAuthorMenuDiv>
             <CommentAuthorDiv>
-              <DisplayName>{author.displayName}</DisplayName>
+              <DisplayName>{displayName}</DisplayName>
               <Dot />
               <PublishedDate>{formatDate(published)}</PublishedDate>
             </CommentAuthorDiv>
           </CommentAuthorMenuDiv>
         </HeaderDiv>
         <CommentContent>{comment}</CommentContent>
-        {/* <CommentAction>
-          <LikeButton liked={post.liked} onClick={handleLikeClick} />
-        </CommentAction> */}
+        <LikeButtonDiv>
+          <LikeButton liked={liked} onClick={handleLikeClick} count={likeCount} />
+        </LikeButtonDiv>
       </CommentBody>
     </CommentCard>
   );

@@ -66,7 +66,11 @@ const Shell: FC<IProps> = () => {
   return (
     <Root>
       <Container>
-        <ResponsiveDrawer currentUrl={currentUrl} onDrawerToggle={handleDrawerToggle} mobileOpen={mobileOpen} />
+        <ResponsiveDrawer
+          currentUrl={currentUrl}
+          onDrawerToggle={handleDrawerToggle}
+          mobileOpen={mobileOpen}
+        />
 
         <Main>
           {currentTitle && (
