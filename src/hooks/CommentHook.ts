@@ -1,10 +1,10 @@
 import { useMemo, useCallback } from "react";
 import CommentService from "services/CommentService";
-import { Comment, User } from "shared/interfaces";
+import { CommentObject, User } from "shared/interfaces";
 
 interface ICommentHook {
-  getComments: (postId: string) => Promise<Comment[]>;
-  sendComment: (postId: string, value: string) => Promise<Comment>;
+  getComments: (postId: string) => Promise<CommentObject[]>;
+  sendComment: (postId: string, value: string) => Promise<CommentObject>;
 }
 
 const useComment = (user: User | null): ICommentHook => {

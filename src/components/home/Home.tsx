@@ -26,7 +26,7 @@ const Home: FC = () => {
   const { user } = useAuthStore();
   const { deletePost, updatePost, getStreamPosts, sharePostToFriends, sharePostToFollowers } =
     usePost(user);
-  const { getLiked, likePost } = useLike();
+  const { getLiked, likePost, getLikes } = useLike();
   const [liked, setLiked] = useState<Like[] | null>(null);
   const [posts, setPosts] = useState<IPost[] | null>(null);
   const [selectedPost, setSelectedPost] = useState<IPost | null>(null);
@@ -40,12 +40,14 @@ const Home: FC = () => {
     (
       currentPosts: IPost[],
       postsData: Pick<PaginateResponse<PostObject>, "count" | "items">,
-      likedData: Like[]
+      likedData: Like[],
+      likesData: Like[][]
     ) => {
-      const newPosts = postsData.items.map((post) => {
+      const newPosts: IPost[] = postsData.items.map((post, index) => {
         return {
           ...post,
           liked: !!likedData.find((l) => l.object === post.id),
+          likeCount: likesData[index].length,
         };
       });
       const combined = [...currentPosts, ...newPosts];
@@ -60,10 +62,11 @@ const Home: FC = () => {
   const loadData = useCallback(async () => {
     if (user) {
       const [postsData, likedData] = await Promise.all([getStreamPosts(1), getLiked()]);
+      const likesData = await Promise.all(postsData.items.map((p) => getLikes(p.id)));
       setLiked(likedData);
-      setNewPosts([], postsData, likedData);
+      setNewPosts([], postsData, likedData, likesData);
     }
-  }, [user, getStreamPosts, getLiked, setNewPosts]);
+  }, [user, getStreamPosts, getLiked, setNewPosts, getLikes]);
 
   useEffect(() => {
     loadData();
@@ -170,10 +173,11 @@ const Home: FC = () => {
     if (liked && posts) {
       const newPage = currentPage + 1;
       const postsData = await getStreamPosts(newPage);
-      setNewPosts(posts, postsData, liked);
+      const likesData = await Promise.all(postsData.items.map((p) => getLikes(p.id)));
+      setNewPosts(posts, postsData, liked, likesData);
       setCurrentPage(newPage);
     }
-  }, [currentPage, getStreamPosts, liked, posts, setNewPosts]);
+  }, [currentPage, getStreamPosts, liked, posts, setNewPosts, getLikes]);
 
   const render = useCallback(() => {
     if (posts === null) {
@@ -237,7 +241,12 @@ const Home: FC = () => {
         onClose={handleCloseShareModal}
         onShare={handleShareFriends}
       />
-      <CommentModal open={openCommentModal} onClose={handleCloseCommentModal} post={selectedPost} />
+      <CommentModal
+        open={openCommentModal}
+        onClose={handleCloseCommentModal}
+        post={selectedPost}
+        liked={liked}
+      />
     </Container>
   );
 };

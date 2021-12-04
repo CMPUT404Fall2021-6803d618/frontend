@@ -1,4 +1,12 @@
-import React, { FC, useMemo, useEffect, useState, useCallback, MouseEvent, ChangeEvent } from "react";
+import React, {
+  FC,
+  useMemo,
+  useEffect,
+  useState,
+  useCallback,
+  MouseEvent,
+  ChangeEvent,
+} from "react";
 import usePost from "hooks/PostHook";
 import styled from "styled-components";
 import Post from "../home/Post";
@@ -13,6 +21,8 @@ import { Button, Container } from "@mui/material";
 import useImage from "hooks/ImageHook";
 import theme from "theme";
 import FileUploader from "components/home/FileUploader";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import ProfileImage from "components/common/components/ProfileImage";
 
 const ProfileDiv = styled.div`
   display: flex;
@@ -23,18 +33,6 @@ const ProfileDiv = styled.div`
 const ProfileImageDiv = styled.div`
   margin: 0 2rem;
   flex: 1;
-  div {
-    width: 150px;
-    height: 150px;
-    position: relative;
-
-    img {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      border-radius: 50%;
-    }
-  }
 `;
 
 const ProfileInfoDiv = styled.div`
@@ -90,7 +88,11 @@ const Profile: FC<IProps> = (props) => {
       getPosts().then((data) => setPosts(data.map((d) => ({ ...d, liked: false }))));
     } else {
       getPosts().then((data) =>
-        setPosts(data.filter((d) => d.visibility === Visibility.PUBLIC).map((d) => ({ ...d, liked: false })))
+        setPosts(
+          data
+            .filter((d) => d.visibility === Visibility.PUBLIC)
+            .map((d) => ({ ...d, liked: false }))
+        )
       );
     }
   }, [getPosts, profile?.id, user?.id]);
@@ -160,14 +162,12 @@ const Profile: FC<IProps> = (props) => {
         <ProfileDiv>
           {isUser && <button onClick={handleToggle}>{editing ? "Update" : "Edit"}</button>}
           <ProfileImageDiv>
-            <div>
-              <img
-                src={
-                  profile?.profileImage ??
-                  "https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg"
-                }
-              />
-            </div>
+            <ProfileImage
+              src={profile?.profileImage}
+              size={150}
+              name={profile?.displayName}
+              color={profile?.profileColor}
+            />
           </ProfileImageDiv>
           <ProfileInfoDiv>
             {editing ? (
@@ -185,7 +185,9 @@ const Profile: FC<IProps> = (props) => {
                 <span>followers</span>
               </div>
               <div>
-                <span>{followings?.filter((f) => f.followStatus === FollowStatus.FOLLOWED).length ?? 0} </span>
+                <span>
+                  {followings?.filter((f) => f.followStatus === FollowStatus.FOLLOWED).length ?? 0}{" "}
+                </span>
                 <span>followings</span>
               </div>
             </SocialStats>
@@ -198,7 +200,8 @@ const Profile: FC<IProps> = (props) => {
                   marginTop: "2rem",
                 }}
               >
-                Github: <input style={{ flex: 1 }} onChange={handleGithubChange} value={editGithub} />
+                Github:{" "}
+                <input style={{ flex: 1 }} onChange={handleGithubChange} value={editGithub} />
               </div>
             ) : (
               <div
@@ -214,7 +217,10 @@ const Profile: FC<IProps> = (props) => {
             )}
           </ProfileInfoDiv>
           {editing ? (
-            <FileUploader onFileSelectError={handleFileSelectError} onFileSelectSuccess={handleFileSelectSuccess} />
+            <FileUploader
+              onFileSelectError={handleFileSelectError}
+              onFileSelectSuccess={handleFileSelectSuccess}
+            />
           ) : (
             <div></div>
           )}

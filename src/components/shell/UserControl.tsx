@@ -9,8 +9,7 @@ import { useAuth } from "hooks/AuthHook";
 import { useAuthStore } from "hooks/AuthStoreHook";
 import { extractIdFromUrl } from "utils";
 import theme from "theme";
-import ListItem from "@mui/material/ListItem";
-import { Typography } from "@mui/material";
+import ProfileImage from "components/common/components/ProfileImage";
 
 const Header = styled.div`
   display: flex;
@@ -18,10 +17,10 @@ const Header = styled.div`
   align-items: center;
   font-family: "Nunito Sans";
   flex-direction: column;
-  svg {
-    font-size: 5rem;
-    margin: 1rem;
-  }
+`;
+
+const ProfileImageDiv = styled.div`
+  margin: 1rem;
 `;
 
 const Control = styled.div`
@@ -93,7 +92,14 @@ const UserControl: FunctionComponent = () => {
 
   return (
     <Header>
-      <AccountCircleIcon />
+      <ProfileImageDiv>
+        <ProfileImage
+          src={user?.profileImage}
+          size={80}
+          name={user?.displayName}
+          color={user?.profileColor}
+        />
+      </ProfileImageDiv>
       <Control>
         {user ? <p>{user.displayName}</p> : <p>Social Distance </p>}
         {LoginLogout}

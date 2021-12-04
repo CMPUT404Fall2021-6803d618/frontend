@@ -42,7 +42,12 @@ const NotificationCard: FC<NotificationCardProps> = (props) => {
         <Grid xs sm="auto">
           <Stack direction="row" justifyContent="flex-end" spacing={1} sx={{ m: 1 }}>
             {buttons.map(({ text: buttonText, variant, onClick }, buttonIndex) => (
-              <Button key={`notif-${index}-${buttonIndex}`} variant={variant} color="primary" onClick={onClick}>
+              <Button
+                key={`notif-${index}-${buttonIndex}`}
+                variant={variant}
+                color="primary"
+                onClick={onClick}
+              >
                 {buttonText}
               </Button>
             ))}

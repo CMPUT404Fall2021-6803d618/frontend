@@ -141,7 +141,16 @@ const Modal = <T extends object | void>(props: IProps<T>) => {
                       <CloseIcon fontSize="small" />
                     </CloseIconButton>
                   )}
-                  <CardContent sx={{ flex: 1 }}>
+                  <CardContent
+                    sx={{
+                      flex: 1,
+                      padding: 0,
+                      margin: 2,
+                      overflowY: "hidden",
+                      display: "flex",
+                      flexDirection: "column",
+                    }}
+                  >
                     <Title>{title}</Title>
                     {children}
                   </CardContent>

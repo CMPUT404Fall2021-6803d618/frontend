@@ -74,7 +74,11 @@ interface IProps {
   onDrawerToggle: () => void;
 }
 
-const ResponsiveDrawer: FunctionComponent<IProps> = ({ currentUrl, onDrawerToggle, mobileOpen }) => {
+const ResponsiveDrawer: FunctionComponent<IProps> = ({
+  currentUrl,
+  onDrawerToggle,
+  mobileOpen,
+}) => {
   const { user } = useAuthStore();
   const classes = useStyles();
 
@@ -93,7 +97,9 @@ const ResponsiveDrawer: FunctionComponent<IProps> = ({ currentUrl, onDrawerToggl
                   key={link.name}
                   component={Link}
                   to={link.path}
-                  selected={link.subpath ? link.subpath.includes(currentUrl) : link.path === currentUrl}
+                  selected={
+                    link.subpath ? link.subpath.includes(currentUrl) : link.path === currentUrl
+                  }
                   classes={{
                     root: classes.listItem,
                     selected: classes.listItemSelected,

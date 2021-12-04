@@ -71,7 +71,7 @@ export class SocialService extends BaseService<Author> implements ISocialService
     });
     return data.items.map((item: FollowingData) => {
       const { object, status } = item;
-      const { id, host, displayName, url, github } = object;
+      const { id, host, displayName, url, github, profileImage, profileColor } = object;
       return {
         id,
         host,
@@ -79,6 +79,8 @@ export class SocialService extends BaseService<Author> implements ISocialService
         url,
         github,
         status,
+        profileImage,
+        profileColor,
       };
     });
   }

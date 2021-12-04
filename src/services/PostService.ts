@@ -20,7 +20,10 @@ interface IPostService {
   getPostById: (postId: string) => Promise<PostObject>;
   updatePost: (postId: string, payload: PostPayload) => Promise<PostObject>;
   deletePost: (postId: string) => Promise<void>;
-  getStreamPosts: (authorId: string, page: number) => Promise<Pick<PaginateResponse<PostObject>, "count" | "items">>;
+  getStreamPosts: (
+    authorId: string,
+    page: number
+  ) => Promise<Pick<PaginateResponse<PostObject>, "count" | "items">>;
 }
 
 export class PostService extends BaseService<PostObject> implements IPostService {
@@ -64,7 +67,11 @@ export class PostService extends BaseService<PostObject> implements IPostService
     await axios.delete(postId);
   }
 
-  public async createPostWithId(authorId: string, postId: string, payload: PostPayload): Promise<PostObject> {
+  public async createPostWithId(
+    authorId: string,
+    postId: string,
+    payload: PostPayload
+  ): Promise<PostObject> {
     const { data } = await axios.post(`${authorId}posts/${formatId(postId)}/`, {
       ...payload,
     });
