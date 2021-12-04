@@ -17,7 +17,12 @@ export const HOME: DrawerLink = {
 export const SOCIAL: DrawerLink = {
   path: paths.SOCIAL_PEOPLE,
   name: "Social",
-  subpath: [paths.SOCIAL_PEOPLE, paths.SOCIAL_FOLLOWERS, paths.SOCIAL_FOLLOWINGS, paths.SOCIAL_FRIENDS],
+  subpath: [
+    paths.SOCIAL_PEOPLE,
+    paths.SOCIAL_FOLLOWERS,
+    paths.SOCIAL_FOLLOWINGS,
+    paths.SOCIAL_FRIENDS,
+  ],
   private: true,
 };
 
