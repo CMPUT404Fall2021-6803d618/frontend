@@ -62,7 +62,7 @@ interface IProps {
 const Profile: FC<IProps> = (props) => {
   const { id } = props;
   const { user } = useAuthStore();
-  const { followers, followings } = useSocial();
+  // const { followers, followings } = useSocial();
   const profileService = useMemo(() => new ProfileService(), []);
   const [profile, setProfile] = useState<Author | null>(null);
   const { getPosts } = usePost(profile);
@@ -180,16 +180,6 @@ const Profile: FC<IProps> = (props) => {
                 <span>{posts?.length ?? 0} </span>
                 <span>posts</span>
               </div>
-              <div>
-                <span>{followers?.length ?? 0} </span>
-                <span>followers</span>
-              </div>
-              <div>
-                <span>
-                  {followings?.filter((f) => f.followStatus === FollowStatus.FOLLOWED).length ?? 0}{" "}
-                </span>
-                <span>followings</span>
-              </div>
             </SocialStats>
             {editing ? (
               <div
@@ -228,7 +218,7 @@ const Profile: FC<IProps> = (props) => {
       ) : (
         <Loading />
       )}
-      {/* {posts && posts.length > 0 && posts?.map((post) => <Post key={post.id} post={post} />)} */}
+      {posts && posts.length > 0 && posts?.map((post) => <Post key={post.id} post={post} />)}
     </Container>
   );
 };

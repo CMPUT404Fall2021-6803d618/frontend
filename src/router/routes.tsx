@@ -62,14 +62,14 @@ export const routes: IRoute[] = [
     fallback: <Loading />,
     appBarTitle: "Create Post",
   },
-  {
-    path: paths.POST_DETAIL,
-    component: views.PostDetailView,
-    exact: true,
-    private: false,
-    fallback: <Loading />,
-    appBarTitle: "Posts",
-  },
+  // {
+  //   path: paths.POST_DETAIL,
+  //   component: views.PostDetailView,
+  //   exact: true,
+  //   private: false,
+  //   fallback: <Loading />,
+  //   appBarTitle: "Posts",
+  // },
   {
     path: paths.PROFILE,
     component: views.ProfileView,
