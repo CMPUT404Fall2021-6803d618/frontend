@@ -24,10 +24,9 @@ const FriendsTab: FC<IFriendsTabProps> = (props) => {
     if (friends?.length === 0) {
       return <div>No friends</div>;
     } else {
-      return friends?.map(({ id, url, displayName, followStatus, profileColor, profileImage }) => (
+      return friends?.map(({ id, displayName, followStatus, profileColor, profileImage }) => (
         <UserCard
           id={id}
-          url={url}
           displayName={displayName}
           followStatus={followStatus}
           key={id}

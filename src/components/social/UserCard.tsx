@@ -13,7 +13,6 @@ const ProfileImageDiv = styled.div`
 
 interface UserCardProps {
   id: string;
-  url: string;
   displayName: string;
   followStatus: FollowStatus;
   profileImage?: string;
@@ -26,7 +25,6 @@ interface UserCardProps {
 const UserCard: FC<UserCardProps> = (props) => {
   const {
     id,
-    url,
     displayName,
     profileImage,
     profileColor,
@@ -38,21 +36,20 @@ const UserCard: FC<UserCardProps> = (props) => {
 
   const handleRemoveFollower = useCallback(
     async (_e: MouseEvent<HTMLButtonElement>) => {
-      await onFollowerRemove?.(url);
+      await onFollowerRemove?.(id);
     },
-    [url, onFollowerRemove]
+    [id, onFollowerRemove]
   );
 
   const handleFollowClick = useCallback(
     async (_e: MouseEvent<HTMLButtonElement>) => {
       if (followStatus === FollowStatus.FOLLOWED) {
-        await onUnfollow?.(url);
+        await onUnfollow?.(id);
       } else if (followStatus === FollowStatus.NOT_FOLLOWED) {
-        console.log("handlefollowclick: url: ", url);
-        await onFollow?.(url);
+        await onFollow?.(id);
       }
     },
-    [url, followStatus, onFollow, onUnfollow]
+    [id, followStatus, onFollow, onUnfollow]
   );
 
   const getFollowText = useCallback(() => {

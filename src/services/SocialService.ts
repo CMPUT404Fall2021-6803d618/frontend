@@ -48,7 +48,7 @@ export class SocialService extends BaseService<Author> implements ISocialService
   }
 
   public async addFollower(authorId: string, data: Author): Promise<void> {
-    await axios.put(this.endpoints.FOLLOWERS(authorId, data.url), {
+    await axios.put(this.endpoints.FOLLOWERS(authorId, data.id), {
       type: "author",
       ...data,
     });

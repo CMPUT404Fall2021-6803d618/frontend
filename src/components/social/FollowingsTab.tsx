@@ -16,20 +16,17 @@ const FollowingsTab: FC<IFollowingsTabProps> = (props) => {
     if (followings?.length === 0) {
       return <div>No followings</div>;
     } else {
-      return followings?.map(
-        ({ id, url, displayName, followStatus, profileColor, profileImage }) => (
-          <UserCard
-            id={id}
-            url={url}
-            displayName={displayName}
-            followStatus={followStatus}
-            key={id}
-            onUnfollow={onUnfollow}
-            profileColor={profileColor}
-            profileImage={profileImage}
-          />
-        )
-      );
+      return followings?.map(({ id, displayName, followStatus, profileColor, profileImage }) => (
+        <UserCard
+          id={id}
+          displayName={displayName}
+          followStatus={followStatus}
+          key={id}
+          onUnfollow={onUnfollow}
+          profileColor={profileColor}
+          profileImage={profileImage}
+        />
+      ));
     }
   }, [followings, onUnfollow]);
 
