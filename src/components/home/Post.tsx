@@ -1,7 +1,7 @@
 import React, { FC, useCallback } from "react";
 import { Post as IPost } from "shared/interfaces";
 import styled from "styled-components";
-import { formatDate } from "utils";
+import { extractIdFromUrl, formatDate } from "utils";
 import MeatballMenu from "./MeatballMenu";
 import { Link } from "react-router-dom";
 import LikeButton from "../common/components/LikeButton/LikeButton";
@@ -14,6 +14,7 @@ import ReactMarkdown from "react-markdown";
 import Card from "@mui/material/Card";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ProfileImage from "components/common/components/ProfileImage";
+import ButtonBase from "@mui/material/ButtonBase";
 
 const Dot = styled.span`
   margin: 0 6px;
@@ -28,14 +29,11 @@ const PublishedDate = styled.span`
   margin-bottom: 0;
 `;
 
-const PostWrapper = styled(Link)`
+const PostWrapper = styled.div`
   height: fit-content;
   display: flex;
   width: 100%;
-  color: darkslategray;
-  &:hover {
-    color: darkslategray;
-  }
+  cursor: default;
 `;
 
 // Post container
@@ -106,12 +104,12 @@ const DisplayName = styled.span`
 
 interface PostProps {
   post: IPost;
-  onDeleteClick: (post: IPost) => Promise<void>;
-  onLikeClick: (post: IPost) => Promise<void>;
-  onEditClick: (post: IPost) => void;
-  onCommentClick: (post: IPost) => void;
-  onShareFriendsClick: (post: IPost) => void;
-  onShareFollowersClick: (post: IPost) => Promise<void>;
+  onDeleteClick?: (post: IPost) => Promise<void>;
+  onLikeClick?: (post: IPost) => Promise<void>;
+  onEditClick?: (post: IPost) => void;
+  onCommentClick?: (post: IPost) => void;
+  onShareFriendsClick?: (post: IPost) => void;
+  onShareFollowersClick?: (post: IPost) => Promise<void>;
 }
 
 // const Posts:FunctionComponent<PostProps> = (props) => {
@@ -131,27 +129,27 @@ const Post: FC<PostProps> = (props) => {
   const isPostAuthor = user?.id === post?.author.id;
 
   const handleDeleteClick = useCallback(async () => {
-    await onDeleteClick(post);
+    await onDeleteClick?.(post);
   }, [onDeleteClick, post]);
 
   const handleEditClick = useCallback(() => {
-    onEditClick(post);
+    onEditClick?.(post);
   }, [onEditClick, post]);
 
   const handleLikeClick = useCallback(async () => {
-    await onLikeClick(post);
+    await onLikeClick?.(post);
   }, [onLikeClick, post]);
 
   const handleShareFriendsClick = useCallback(() => {
-    onShareFriendsClick(post);
+    onShareFriendsClick?.(post);
   }, [onShareFriendsClick, post]);
 
   const handleShareFollowersClick = useCallback(() => {
-    onShareFollowersClick(post);
+    onShareFollowersClick?.(post);
   }, [onShareFollowersClick, post]);
 
   const handleCommentClick = useCallback(() => {
-    onCommentClick(post);
+    onCommentClick?.(post);
   }, [onCommentClick, post]);
 
   const meatballMenuItems = [
@@ -168,14 +166,22 @@ const Post: FC<PostProps> = (props) => {
   ];
 
   return (
-    <PostWrapper to={`/post/${encodeURIComponent(id)}`}>
+    <PostWrapper>
       <PostCard>
         <ProfileImageDiv>
-          <ProfileImage
-            src={author.profileImage}
-            name={author.displayName}
-            color={author.profileColor}
-          />
+          <ButtonBase
+            to={`/profile/${extractIdFromUrl(author.id)}`}
+            component={Link}
+            sx={{
+              justifyContent: "center",
+            }}
+          >
+            <ProfileImage
+              src={author.profileImage}
+              name={author.displayName}
+              color={author.profileColor}
+            />
+          </ButtonBase>
         </ProfileImageDiv>
         <PostBody>
           <HeaderDiv>
@@ -186,7 +192,9 @@ const Post: FC<PostProps> = (props) => {
                 <PublishedDate>{formatDate(published)}</PublishedDate>
               </PostAuthorDiv>
 
-              {isPostAuthor && <MeatballMenu items={meatballMenuItems} />}
+              {isPostAuthor && onEditClick && onDeleteClick && (
+                <MeatballMenu items={meatballMenuItems} />
+              )}
             </PostAuthorMenuDiv>
           </HeaderDiv>
           <PostContent>
@@ -194,13 +202,17 @@ const Post: FC<PostProps> = (props) => {
             <ReactMarkdown>{content}</ReactMarkdown>
           </PostContent>
           <PostAction>
-            <CommentButton onClick={handleCommentClick} />
-            <LikeButton liked={liked} onClick={handleLikeClick} count={likeCount} />
-            <ShareButton
-              onFriendsClick={handleShareFriendsClick}
-              onFollowersClick={handleShareFollowersClick}
-              postVisibility={visibility}
-            />
+            {onCommentClick && <CommentButton onClick={handleCommentClick} />}
+            {onLikeClick && (
+              <LikeButton liked={liked} onClick={handleLikeClick} count={likeCount} />
+            )}
+            {onShareFriendsClick && onShareFollowersClick && (
+              <ShareButton
+                onFriendsClick={handleShareFriendsClick}
+                onFollowersClick={handleShareFollowersClick}
+                postVisibility={visibility}
+              />
+            )}
           </PostAction>
         </PostBody>
       </PostCard>

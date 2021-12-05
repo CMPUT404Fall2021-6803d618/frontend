@@ -10,21 +10,9 @@ import NotFound from "components/404/NotFound";
 import { paths } from "router/paths";
 import PostDetail from "components/home/PostDetail";
 import { ThemeProvider } from "@mui/material/styles";
-import * as THEME from "theme";
+import theme from "theme";
 import { CssBaseline } from "@mui/material";
 import { styled } from "@mui/material/styles";
-
-const ResponsiveContainer = styled("div")(({ theme }) => ({
-  [theme.breakpoints.down("sm")]: {
-    padding: "0 0",
-  },
-  [theme.breakpoints.up("md")]: {
-    padding: "0 8rem",
-  },
-  [theme.breakpoints.up("lg")]: {
-    padding: "0 12rem",
-  },
-}));
 
 const App: FunctionComponent = () => {
   const { renewToken, isAuthenticated } = useAuth();
@@ -51,7 +39,7 @@ const App: FunctionComponent = () => {
   }, [renewToken, isAuthenticated]);
 
   return (
-    <ThemeProvider theme={THEME}>
+    <ThemeProvider theme={theme}>
       <CssBaseline enableColorScheme />
       {isLoading ? (
         <Loading />

@@ -40,40 +40,17 @@ interface IAuthService {
 export class AuthService implements IAuthService {
   private async processUserData(response: AxiosResponse<UserData>): Promise<User> {
     const { data } = response;
-    const {
-      access_token: accessToken,
-      refresh_token: refreshToken,
-      author,
+    const { access_token: accessToken, refresh_token: refreshToken, author, username } = data;
+    this.updateAuthHeader(accessToken);
+    cookies.remove("refreshToken");
+    cookies.set("refreshToken", refreshToken, {
+      path: "/",
+      expires: new Date("9999-12-31T12:00:00"),
+    });
+    return {
       username,
-      is_active: isActive,
-    } = data;
-    if (process.env.REACT_ADMIN_ACTIVE_TOGGLE === true) {
-      if (isActive) {
-        this.updateAuthHeader(accessToken);
-        cookies.remove("refreshToken");
-        cookies.set("refreshToken", refreshToken, {
-          path: "/",
-          expires: new Date("9999-12-31T12:00:00"),
-        });
-        return {
-          username,
-          ...author,
-        };
-      } else {
-        throw new Error("Account is not activated. Please contact server admin.");
-      }
-    } else {
-      this.updateAuthHeader(accessToken);
-      cookies.remove("refreshToken");
-      cookies.set("refreshToken", refreshToken, {
-        path: "/",
-        expires: new Date("9999-12-31T12:00:00"),
-      });
-      return {
-        username,
-        ...author,
-      };
-    }
+      ...author,
+    };
   }
 
   public async login(username: string, password: string): Promise<User> {

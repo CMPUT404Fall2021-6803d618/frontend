@@ -5,7 +5,9 @@ import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
 const config: AxiosRequestConfig = {
-  timeout: process.env.REACT_NETWORK_TIMEOUT ?? 60000,
+  timeout: process.env.REACT_NETWORK_TIMEOUT
+    ? parseInt(process.env.REACT_NETWORK_TIMEOUT, 10)
+    : 60000,
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",
