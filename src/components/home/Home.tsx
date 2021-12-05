@@ -188,6 +188,9 @@ const Home: FC = () => {
       return (
         <>
           {posts.map((post) => {
+            if (post.is_github) {
+              return <Post key={post.id} post={post} />;
+            }
             return (
               <Post
                 key={post.id}
