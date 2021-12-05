@@ -49,7 +49,7 @@ export default function useSocial(shouldLoadData = true): ISocialHook {
       return peopleData
         .filter((person) => person.id !== userId)
         .map((person) => {
-          const following = followingsData.find((f) => f.id === person.id);
+          const following = followingsData.find((f) => f.url === person.url);
           return following
             ? { ...following }
             : { ...person, followStatus: FollowStatus.NOT_FOLLOWED };
@@ -75,7 +75,7 @@ export default function useSocial(shouldLoadData = true): ISocialHook {
         };
       });
       const newFollowers: Person[] = followersData.map((follower) => {
-        const following = newFollowings.find((f) => f.id === follower.id);
+        const following = newFollowings.find((f) => f.url === follower.url);
         return following
           ? { ...following }
           : { ...follower, followStatus: FollowStatus.NOT_FOLLOWED };
@@ -124,7 +124,7 @@ export default function useSocial(shouldLoadData = true): ISocialHook {
     }
   }, [isNodeChanged, loadNewNodeData]);
 
-  const getNewStatusData = useCallback((arr: Person[], id: string, newStatus: FollowStatus) => {
+  const getNewStatusDataById = useCallback((arr: Person[], id: string, newStatus: FollowStatus) => {
     const index = arr.findIndex((p) => p.id === id);
     if (index !== -1) {
       const newArr = [...arr];
@@ -140,13 +140,32 @@ export default function useSocial(shouldLoadData = true): ISocialHook {
     }
   }, []);
 
+  const getNewStatusDataByUrl = useCallback(
+    (arr: Person[], url: string, newStatus: FollowStatus) => {
+      const index = arr.findIndex((p) => p.url === url);
+      if (index !== -1) {
+        const newArr = [...arr];
+        const newPerson = {
+          ...arr[index],
+          followStatus: newStatus,
+        };
+        newArr[index] = { ...newPerson };
+        return {
+          updatedArr: newArr,
+          updatedPerson: newPerson,
+        };
+      }
+    },
+    []
+  );
+
   // send friend request
   const handleFollow = useCallback(
     async (id: string) => {
       if (user && followers && followings && people) {
         await socialService.sendFollowRequest(user.id, id);
-        const newFollowerStatus = getNewStatusData(followers, id, FollowStatus.PENDING);
-        const newPeopleStatus = getNewStatusData(people, id, FollowStatus.PENDING);
+        const newFollowerStatus = getNewStatusDataByUrl(followers, id, FollowStatus.PENDING);
+        const newPeopleStatus = getNewStatusDataByUrl(people, id, FollowStatus.PENDING);
         if (newFollowerStatus) {
           setFollowers(newFollowerStatus.updatedArr);
           setFollowings([...followings, { ...newFollowerStatus.updatedPerson }]);
@@ -157,7 +176,7 @@ export default function useSocial(shouldLoadData = true): ISocialHook {
         }
       }
     },
-    [followers, followings, getNewStatusData, people, socialService, user]
+    [followers, followings, getNewStatusDataByUrl, people, socialService, user]
   );
 
   // cancel friend request
@@ -166,13 +185,13 @@ export default function useSocial(shouldLoadData = true): ISocialHook {
       try {
         if (user && followers && followings && friends && people) {
           await socialService.unfollow(user.id, id);
-          const newFollowerStatus = getNewStatusData(followers, id, FollowStatus.NOT_FOLLOWED);
-          const newPeopleStatus = getNewStatusData(people, id, FollowStatus.NOT_FOLLOWED);
+          const newFollowerStatus = getNewStatusDataByUrl(followers, id, FollowStatus.NOT_FOLLOWED);
+          const newPeopleStatus = getNewStatusDataByUrl(people, id, FollowStatus.NOT_FOLLOWED);
           if (newFollowerStatus) {
             setFollowers(newFollowerStatus.updatedArr);
-            setFollowings(followings.filter((f) => f.id !== id));
-            setFriends(friends.filter((f) => f.id !== id));
+            setFriends(friends.filter((f) => f.url !== id));
           }
+          setFollowings(followings.filter((f) => f.url !== id));
           if (newPeopleStatus) {
             setPeople(newPeopleStatus.updatedArr);
           }
@@ -181,7 +200,7 @@ export default function useSocial(shouldLoadData = true): ISocialHook {
         console.log(err);
       }
     },
-    [user, followers, followings, friends, people, socialService, getNewStatusData]
+    [user, followers, followings, friends, people, socialService, getNewStatusDataByUrl]
   );
 
   // delete friend request
@@ -189,8 +208,8 @@ export default function useSocial(shouldLoadData = true): ISocialHook {
     async (id: string) => {
       if (user && followers && followings && friends) {
         await socialService.removeFollower(user.id, id);
-        setFollowers(followers.filter((f) => f.id !== id));
-        setFriends(friends.filter((f) => f.id !== id));
+        setFollowers(followers.filter((f) => f.url !== id));
+        setFriends(friends.filter((f) => f.url !== id));
       }
     },
     [socialService, followers, followings, friends, user]

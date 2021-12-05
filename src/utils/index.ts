@@ -5,6 +5,7 @@ export function formatDate(val: string): string {
 }
 
 export function formatId(id: string): string {
+  console.log("formatId: ", id);
   if (id[id.length - 1] === "/") {
     return id.slice(0, -1);
   } else {
