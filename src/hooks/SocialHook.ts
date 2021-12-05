@@ -170,9 +170,9 @@ export default function useSocial(shouldLoadData = true): ISocialHook {
           const newPeopleStatus = getNewStatusData(people, id, FollowStatus.NOT_FOLLOWED);
           if (newFollowerStatus) {
             setFollowers(newFollowerStatus.updatedArr);
-            setFollowings(followings.filter((f) => f.id !== id));
             setFriends(friends.filter((f) => f.id !== id));
           }
+          setFollowings(followings.filter((f) => f.id !== id));
           if (newPeopleStatus) {
             setPeople(newPeopleStatus.updatedArr);
           }
