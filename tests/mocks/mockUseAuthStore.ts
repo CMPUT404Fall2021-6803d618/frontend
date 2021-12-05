@@ -1,5 +1,5 @@
-import { useAuthStore } from "hooks/AuthStoreHook";
-import { User } from "shared/interfaces";
+import { useAuthStore } from "../../src/hooks/AuthStoreHook";
+import { User } from "../../src/shared/interfaces";
 import { mocked } from "ts-jest/utils";
 
 export function mockAuthStore(): void {
@@ -12,7 +12,7 @@ export function mockAuthStore(): void {
     profileImage: undefined,
     username: "username",
   };
-  jest.doMock("hooks/AuthStoreHook", () => {
+  jest.doMock("../../src/hooks/AuthStoreHook", () => {
     return {
       __esModule: true,
       useAuthStore: jest.fn().mockReturnValue({

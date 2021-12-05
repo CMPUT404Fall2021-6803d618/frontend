@@ -1,10 +1,10 @@
-import usePost from "hooks/PostHook";
-import { PostObject } from "shared/interfaces";
+import usePost from "../../src/hooks/PostHook";
+import { PostObject } from "../../src/shared/interfaces";
 import { mocked } from "ts-jest/utils";
 
 export function mockUsePost(): void {
   const mockPosts: PostObject[] = [];
-  jest.doMock("hooks/PostHook", () => {
+  jest.doMock("../../src/hooks/PostHook", () => {
     return {
       __esModule: true,
       default: jest.fn().mockReturnValue({

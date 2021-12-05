@@ -1,11 +1,11 @@
 import React from "react";
-import Home from "components/home/Home";
+import Home from "../src/components/home/Home";
 import { mockAuthStore } from "./mocks/mockUseAuthStore";
 import { mockUsePost } from "./mocks/mockUsePost";
 import { render, screen } from "@testing-library/react";
 
-jest.mock("hooks/PostHook");
-jest.mock("hooks/AuthStoreHook");
+jest.mock("../../src/hooks/PostHook");
+jest.mock("../../src/hooks/AuthStoreHook");
 
 mockAuthStore();
 mockUsePost();
