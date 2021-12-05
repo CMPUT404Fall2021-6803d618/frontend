@@ -15,7 +15,12 @@ const FollowRequestsTab: FC<IProps> = (props) => {
     <ListContainer>
       {items.length > 0 ? (
         items.map((item, index) => (
-          <FollowInboxItem key={`follow-request-${index}`} item={item} index={index} onAccept={onAccept} />
+          <FollowInboxItem
+            key={`follow-request-${index}`}
+            item={item}
+            index={index}
+            onAccept={onAccept}
+          />
         ))
       ) : (
         <div>No follow requests</div>

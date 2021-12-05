@@ -34,7 +34,10 @@ const Inbox: FC<IProps> = (props) => {
         id: "follow-requests",
         label: "Follow Requests",
         render: () => (
-          <FollowRequestsTab items={followRequestItems as FollowingData[]} onAccept={handleAcceptFollowRequest} />
+          <FollowRequestsTab
+            items={followRequestItems as FollowingData[]}
+            onAccept={handleAcceptFollowRequest}
+          />
         ),
       },
     ],

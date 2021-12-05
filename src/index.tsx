@@ -8,7 +8,7 @@ import { AuthStore } from "stores/AuthStore";
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter basename={`${import.meta.env.BASE_URL}`}>
+    <BrowserRouter basename={`${process.env.BASE_URL}`}>
       <AuthStore.Container>
         <App />
       </AuthStore.Container>

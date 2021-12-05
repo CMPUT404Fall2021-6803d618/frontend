@@ -34,7 +34,13 @@ const FileUploader: FC<IProps> = ({ onFileSelectError, onFileSelectSuccess }) =>
   return (
     <label htmlFor="contained-button-file">
       <Input accept="image/*" id="contained-button-file" onChange={handleFileInput} type="file" />
-      <Button sx={{ marginTop: 1, padding: 1 }} fullWidth variant="outlined" component="span" color="secondary">
+      <Button
+        sx={{ marginTop: 1, padding: 1 }}
+        fullWidth
+        variant="outlined"
+        component="span"
+        color="secondary"
+      >
         Upload Image
       </Button>
     </label>

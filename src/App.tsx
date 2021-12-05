@@ -10,7 +10,7 @@ import NotFound from "components/404/NotFound";
 import { paths } from "router/paths";
 import PostDetail from "components/home/PostDetail";
 import { ThemeProvider } from "@mui/material/styles";
-import theme from "theme";
+import * as THEME from "theme";
 import { CssBaseline } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
@@ -51,7 +51,7 @@ const App: FunctionComponent = () => {
   }, [renewToken, isAuthenticated]);
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={THEME}>
       <CssBaseline enableColorScheme />
       {isLoading ? (
         <Loading />

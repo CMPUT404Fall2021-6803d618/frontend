@@ -162,7 +162,12 @@ const CreatePost: FC = () => {
       return (
         <Box sx={{ margin: 1 }}>
           <Stack spacing={1}>
-            <TextField variant="outlined" placeholder="Title" onChange={handleTitleChange} value={title} />
+            <TextField
+              variant="outlined"
+              placeholder="Title"
+              onChange={handleTitleChange}
+              value={title}
+            />
             <TextField
               variant="outlined"
               placeholder="Description"
@@ -179,7 +184,10 @@ const CreatePost: FC = () => {
             />
           </Stack>
 
-          <FileUploader onFileSelectError={handleFileSelectError} onFileSelectSuccess={handleFileSelectSuccess} />
+          <FileUploader
+            onFileSelectError={handleFileSelectError}
+            onFileSelectSuccess={handleFileSelectSuccess}
+          />
 
           <Grid container spacing={1} sx={{ marginTop: 1 }}>
             <Grid item xs={12} sm>
@@ -200,7 +208,10 @@ const CreatePost: FC = () => {
 
             <Grid item xs={12} sm>
               <FormControl fullWidth sx={{ height: "100%" }}>
-                <FriendButton disabled={visibility !== Visibility.FRIENDS} onClick={handleOpenFriendsModal}>
+                <FriendButton
+                  disabled={visibility !== Visibility.FRIENDS}
+                  onClick={handleOpenFriendsModal}
+                >
                   Select Friends
                 </FriendButton>
               </FormControl>

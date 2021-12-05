@@ -5,7 +5,7 @@ import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
 const config: AxiosRequestConfig = {
-  timeout: import.meta.env.VITE_NETWORK_TIMEOUT ?? 60000,
+  timeout: process.env.REACT_NETWORK_TIMEOUT ?? 60000,
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",
@@ -28,12 +28,16 @@ instance.interceptors.response.use(undefined, (error: AxiosError) => {
   }
   if (error.config && error.response?.status === 401) {
     delete instance.defaults.headers.common["Authorization"];
-    return instance.post(`${BASE_URL}/token-refresh/`, { refresh: cookies.get("refreshToken") }).then((res) => {
-      const AuthHeader = `Bearer ${res.data.access_token}`;
-      instance.defaults.headers.common["Authorization"] = AuthHeader;
-      error.config.headers["Authorization"] = AuthHeader;
-      return axios.request(error.config);
-    });
+    return instance
+      .post(`${BASE_URL}/token-refresh/`, {
+        refresh: cookies.get("refreshToken"),
+      })
+      .then((res) => {
+        const AuthHeader = `Bearer ${res.data.access_token}`;
+        instance.defaults.headers.common["Authorization"] = AuthHeader;
+        error.config.headers["Authorization"] = AuthHeader;
+        return axios.request(error.config);
+      });
   }
 
   return Promise.reject(error);

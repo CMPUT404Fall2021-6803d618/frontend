@@ -62,7 +62,11 @@ const Social: FC<IProps> = (props) => {
         id: "friends",
         label: "Friends",
         render: () => (
-          <FriendsTab friends={friends} onUnfollow={handleUnfollow} onRemoveFollower={handleRemoveFollower} />
+          <FriendsTab
+            friends={friends}
+            onUnfollow={handleUnfollow}
+            onRemoveFollower={handleRemoveFollower}
+          />
         ),
       },
     ],

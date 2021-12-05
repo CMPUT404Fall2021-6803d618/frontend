@@ -2,7 +2,12 @@ import { axios } from "utils/axios";
 
 interface IBaseService<T> {
   getAll: (url: string, dataKey?: string) => Promise<T[]>;
-  getPaginate: (url: string, page: number, size: number, dataKey?: string) => Promise<PaginateResponse<T>>;
+  getPaginate: (
+    url: string,
+    page: number,
+    size: number,
+    dataKey?: string
+  ) => Promise<PaginateResponse<T>>;
 }
 
 export interface PaginateResponse<T> {

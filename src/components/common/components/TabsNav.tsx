@@ -96,7 +96,13 @@ const TabsNav: FC<IProps> = (props) => {
     <div style={{ overflow: "hidden" }}>
       <Box sx={{ width: "100%", overflow: "hidden" }}>
         <Box sx={{ borderBottom: 1, borderColor: "divider", overflow: "hidden" }}>
-          <Tabs value={value} onChange={handleChange} aria-label="friend tabs" scrollButtons allowScrollButtonsMobile>
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            aria-label="friend tabs"
+            scrollButtons
+            allowScrollButtonsMobile
+          >
             {tabs.map((tab, index) => (
               <Tab label={tab.label} {...a11yProps(index)} key={`tab-${tab.label}`} wrapped />
             ))}

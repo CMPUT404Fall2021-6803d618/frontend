@@ -142,7 +142,15 @@ const PostDetail: FC<IProps> = (props) => {
         </div>
       );
     }
-  }, [commentValue, handleCommentValueChange, handleSendComment, isPostAuthor, post, renderComments, user]);
+  }, [
+    commentValue,
+    handleCommentValueChange,
+    handleSendComment,
+    isPostAuthor,
+    post,
+    renderComments,
+    user,
+  ]);
 
   return <Container className="container">{render()}</Container>;
 };

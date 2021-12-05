@@ -33,7 +33,9 @@ const FriendsModal: FC<IProps> = (props) => {
         const friend = friends.find((f) => f.id === id);
         if (friend) {
           const isSelected = !!selectedFriends.find((f) => f.id === id);
-          const newFriends = isSelected ? selectedFriends.filter((f) => f.id !== id) : [...selectedFriends, friend];
+          const newFriends = isSelected
+            ? selectedFriends.filter((f) => f.id !== id)
+            : [...selectedFriends, friend];
           setSelectedFriends(newFriends);
         }
       }

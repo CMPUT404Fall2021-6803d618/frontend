@@ -44,9 +44,8 @@
     "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
   },
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "start": "react-scripts start",
+    "build": "react-scripts build"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -97,9 +96,7 @@
     "file-loader": "^6.2.0",
     "prettier": "^2.4.1",
     "ts-loader": "^8.0.11",
-    "url-loader": "^4.1.1",
-    "vite": "^2.6.13",
-    "vite-tsconfig-paths": "^3.3.17"
+    "url-loader": "^4.1.1"
   },
   "babel": {
     "plugins": [
