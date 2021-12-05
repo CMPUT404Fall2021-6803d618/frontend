@@ -109,9 +109,9 @@ const Profile: FC<IProps> = (props) => {
       e.preventDefault();
       if (editing) {
         if (profile) {
-          console.log(editImageProfile);
+          console.log(editGithub);
           await profileService.updateProfile(id, {
-            github: editGithub === "" ? undefined : editGithub,
+            github: editGithub,
             displayName: editDisplayName,
             profileImage: editImageProfile,
           });

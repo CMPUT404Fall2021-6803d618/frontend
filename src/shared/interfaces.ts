@@ -43,6 +43,7 @@ export interface PostObject extends BaseObject {
   published: string;
   visibility: Visibility;
   unlisted: boolean;
+  is_github: boolean;
 }
 
 export interface Post extends PostObject, Likeable {}
