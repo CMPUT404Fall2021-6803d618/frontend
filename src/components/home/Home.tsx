@@ -62,7 +62,9 @@ const Home: FC = () => {
   const loadData = useCallback(async () => {
     if (user) {
       const [postsData, likedData] = await Promise.all([getStreamPosts(1), getLiked()]);
-      const likesData = await Promise.all(postsData.items.map((p) => getLikes(p.id)));
+      const likesData = await Promise.all(
+        postsData.items.map((p) => (p.is_github ? Promise.resolve([]) : getLikes(p.id)))
+      );
       setLiked(likedData);
       setNewPosts([], postsData, likedData, likesData);
     }

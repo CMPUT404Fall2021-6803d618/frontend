@@ -92,7 +92,7 @@ export class PostService extends BaseService<PostObject> implements IPostService
     authorId: string,
     page: number
   ): Promise<Pick<PaginateResponse<PostObject>, "count" | "items">> {
-    const { count, items } = await this.getPaginate(`${authorId}stream/`, page);
+    const { count, items } = await this.getPaginate(`${formatId(authorId)}/stream/`, page);
     return { count, items };
   }
 }

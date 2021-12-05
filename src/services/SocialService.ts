@@ -35,10 +35,10 @@ export class SocialService extends BaseService<Author> implements ISocialService
       LIST_FOREIGN_AUTHORS: (nodeId: number) => `${BASE_URL}/foreign-authors/${nodeId}/`,
       LIST_FOLLOWERS: (authorId: string) => `${formatId(authorId)}/followers/`,
       FOLLOWERS: (authorId: string, foreignAuthorId: string) =>
-        `${formatId(authorId)}/followers/${encodeURIComponent(foreignAuthorId)}`,
+        `${formatId(authorId)}/followers/${encodeURIComponent(formatId(foreignAuthorId) + "/")}`,
       LIST_FOLLOWINGS: (authorId: string) => `${formatId(authorId)}/followings/`,
       FOLLOWINGS: (authorId: string, foreignAuthorId: string) =>
-        `${formatId(authorId)}/followings/${encodeURIComponent(foreignAuthorId)}`,
+        `${formatId(authorId)}/followings/${encodeURIComponent(formatId(foreignAuthorId) + "/")}`,
     };
   }
 
