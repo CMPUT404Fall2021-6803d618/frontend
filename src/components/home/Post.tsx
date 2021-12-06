@@ -124,7 +124,7 @@ const Post: FC<PostProps> = (props) => {
     onShareFollowersClick,
     onCommentClick,
   } = props;
-  const { content, author, published, title, likeCount, liked, visibility, id } = post;
+  const { content, author, published, title, likeCount, liked, visibility, is_github } = post;
   const isPostAuthor = user?.id === post?.author.id;
 
   const handleDeleteClick = useCallback(async () => {
@@ -164,29 +164,52 @@ const Post: FC<PostProps> = (props) => {
     },
   ];
 
+  const getProfileImage = useCallback(() => {
+    if (is_github) {
+      return (
+        <a href={author.github} target="_blank" rel="noreferrer">
+          <ProfileImage
+            src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+            name={author.displayName}
+            color={author.profileColor}
+          />
+        </a>
+      );
+    } else {
+      return (
+        <ButtonBase
+          to={`/profile/${encodeURIComponent(author.url)}`}
+          component={Link}
+          sx={{
+            justifyContent: "center",
+          }}
+        >
+          <ProfileImage
+            src={author.profileImage}
+            name={author.displayName}
+            color={author.profileColor}
+          />
+        </ButtonBase>
+      );
+    }
+  }, [
+    author.displayName,
+    author.github,
+    author.profileColor,
+    author.profileImage,
+    author.url,
+    is_github,
+  ]);
+
   return (
     <PostWrapper>
       <PostCard>
-        <ProfileImageDiv>
-          <ButtonBase
-            to={`/profile/${encodeURIComponent(author.url)}`}
-            component={Link}
-            sx={{
-              justifyContent: "center",
-            }}
-          >
-            <ProfileImage
-              src={author.profileImage}
-              name={author.displayName}
-              color={author.profileColor}
-            />
-          </ButtonBase>
-        </ProfileImageDiv>
+        <ProfileImageDiv>{getProfileImage()}</ProfileImageDiv>
         <PostBody>
           <HeaderDiv>
             <PostAuthorMenuDiv>
               <PostAuthorDiv>
-                <DisplayName>{author.displayName}</DisplayName>
+                <DisplayName>{is_github ? "GitHub" : author.displayName}</DisplayName>
                 <Dot />
                 <PublishedDate>{formatDate(published)}</PublishedDate>
               </PostAuthorDiv>

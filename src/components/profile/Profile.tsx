@@ -23,6 +23,7 @@ import theme from "theme";
 import FileUploader from "components/home/FileUploader";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ProfileImage from "components/common/components/ProfileImage";
+import { extractIdFromUrl } from "utils";
 
 const ProfileDiv = styled.div`
   display: flex;
@@ -110,7 +111,7 @@ const Profile: FC<IProps> = (props) => {
       if (editing) {
         if (profile) {
           console.log(editGithub);
-          await profileService.updateProfile(id, {
+          await profileService.updateProfile(extractIdFromUrl(decodeURIComponent(id)), {
             github: editGithub,
             displayName: editDisplayName,
             profileImage: editImageProfile,
