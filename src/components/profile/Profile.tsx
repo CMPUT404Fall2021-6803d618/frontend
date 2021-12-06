@@ -17,7 +17,7 @@ import { ProfileService } from "services/ProfileService";
 import { Author, Post as IPost } from "shared/interfaces";
 import Loading from "components/common/components/Loading";
 import { Visibility } from "shared/enums";
-import { Button, Container } from "@mui/material";
+import { Button, Container, Stack } from "@mui/material";
 import useImage from "hooks/ImageHook";
 import theme from "theme";
 import FileUploader from "components/home/FileUploader";
@@ -218,7 +218,15 @@ const Profile: FC<IProps> = (props) => {
       ) : (
         <Loading />
       )}
-      {posts && posts.length > 0 && posts?.map((post) => <Post key={post.id} post={post} />)}
+      {posts ? (
+        <Stack spacing={1}>
+          {posts.map((post) => (
+            <Post key={post.id} post={post} />
+          ))}
+        </Stack>
+      ) : (
+        <Loading />
+      )}
     </Container>
   );
 };
