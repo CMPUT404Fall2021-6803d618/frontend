@@ -6,6 +6,8 @@ import { FollowStatus } from "hooks/SocialHook";
 import Stack from "@mui/material/Stack";
 import Grid from "@mui/material/Grid";
 import ProfileImage from "components/common/components/ProfileImage";
+import { Link } from "react-router-dom";
+import ButtonBase from "@mui/material/ButtonBase";
 
 const ProfileImageDiv = styled.div`
   margin-right: 8px;
@@ -17,6 +19,7 @@ interface UserCardProps {
   followStatus: FollowStatus;
   profileImage?: string;
   profileColor?: string;
+  url: string;
   onFollowerRemove?: (id: string) => Promise<void>;
   onFollow?: (id: string) => Promise<void>;
   onUnfollow?: (id: string) => Promise<void>;
@@ -28,6 +31,7 @@ const UserCard: FC<UserCardProps> = (props) => {
     displayName,
     profileImage,
     profileColor,
+    url,
     followStatus,
     onFollowerRemove,
     onFollow,
@@ -76,7 +80,20 @@ const UserCard: FC<UserCardProps> = (props) => {
         <Grid xs sm>
           <Stack direction="row" alignItems="center" spacing={1}>
             <ProfileImageDiv>
-              <ProfileImage src={profileImage} size={40} name={displayName} color={profileColor} />
+              <ButtonBase
+                to={`/profile/${encodeURIComponent(url)}`}
+                component={Link}
+                sx={{
+                  justifyContent: "center",
+                }}
+              >
+                <ProfileImage
+                  src={profileImage}
+                  size={40}
+                  name={displayName}
+                  color={profileColor}
+                />
+              </ButtonBase>
             </ProfileImageDiv>
             <span>{displayName}</span>
           </Stack>

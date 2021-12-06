@@ -24,7 +24,7 @@ const PeopleTab: FC<IProps> = (props) => {
     if (people?.length === 0) {
       return <div>No people</div>;
     } else {
-      return people?.map(({ id, displayName, followStatus, profileImage, profileColor }) => (
+      return people?.map(({ id, displayName, followStatus, profileImage, profileColor, url }) => (
         <UserCard
           id={id}
           displayName={displayName}
@@ -34,6 +34,7 @@ const PeopleTab: FC<IProps> = (props) => {
           key={id}
           profileImage={profileImage}
           profileColor={profileColor}
+          url={url}
         />
       ));
     }
