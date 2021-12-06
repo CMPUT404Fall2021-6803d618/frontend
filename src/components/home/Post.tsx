@@ -1,7 +1,7 @@
 import React, { FC, useCallback } from "react";
 import { Post as IPost } from "shared/interfaces";
 import styled from "styled-components";
-import { extractIdFromUrl, formatDate } from "utils";
+import { formatDate } from "utils";
 import MeatballMenu from "./MeatballMenu";
 import { Link } from "react-router-dom";
 import LikeButton from "../common/components/LikeButton/LikeButton";
@@ -12,7 +12,6 @@ import { useAuthStore } from "hooks/AuthStoreHook";
 import CommentButton from "components/common/components/CommentButton";
 import ReactMarkdown from "react-markdown";
 import Card from "@mui/material/Card";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ProfileImage from "components/common/components/ProfileImage";
 import ButtonBase from "@mui/material/ButtonBase";
 

@@ -1,3 +1,4 @@
+import { BASE_URL } from "shared/constants";
 import { ContentType, Visibility } from "shared/enums";
 import { Author, PostObject } from "shared/interfaces";
 import { formatId } from "utils";
@@ -40,8 +41,17 @@ export class PostService extends BaseService<PostObject> implements IPostService
   // }
 
   public async getPosts(authorId: string): Promise<PostObject[]> {
-    const { data } = await axios.get(`${formatId(authorId)}/posts/`);
-    return data.items;
+    console.log(authorId);
+    const url = new URL(authorId);
+    if (url.origin === BASE_URL) {
+      const { data } = await axios.get(`${formatId(authorId)}/posts/`);
+      return data.items;
+    } else {
+      const { data } = await axios.get(
+        `${BASE_URL}/proxy/${encodeURIComponent(formatId(authorId) + "/posts/")}`
+      );
+      return data.items;
+    }
   }
 
   public async createPost(authorId: string, payload: PostPayload): Promise<PostObject> {
