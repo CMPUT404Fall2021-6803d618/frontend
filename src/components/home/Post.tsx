@@ -170,7 +170,7 @@ const Post: FC<PostProps> = (props) => {
       <PostCard>
         <ProfileImageDiv>
           <ButtonBase
-            to={`/profile/${extractIdFromUrl(author.id)}`}
+            to={`/profile/${encodeURIComponent(author.url)}`}
             component={Link}
             sx={{
               justifyContent: "center",

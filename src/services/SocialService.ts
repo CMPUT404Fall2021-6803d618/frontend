@@ -32,7 +32,7 @@ export class SocialService extends BaseService<Author> implements ISocialService
     super();
     this.endpoints = {
       LIST_AUTHORS: () => `${BASE_URL}/authors/`,
-      LIST_FOREIGN_AUTHORS: (nodeId: number) => `${BASE_URL}/foreign-authors/${nodeId}/`,
+      LIST_FOREIGN_AUTHORS: (nodeId: number) => `${BASE_URL}/nodes/${nodeId}/authors/`,
       LIST_FOLLOWERS: (authorId: string) => `${formatId(authorId)}/followers/`,
       FOLLOWERS: (authorId: string, foreignAuthorId: string) =>
         `${formatId(authorId)}/followers/${encodeURIComponent(foreignAuthorId)}`,
