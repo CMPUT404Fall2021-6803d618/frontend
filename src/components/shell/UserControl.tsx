@@ -67,7 +67,7 @@ const UserControl: FunctionComponent = () => {
       isAuthenticated ? (
         <Fragment>
           <PrimaryButton
-            to={`/profile/${extractIdFromUrl(user?.id)}`}
+            to={`/profile/${encodeURIComponent(user?.url ?? "")}`}
             component={Link}
             sx={{
               justifyContent: "center",
