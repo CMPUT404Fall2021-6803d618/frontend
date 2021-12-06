@@ -67,7 +67,7 @@ export class PostService extends BaseService<PostObject> implements IPostService
   }
 
   public async updatePost(postId: string, payload: PostPayload): Promise<PostObject> {
-    const { data } = await axios.post(postId, {
+    const { data } = await axios.post(`${formatId(postId)}/`, {
       ...payload,
     });
     return data;
