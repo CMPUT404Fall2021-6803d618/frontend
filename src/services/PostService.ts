@@ -50,7 +50,11 @@ export class PostService extends BaseService<PostObject> implements IPostService
       const { data } = await axios.get(
         `${BASE_URL}/proxy/${encodeURIComponent(formatId(authorId) + "/posts/")}`
       );
-      return data.items;
+      if (Array.isArray(data)) {
+        return data;
+      } else {
+        return data.items;
+      }
     }
   }
 
