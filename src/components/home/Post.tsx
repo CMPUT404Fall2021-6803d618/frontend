@@ -14,6 +14,7 @@ import ReactMarkdown from "react-markdown";
 import Card from "@mui/material/Card";
 import ProfileImage from "components/common/components/ProfileImage";
 import ButtonBase from "@mui/material/ButtonBase";
+import { ContentType } from "shared/enums";
 
 const Dot = styled.span`
   margin: 0 6px;
@@ -124,7 +125,17 @@ const Post: FC<PostProps> = (props) => {
     onShareFollowersClick,
     onCommentClick,
   } = props;
-  const { content, author, published, title, likeCount, liked, visibility, is_github } = post;
+  const {
+    content,
+    author,
+    published,
+    title,
+    likeCount,
+    liked,
+    visibility,
+    is_github,
+    contentType,
+  } = post;
   const isPostAuthor = user?.id === post?.author.id;
 
   const handleDeleteClick = useCallback(async () => {
@@ -221,7 +232,11 @@ const Post: FC<PostProps> = (props) => {
           </HeaderDiv>
           <PostContent>
             <PostTitle>{title}</PostTitle>
-            <ReactMarkdown>{content}</ReactMarkdown>
+            {contentType === ContentType.MARKDOWN ? (
+              <ReactMarkdown>{content}</ReactMarkdown>
+            ) : (
+              <p>{content}</p>
+            )}
           </PostContent>
           <PostAction>
             {onCommentClick && <CommentButton onClick={handleCommentClick} />}

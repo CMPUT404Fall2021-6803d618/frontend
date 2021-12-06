@@ -49,6 +49,7 @@ const CreatePost: FC = () => {
   const [title, setTitle] = useState("");
   const [visibility, setVisibility] = useState(Visibility.PUBLIC);
   const [description, setDescription] = useState("");
+  const [contentType, setContentType] = useState(ContentType.MARKDOWN);
   const { user } = useAuthStore();
   const { createPost } = usePost(user);
   const { uploadImage } = useImage(user);
@@ -83,7 +84,7 @@ const CreatePost: FC = () => {
       const payload: PostPayload = {
         title,
         description,
-        contentType: ContentType.MARKDOWN,
+        contentType,
         content,
         visibility,
         unlisted: false,
@@ -95,7 +96,7 @@ const CreatePost: FC = () => {
       await createPost(payload);
       setIsPostCreated(true);
     },
-    [content, title, description, visibility, selectedFriends, createPost]
+    [content, title, description, contentType, visibility, selectedFriends, createPost]
   );
 
   const handleContentChange = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -155,6 +156,15 @@ const CreatePost: FC = () => {
     [content, uploadImage, visibility]
   );
 
+  const handleContentTypeChange = useCallback((e: SelectChangeEvent) => {
+    console.log(e.target.value);
+    if (e.target.value === ContentType.MARKDOWN) {
+      setContentType(ContentType.MARKDOWN);
+    } else {
+      setContentType(ContentType.PLAIN_TEXT);
+    }
+  }, []);
+
   const render = useCallback(() => {
     if (isPostCreated) {
       return <Redirect to={paths.HOME} />;
@@ -190,6 +200,22 @@ const CreatePost: FC = () => {
           />
 
           <Grid container spacing={1} sx={{ marginTop: 1 }}>
+            <Grid item xs={12} sm>
+              <FormControl fullWidth>
+                <InputLabel id="select-content-type-label">Content Type</InputLabel>
+                <Select
+                  labelId="select-content-type-label"
+                  id="select-content-type"
+                  value={contentType}
+                  label="Content Type"
+                  onChange={handleContentTypeChange}
+                >
+                  <MenuItem value={ContentType.MARKDOWN}>Markdown</MenuItem>
+                  <MenuItem value={ContentType.PLAIN_TEXT}>Plain Text</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+
             <Grid item xs={12} sm>
               <FormControl fullWidth>
                 <InputLabel id="select-visibility-label">Visibility</InputLabel>
@@ -238,11 +264,13 @@ const CreatePost: FC = () => {
     description,
     handleContentChange,
     content,
+    handleFileSelectError,
+    handleFileSelectSuccess,
+    contentType,
+    handleContentTypeChange,
     visibility,
     handleVisibilityChange,
     handleOpenFriendsModal,
-    handleFileSelectError,
-    handleFileSelectSuccess,
     handleSubmit,
     openFriendsModal,
     handleCloseFriendsModal,
